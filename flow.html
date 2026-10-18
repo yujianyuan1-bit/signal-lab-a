@@ -19,7 +19,7 @@ body.embed .footer{padding-bottom:20px}
 <section class="card"><div class="sectionTop"><div><h2>已连接的日线背景</h2><div class="sectLead">从现有 data.js 读取 · 指数无单独订单簿</div></div><span class="tag" id="feedTag">读取中</span></div><div class="grid"><div class="stat"><small>指数最新收盘</small><strong id="topPrice">—</strong></div><div class="stat"><small>行情日期</small><strong id="topDate">—</strong></div><div class="stat"><small>MA20 / MA60</small><strong id="topMa">—</strong></div><div class="stat"><small>跟踪ETF</small><strong id="topEtf">—</strong></div></div><div class="details" id="feedDetail">正在尝试加载原网站的公开日线快照…</div></section>
 <section class="card"><div class="sectionTop"><div><h2>01 · CVD / 主动成交差</h2><div class="sectLead">按数据质量分级：交易所方向 ＞ 报价推断 ＞ Tick规则推断</div></div><span class="tag warn" id="cvdFlag">等待逐笔数据</span></div><div class="stat" id="autoProxyPanel" style="margin:14px 0 16px">
 <div class="row" style="justify-content:space-between"><h3>自动分钟成交压力代理 · PVD</h3><span class="tag warn" id="autoProxyBadge">等待1分钟行情</span></div>
-<div class="source" style="margin-top:5px">观察ETF：<strong id="autoProxyEtf">159915</strong> · 东方财富1分钟真实OHLC/成交额 · 用K线位置估算资金压力；<strong>非真实逐笔CVD，也不是主力净买额</strong>。</div>
+<div class="source" style="margin-top:5px">观察ETF：<strong id="autoProxyEtf">159915</strong> · 新浪 / 腾讯 / 东方财富1分钟OHLC及成交额（实际来源见下方） · 用K线位置估算资金压力；<strong>非真实逐笔CVD，也不是主力净买额</strong>。</div>
 <div class="grid" style="margin-top:12px"><div class="stat"><small>最近已核验交易日 · 模型净压力比例</small><strong id="autoProxyRatio">—</strong></div><div class="stat"><small>累计有效交易日</small><strong id="autoProxyCount">—</strong></div></div>
 <div class="source" id="autoProxyMeta" style="margin:12px 0">尚未运行ETF分钟自动采集。</div>
 <h3 style="margin:14px 0 8px">ETF日线价格 / 累计拟合压力</h3>
@@ -245,12 +245,21 @@ function proxyChart(rows,unit){
  const label=s=>String(s).replace(/[&<>]/g,'');
  return `<svg viewBox="0 0 740 246" role="img" aria-label="ETF价格和估算资金压力走势，独立归一化，非真实逐笔CVD"><path d="M22 112 H718" stroke="#344b62" stroke-dasharray="4 5"/>${proxyPlot(v,'price','#4de0b7',740,225)}${proxyPlot(v,'proxy','#adbaff',740,225)}<text x="24" y="241" fill="#99b3cd" font-size="12">${label(rows[0].date)}</text><text x="716" y="241" text-anchor="end" fill="#99b3cd" font-size="12">${label(rows.at(-1).date)}</text></svg><div class="source">${unit}；两线单独缩放，仅用于观察方向，不代表绝对买卖金额。</div>`;
 }
+// Never splice differently bucketed provider series into one cumulative signal.
+function comparableProxyDays(info){
+ const rows=(info?.days||[]).slice().sort((a,b)=>a.date.localeCompare(b.date));
+ const source=rows.at(-1)?.source;
+ if(!source)return rows; // Legacy single-provider data.
+ let start=rows.length-1;
+ while(start>0 && rows[start-1].source===source)start--;
+ return rows.slice(start);
+}
 function renderProxyConfluence(){
  const idx=window.SIGNAL_LIVE?.indices?.[current]?.index;
  const his=(idx?.history||[]).filter(x=>Number.isFinite(+x.close));
  const proxy=window.SIGNAL_LIVE?.cvd_proxy?.[current];
  const m=window.SIGNAL_LIVE?.margin?.[current];
- const all=(proxy?.days||[]).slice().sort((a,b)=>a.date.localeCompare(b.date));
+ const all=comparableProxyDays(proxy);
  const recent=his.slice(-11),prices=recent.map(x=>+x.close);
  let flat=null;
  if(recent.length>=11)flat=Math.min(...prices.slice(-5))>=Math.min(...prices.slice(-10,-5));
@@ -282,12 +291,12 @@ function renderProxyConfluence(){
 function renderAutoProxy(){
  const info=window.SIGNAL_LIVE?.cvd_proxy?.[current];
  $('#autoProxyEtf').textContent=etfCodes[current];
- let rows=Array.isArray(info?.days)?info.days.filter(r=>Number.isFinite(+r.close)&&Number.isFinite(+r.pressure_amount)&&Number.isFinite(+r.amount)&&r.amount>0).slice().sort((a,b)=>a.date.localeCompare(b.date)):[];
+ let rows=Array.isArray(info?.days)?comparableProxyDays(info).filter(r=>Number.isFinite(+r.close)&&Number.isFinite(+r.pressure_amount)&&Number.isFinite(+r.amount)&&r.amount>0).slice().sort((a,b)=>a.date.localeCompare(b.date)):[];
  const latest=rows.at(-1),usable=info?.status==='ok';
  $('#autoProxyCount').textContent=rows.length?rows.length+' 日':'—';
  $('#autoProxyRatio').textContent=latest&&usable?(latest.pressure_ratio*100).toFixed(2)+'%':'—';
  $('#autoProxyBadge').textContent=usable?'分钟代理·近期数据':info?.status==='stale'?'分钟数据过期':'未接通/无分钟记录';
- $('#autoProxyMeta').textContent=`${rows.length?'最近有效：'+latest.date+'；':''}已验证天数 ${rows.length}；指数收盘 ${info?.last_index_date||'—'}；来源：${info?.source||'待接入'}；${info?.reason?'抓取异常：'+info.reason.slice(0,100):''}（分钟拟合，非逐笔）`;
+ $('#autoProxyMeta').textContent=`${rows.length?'最近有效：'+latest.date+'；':''}同源连续记录 ${rows.length} 日（已存 ${info?.days?.length||0} 日；切换来源不拼接累计曲线）；指数收盘 ${info?.last_index_date||'—'}；来源：${info?.source||'待接入'}；${info?.reason?'抓取异常：'+info.reason.slice(0,100):''}（分钟拟合，非逐笔）`;
  let cumulative=0;
  const daily=rows.map(r=>({date:r.date,price:Number(r.close),proxy:(cumulative+=Number(r.pressure_amount))}));
  $('#autoProxyDailyChart').innerHTML=proxyChart(daily,'真实ETF日收盘 vs 以成交额为权重的代理压力');

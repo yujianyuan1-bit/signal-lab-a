@@ -559,6 +559,93 @@ def _preserved_days(old):
     return clean
 
 
+def _sina_etf_minutes(symbol):
+    """Read published, unadjusted minute OHLC and amount; never estimate amount.
+
+    Same public endpoint used by AKShare stock_zh_a_minute, without its
+    unrelated daily adjustment request. Parse JSONP as JSON, never execute it.
+    """
+    from urllib.request import urlopen
+    from urllib.parse import urlencode
+    import pandas as pd
+    if symbol not in {c['etf_symbol'] for c in CONFIG.values()}:
+        raise ValueError('仅允许已配置的A股ETF')
+    url = ('https://quotes.sina.cn/cn/api/jsonp_v2.php/=/CN_MarketDataService.getKLineData?'
+           + urlencode({'symbol':symbol,'scale':'1','ma':'no','datalen':'1970'}))
+    with urlopen(url, timeout=15) as response:
+        text = response.read(2_000_001).decode('utf-8')
+    if len(text) > 2_000_000:
+        raise ValueError('分钟响应超过大小限制')
+    start, end = text.find('=('), text.rfind(');')
+    if start < 0 or end <= start:
+        raise ValueError('新浪分钟响应不是预期JSONP')
+    rows = json.loads(text[start+2:end])
+    if not isinstance(rows,list) or not rows:
+        raise ValueError('新浪未返回分钟记录')
+    return pd.DataFrame(rows).rename(columns={'day':'时间','open':'开盘',
+        'close':'收盘','high':'最高','low':'最低','amount':'成交额','volume':'成交量'})
+
+
+def _tencent_etf_minutes(symbol):
+    """Join Tencent OHLC with same-source cumulative turnover, never price*volume.
+
+    mkline alone has no verified amount field. Only the date returned by the
+    minute endpoint is eligible; its post-15:00 observations are excluded.
+    """
+    from urllib.request import urlopen
+    from urllib.parse import urlencode
+    import pandas as pd
+    if symbol not in {c['etf_symbol'] for c in CONFIG.values()}:
+        raise ValueError('仅允许已配置的A股ETF')
+    def get(url,params):
+        with urlopen(url+'?'+urlencode(params),timeout=15) as response:
+            raw=response.read(2_000_001)
+        if len(raw)>2_000_000:
+            raise ValueError('腾讯分钟响应超过大小限制')
+        doc=json.loads(raw)
+        if doc.get('code')!=0:
+            raise ValueError('腾讯分钟接口返回错误')
+        return doc['data'][symbol]
+    candles=get('https://ifzq.gtimg.cn/appstock/app/kline/mkline',
+                {'param':symbol+',m1,,1000'})['m1']
+    minute=get('https://web.ifzq.gtimg.cn/appstock/app/minute/query',
+               {'code':symbol})['data']
+    day=datetime.strptime(minute['date'],'%Y%m%d').strftime('%Y-%m-%d')
+    amounts={}; previous_amount=0.;previous_volume=0.;previous_time=''
+    for line in minute['data']:
+        fields=line.split()
+        if len(fields)!=4:
+            raise ValueError('腾讯分时缺少累计成交额')
+        tm,close,volume,amount=fields
+        if not ('0930'<=tm<='1130' or '1301'<=tm<='1500'):
+            continue
+        cl,vol,amt=map(_number,(close,volume,amount))
+        if (None in (cl,vol,amt) or cl<=0 or vol<previous_volume or
+                amt<previous_amount or tm<=previous_time):
+            raise ValueError('腾讯累计成交数据无效或回退')
+        amounts[tm]=(cl,vol-previous_volume,amt-previous_amount)
+        previous_volume,previous_amount,previous_time=vol,amt,tm
+    rows=[]; seen=set()
+    for bar in candles:
+        stamp=str(bar[0])
+        if stamp[:8]!=minute['date']:
+            continue
+        tm=stamp[8:12]
+        if tm not in amounts or tm in seen:
+            raise ValueError('腾讯分钟K线与累计成交额时间不一致')
+        cl,vol,amt=amounts[tm]
+        barclose,barvolume=_number(bar[2]),_number(bar[5])
+        if (barclose is None or barvolume is None or abs(barclose-cl)>0.000001
+                or abs(barvolume-vol)>max(1,vol*0.00001)):
+            raise ValueError('腾讯两个分钟接口的价格/成交量不一致')
+        seen.add(tm)
+        rows.append({'时间':day+' '+tm[:2]+':'+tm[2:],
+            '开盘':bar[1],'收盘':bar[2],'最高':bar[3],'最低':bar[4],'成交额':amt})
+    if seen!=set(amounts):
+        raise ValueError('腾讯分钟K线缺少累计成交额对应记录')
+    return pd.DataFrame(rows)
+
+
 def build_minute_proxy(ak, cfg, index_record, etf_record, previous):
     """Best-effort additive data; failure must never break existing live feeds."""
     latest = (index_record or {}).get('date')
@@ -566,7 +653,7 @@ def build_minute_proxy(ak, cfg, index_record, etf_record, previous):
     days=_preserved_days(old)
     code = cfg['etf']
     result={'kind':'minute_clv_body_proxy','etf':code,'status':'unavailable',
-        'source':'AKShare / 东方财富 fund_etf_hist_min_em (1min, 非逐笔)',
+        'source':'新浪 / 腾讯 / 东方财富 1分钟OHLC/成交额（非逐笔）',
         'method':'0.65*CLV + 0.35*实体幅度, 乘以每分钟成交额（元）',
         'caveat':'非真实逐笔CVD：OHLC无法识别谁主动成交，不得称为主力净买额',
         'days':[], 'latest_minute':None,'quality':'unvalidated_proxy', 'reason':None}
@@ -577,32 +664,49 @@ def build_minute_proxy(ak, cfg, index_record, etf_record, previous):
         result['status'] = 'stale' if result['days'] else 'unavailable'
         result['reason']='无已核对指数交易日期';return result
     fresh_rows=[]; latest_minute=None;error=None
+    errors=[]
+    providers=[
+        ('新浪财经 1分钟OHLC/成交额（非逐笔）',
+         lambda: _sina_etf_minutes(cfg['etf_symbol'])),
+        ('腾讯财经 1分钟OHLC + 同源累计成交额差分（非逐笔）',
+         lambda: _tencent_etf_minutes(cfg['etf_symbol'])),
+        ('AKShare / 东方财富 1分钟OHLC/成交额（非逐笔）',
+         lambda: ak.fund_etf_hist_min_em(symbol=code, period='1', adjust='',
+            start_date='1979-01-01 09:30:00', end_date='2222-01-01 15:01:00')),
+    ]
     timer_on=hasattr(signal,'SIGALRM')
     before = signal.getsignal(signal.SIGALRM) if timer_on else None
-    try:
-        if timer_on:
-            def _raise_timeout(signum, frame):
-                raise TimeoutError('ETF一分钟行情接口40秒无响应')
-            signal.signal(signal.SIGALRM,_raise_timeout)
-            signal.setitimer(signal.ITIMER_REAL, 40)
+    for source, fetch in providers:
         try:
-            raw = ak.fund_etf_hist_min_em(symbol=code, period='1', adjust='',
-                                           start_date='1979-01-01 09:30:00',
-                                           end_date='2222-01-01 15:01:00')
+            if timer_on:
+                def _raise_timeout(signum, frame):
+                    raise TimeoutError('分钟接口40秒超时')
+                signal.signal(signal.SIGALRM,_raise_timeout)
+                signal.setitimer(signal.ITIMER_REAL,40)
+            bars=_parse_minute_frame(fetch())
+            rows, minute=_group_minutes(bars, latest, etf_record)
+            if not rows:
+                raise ValueError('无完整且通过日线校验的交易日')
+            for row in rows:
+                row['source']=source
+            # Prefer the candidate with the newest verified session, then coverage.
+            if not fresh_rows or (rows[-1]['date'],len(rows)) > (fresh_rows[-1]['date'],len(fresh_rows)):
+                fresh_rows, latest_minute=rows, minute
+                result['source']=source
+            if rows[-1]['date']==latest:
+                break
+            errors.append(source+'：最新有效日落后指数日期')
+        except Exception as exc:
+            errors.append(source+'：'+str(exc)[:160])
+            print('分钟压力代理 '+code+' '+errors[-1], file=sys.stderr, flush=True)
         finally:
             if timer_on:
                 signal.setitimer(signal.ITIMER_REAL,0)
-        bars = _parse_minute_frame(raw)
-        fresh_rows, latest_minute = _group_minutes(bars, latest, etf_record)
-        if not fresh_rows:
-            raise ValueError('分钟记录均不完整或与ETF日线不一致')
-    except Exception as exc:
-        error=str(exc)[:200]
-        print('分钟压力代理 '+code+' 数据暂不可用：'+error, file=sys.stderr, flush=True)
-    finally:
-        if timer_on:
-            signal.setitimer(signal.ITIMER_REAL,0)
-            signal.signal(signal.SIGALRM,before)
+                signal.signal(signal.SIGALRM,before)
+    error='；'.join(errors) or None
+    result['fetch_errors']=errors
+    if not fresh_rows:
+        result['source']=old.get('source') or '新浪 / 腾讯 / 东方财富（均未取得有效分钟数据）'
     for row in fresh_rows:
         days[row['date']]=row
     ordered=[days[d] for d in sorted(days) if d <= latest][-150:]
