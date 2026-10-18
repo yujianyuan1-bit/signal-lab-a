@@ -17,7 +17,7 @@ import urllib.parse
 import urllib.request
 from datetime import date, datetime, timedelta
 
-IDS = ('value', 'earnings', 'liquidity', 'breadth', 'volume', 'etf', 'leverage', 'trend', 'cvd')
+IDS = ('value', 'earnings', 'liquidity', 'breadth', 'volume', 'etf', 'leverage', 'trend', 'cvd', 'relative')
 EM = 'https://datacenter-web.eastmoney.com/api/data/v1/get'
 
 
@@ -424,6 +424,52 @@ def trend_factor(market):
                   '5.5+价格相对MA20(±1)+MA20相对MA60(+1/−0.7)+5日涨幅÷4（截断±2），限制1–10')
 
 
+def benchmark_history(asof):
+    """Shanghai Composite raw index closes, on the requested target end date."""
+    obj = request('https://web.ifzq.gtimg.cn/appstock/app/fqkline/get',
+                  {'param':f'sh000001,day,,{asof},120,qfq'}, timeout=18)
+    rows = obj.get('data', {}).get('sh000001', {}).get('day')
+    if not isinstance(rows, list):
+        raise ValueError('上证指数未返回原始day日线')
+    closes = {}
+    for r in rows:
+        d, c = day(r[0]), number(r[2])
+        if d > asof:
+            continue
+        if c is None or c <= 0 or d in closes:
+            raise ValueError('上证日线存在无效价格或重复日期')
+        closes[d] = c
+    if len(closes) < 65 or max(closes) != asof:
+        raise ValueError('上证指数交易日不足或末日不同步')
+    return dict(status='ok', date=asof, code='000001', source='腾讯上证指数原始日线',
+                history=[dict(date=d,close=closes[d]) for d in sorted(closes)])
+
+
+def relative_strength_factor(market, benchmark):
+    if benchmark.get('status') != 'ok':
+        return missing(benchmark.get('reason','上证基准不可用'))
+    target = {r['date']:number(r['close']) for r in market['history'] if r['date']<=market['date']}
+    dates = sorted(target)[-65:]
+    base = {r['date']:number(r['close']) for r in benchmark['history']}
+    if len(dates)<65 or dates[-1]!=market['date'] or benchmark.get('date')!=market['date']:
+        raise ValueError('相对强弱两端末日或历史长度不匹配')
+    if any(target[d] is None or target[d]<=0 or base.get(d) is None or base[d]<=0 for d in dates):
+        raise ValueError('相对强弱缺少共同交易日，不使用前向填充')
+    # Display Shanghai / target as requested. Positive score direction is its inverse.
+    ratio = {d:base[d]/target[d] for d in dates}
+    relative5 = (ratio[dates[-6]]/ratio[dates[-1]]-1)*100
+    relative20 = (ratio[dates[-21]]/ratio[dates[-1]]-1)*100
+    initial = ratio[dates[0]]
+    return factor(5+.5*relative20+.2*relative5, market['date'],
+        '腾讯指数日线 / 上证000001与目标指数同日比值',
+        '候选规则：5+0.5×20日目标/上证相对涨幅%+0.2×5日相对涨幅%，限制1–10；默认0%权重，待历史验证',
+        relative_5d_pct=round(relative5,4), relative_20d_pct=round(relative20,4),
+        shanghai_over_target=round(ratio[dates[-1]],6), benchmark_close=base[dates[-1]],
+        ratio_series=[[d,round(ratio[d]/initial*100,4)] for d in dates],
+        validation_status='experimental', recommended_weight=0,
+        scope=f'风格相对强弱，不是资金流或市值占比。上证/目标比值{ratio[dates[-1]]:.4f}，下降代表目标更强；5日相对涨幅{relative5:+.2f}%，20日{relative20:+.2f}%')
+
+
 def collect_research(result, previous=None):
     """Bounded parallel public reads; factor failure cannot erase index history."""
     previous = previous or {}
@@ -456,6 +502,8 @@ def collect_research(result, previous=None):
                 print(f'成分日线进度 {completed}/{len(all_codes)}', flush=True)
     out['cache'] = snapshots
     liquidity = attempt(lambda: liquidity_factor(latest), 'M2/LPR')
+    benchmark = attempt(lambda: benchmark_history(latest), '上证000001')
+    out['benchmark'] = benchmark
     jobs = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
         for key in ('cy', 'kc'):
@@ -464,6 +512,7 @@ def collect_research(result, previous=None):
             doc = dict(doc, index=market)
             m = members[key]
             facts = dict(trend=trend_factor(market), volume=volume_factor(doc),
+                         relative=attempt(lambda: relative_strength_factor(market, benchmark)),
                          leverage=leverage_factor(result.get('margin', {}).get(key, {}), market),
                          liquidity=dict(liquidity),
                          cvd=missing('没有授权真实逐笔主动买卖数据；分钟PVD独立展示且不替代CVD计分',
@@ -495,9 +544,9 @@ def collect_research(result, previous=None):
                 current['series'] = old['series']
             current['checked_at'] = result['generated_at']
             facts[name] = current
-        print('九维研究', key, ' '.join(f'{name}={facts[name]["status"]}' for name in IDS), flush=True)
+        print('十维研究', key, ' '.join(f'{name}={facts[name]["status"]}' for name in IDS), flush=True)
     out['collection_errors'] = errors[:20]
-    out['health'] = {key: dict(ok=sum(f['status'] == 'ok' for f in facts.values()), total=9,
+    out['health'] = {key: dict(ok=sum(f['status'] == 'ok' for f in facts.values()), total=len(IDS),
                               missing=[name for name, f in facts.items() if f['status'] != 'ok'])
                      for key, facts in out['indices'].items()}
     return out

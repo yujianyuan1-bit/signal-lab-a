@@ -837,10 +837,10 @@ def build(ak):
     try:
         result['research'] = collect_research(result, previous)
     except Exception as exc:
-        print('九维采集失败，日线及历史仍保留: '+str(exc)[:160], file=sys.stderr, flush=True)
+        print('十维采集失败，日线及历史仍保留: '+str(exc)[:160], file=sys.stderr, flush=True)
         result['research'] = {'version':1, 'indices':{
-            k:{name:missing('九维采集整体失败: '+str(exc)[:160]) for name in IDS} for k in CONFIG},
-            'cache':previous.get('cache', {}), 'health':{k:{'ok':0,'total':9,'missing':list(IDS)} for k in CONFIG}}
+            k:{name:missing('十维采集整体失败: '+str(exc)[:160]) for name in IDS} for k in CONFIG},
+            'cache':previous.get('cache', {}), 'health':{k:{'ok':0,'total':len(IDS),'missing':list(IDS)} for k in CONFIG}}
     for key in CONFIG:
         shares=result['research'].get('indices',{}).get(key,{}).get('etf',{})
         result['indices'][key]['etf_shares']={

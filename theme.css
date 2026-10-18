@@ -202,7 +202,7 @@ input[type="range"] { accent-color: #b1d6c0; }
 .live-panel { margin: 0 0 24px; padding: 21px 24px 17px; }
 .live-head { font-size: 12px; font-weight: 550; letter-spacing: .2px; }
 .live-meta { font-size: 10px; color: #8c9db2; }
-.live-metrics { grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 0; margin-top: 18px; border-top: 1px solid #bed2ee10; }
+.live-metrics { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 0; margin-top: 18px; border-top: 1px solid #bed2ee10; }
 .live-tile { background: transparent; border: 0; border-right: 1px solid #bed2ee10; border-radius: 0; padding: 17px 11px 5px; min-width: 0; }
 .live-tile:first-child { padding-left: 0; }
 .live-tile:last-child { border-right: 0; }
