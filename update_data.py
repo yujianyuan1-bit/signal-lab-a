@@ -173,6 +173,142 @@ def optional_breadth(ak, asof):
         return {'status':'unavailable','reason':f'未能获取全A广度：{str(exc)[:110]}'}
 
 
+
+# ─── Free board-level financing proxy (NOT index-constituent financing). ───
+def _load_previous_margin():
+    """Preserve already verified trading days across scheduled runs."""
+    try:
+        content=(ROOT/'data.js').read_text(encoding='utf-8')
+        prefix='window.SIGNAL_LIVE = '
+        pos=content.find(prefix)
+        if pos < 0:
+            return {}
+        obj=json.loads(content[pos+len(prefix):].strip().rstrip(';'))
+        return obj.get('margin',{}) if isinstance(obj.get('margin',{}),dict) else {}
+    except (OSError,ValueError,TypeError) as exc:
+        print('旧两融记录不可用，将尝试重新获取:',str(exc)[:100],flush=True)
+        return {}
+
+
+def _norm_code(value):
+    """SSE sometimes produces integer securities codes; restore the 6 digits."""
+    raw=str(value).strip().split('.')[0]
+    raw=''.join(ch for ch in raw if ch.isdigit())
+    return raw.zfill(6) if 1<=len(raw)<=6 else ''
+
+
+def _margin_snapshot(df, exchange, date, price):
+    """Aggregate board securities, not ETFs/other A-shares. All balances in CNY."""
+    if df is None or df.empty:
+        raise ValueError('交易所未返回个股融资明细')
+    df=df.copy()
+    code_col=next((k for k in ['标的证券代码','证券代码','证券代码及简称','证券代码(6位)','证券代码（6位）'] if k in df.columns),None)
+    bal_col=next((k for k in ['融资余额','融资余额(元)','融资余额（元）'] if k in df.columns),None)
+    if code_col is None or bal_col is None:
+        raise ValueError(f'字段改变，未识别代码/余额列: {list(df.columns)[:12]}')
+    if '万' in bal_col:
+        raise ValueError('当前余额字段以万元计价，拒绝在未确认单位时自动聚合')
+    df['_code']=df[code_col].map(_norm_code)
+    prefixes=('300','301') if exchange=='SZSE' else ('688','689')
+    df=df[df['_code'].str.startswith(prefixes)]
+    df=df.drop_duplicates('_code',keep='last')
+    bals=[]
+    for item in df[bal_col]:
+        if isinstance(item,str):
+            item=item.replace(',','').replace('，','').replace('元','').strip()
+        v=valid(item)
+        if v is not None and v>=0:
+            bals.append(v)
+    total=sum(bals)
+    if len(bals)<30 or not (1e9 < total < 2e13):
+        raise ValueError(f'股票数或单位异常：{len(bals)}只，余额合计 {total:g}')
+    return {'date':date,'price':float(price),'financing_balance':round(total,2),
+            'stock_count':len(bals),'exchange':exchange}
+
+
+def _one_margin_date(ak,key,date,price):
+    import signal
+    # AKShare's exchange calls can hang on an unreachable host. Linux GitHub
+    # runners support a short, per-request wall-clock watchdog.
+    def alarm_handler(_signum,_frame):
+        raise TimeoutError('该交易所融资接口响应超时')
+    if key=='cy':
+        method=ak.stock_margin_detail_szse
+        exchange='SZSE'
+    else:
+        method=ak.stock_margin_detail_sse
+        exchange='SSE'
+    previous=None
+    use_alarm=hasattr(signal,'SIGALRM')
+    if use_alarm:
+        previous=signal.signal(signal.SIGALRM,alarm_handler)
+        signal.setitimer(signal.ITIMER_REAL, 16)
+    try:
+        df=method(date=date.replace('-',''))
+        return _margin_snapshot(df,exchange,date,price)
+    finally:
+        if use_alarm:
+            signal.setitimer(signal.ITIMER_REAL,0)
+            signal.signal(signal.SIGALRM,previous)
+
+
+def optional_board_margin(ak,indices):
+    """Fetch verified dates incrementally; avoid inventing missing exchange data.
+
+    The source is per-security daily financing from SSE/SZSE. The scope is ALL
+    financing-eligible GEM / STAR stocks and does NOT equal index membership.
+    """
+    previous=_load_previous_margin()
+    result={}
+    for key in ('cy','kc'):
+        item=indices.get(key,{})
+        index=item.get('index') if isinstance(item,dict) else None
+        history=(index or {}).get('history',[])
+        old=previous.get(key,{}) if isinstance(previous.get(key,{}),dict) else {}
+        old_rows=old.get('series',[])
+        records={r['date']:r for r in old_rows if isinstance(r,dict) and r.get('date') and
+                 valid(r.get('price')) is not None and valid(r.get('financing_balance')) is not None}
+        source={'cy':'深交所个股融资融券明细 / AKShare','kc':'上交所个股融资融券明细 / AKShare'}[key]
+        scope={'cy':'创业板融资标的股票(300/301)，非创业板指成分股','kc':'科创板融资标的股票(688/689)，非科创50成分股'}[key]
+        if not history:
+            result[key]={'status':'unavailable','scope':scope,'source':source,
+                         'series':sorted(records.values(),key=lambda x:x['date'])[-90:],
+                         'reason':'指数没有交易日期，无法确认两融数据日期'}
+            continue
+        recent=history[-40:]
+        needs=[d for d in reversed(recent) if d.get('date') not in records]
+        # Max 12 dates per board per run; oldest holes will be filled incrementally.
+        # Prefer last reported sessions; data may lag close by one exchange day.
+        attempts=0
+        messages=[]
+        for day in needs[:12]:
+            attempts+=1
+            try:
+                row=_one_margin_date(ak,key,day['date'],day['close'])
+                records[day['date']]=row
+                print(f'两融 {key} {day["date"]} {row["stock_count"]} 只, {row["financing_balance"]:.0f} 元',flush=True)
+            except Exception as exc:
+                msg=f'{day["date"]} {str(exc)[:100]}'
+                messages.append(msg)
+                print('两融接口暂不可用：'+key+' '+msg,file=sys.stderr,flush=True)
+                # If last two calls fail (e.g. entire exchange down), stop trying
+                # older dates to avoid GitHub Actions rate-limits and long hangs.
+                if len(messages)>=3 and not records:
+                    break
+        rows=sorted(records.values(),key=lambda x:x['date'])[-90:]
+        latest_day=rows[-1]['date'] if rows else None
+        last_index_day=index.get('date')
+        trading_dates=[x['date'] for x in recent]
+        lag=sum(1 for d in trading_dates if latest_day and latest_day<d<=last_index_day) if latest_day else None
+        result[key]={'status':('ok' if rows and lag is not None and lag<=3 else 'stale' if rows else 'unavailable'),
+                     'source':source,'scope':scope,'balance_unit':'CNY','series':rows,
+                     'date':latest_day,'lag_trading_days':lag,
+                     'coverage_trading_days':len(rows),'attempted':attempts,
+                     'reason':(messages[0] if messages else None),
+                     'warning':'融资标的板块代理指标；不等于指数成分股或实际账户强平数据'}
+        print(f'融资数据 {key} 状态 {result[key]["status"]}，已有 {len(rows)}日，最后 {latest_day}',flush=True)
+    return result
+
 def build(ak):
     now = datetime.now(TZ)
     start = (now-timedelta(days=390)).strftime('%Y%m%d')
@@ -203,6 +339,7 @@ def build(ak):
         raise RuntimeError('至少一个指数的所有行情来源均失败，拒绝覆盖旧快照')
     # Run full-market query only once. Its scope must be explicit.
     result['breadth']=optional_breadth(ak,max(success_dates))
+    result['margin']=optional_board_margin(ak,result['indices'])
     return result
 
 
