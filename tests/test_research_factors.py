@@ -27,6 +27,21 @@ class ResearchTests(unittest.TestCase):
         doc['etf']['date'] = m['history'][-2]['date']
         self.assertIsNone(r.volume_factor(doc)['score'])
 
+    def test_native_index_turnover_fallback_uses_money_not_volume(self):
+        m = dict(market(), code='399006', daily_change_pct=-1)
+        dates = [x['date'] for x in m['history']][-21:]
+        obj = {'data':{'indexCode':'399006','item':['timestamp','close','amount','volume'],
+                       'data':[[d,100,100+i,999999] for i,d in enumerate(dates)]}}
+        with patch.object(r, 'request', return_value=obj):
+            got = r.volume_factor(dict(index=m, etf={}))
+        self.assertEqual(got['status'], 'ok')
+        self.assertFalse(got['proxy'])
+        self.assertAlmostEqual(got['ratio'], 120 / 109.5, places=4)
+        # A complete but inconsistent index series must not fill the score.
+        obj['data']['data'][-1][1] = 200
+        with patch.object(r, 'request', return_value=obj):
+            self.assertIsNone(r.volume_factor(dict(index=m, etf={}))['score'])
+
     def test_breadth_requires_same_dates_and_90_percent(self):
         m = market()
         codes = [str(i) for i in range(10)]
@@ -108,6 +123,7 @@ class ResearchTests(unittest.TestCase):
         good = r.factor(7, m['date'], 'old', 'old')
         previous = dict(indices={k: {'value':good} for k in ('cy', 'kc')})
         with patch.object(r, 'constituents', side_effect=ValueError('offline')), \
+             patch.object(r, 'index_turnover_ratio', side_effect=ValueError('offline')), \
              patch.object(r, 'liquidity_factor', side_effect=ValueError('offline')), \
              patch.object(r, 'valuation_factor', side_effect=ValueError('offline')), \
              patch.object(r, 'shares_factor', side_effect=ValueError('offline')):
