@@ -329,6 +329,44 @@ def shares_factor(key, market, previous):
                   scope=f'仅{code}单只ETF份额代理，不是该指数全部ETF申赎，也不是净流入金额')
 
 
+def index_turnover_ratio(market):
+    """Provider-native turnover ratios; no volume-to-money conversion."""
+    dates = [r['date'] for r in market['history']][-21:]
+    if len(dates) != 21:
+        raise ValueError('指数交易日不足21日')
+    # The caller stores the exact index identifier in the market document.
+    code = market.get('code')
+    if code == '399006':
+        obj = request('https://hq.cnindex.com.cn/market/market/getIndexDailyDataWithDataFormat',
+                      {'indexCode':code, 'startDate':dates[0], 'endDate':dates[-1], 'frequency':'day'})
+        data = obj.get('data') or {}
+        if data.get('indexCode') != code:
+            raise ValueError('国证返回的指数代码不一致')
+        columns = data.get('item', [])
+        if not all(k in columns for k in ('timestamp', 'close', 'amount')):
+            raise ValueError('国证成交额历史字段变化')
+        records = [{k: row[i] for i, k in enumerate(columns)} for row in data.get('data', [])]
+        rows = {day(r['timestamp']):(number(r['close']),number(r['amount'])) for r in records}
+        source = '国证指数399006日线成交额'
+    elif code == '000688':
+        obj = request('https://www.csindex.com.cn/csindex-home/perf/index-perf',
+                      {'indexCode':code,'startDate':dates[0].replace('-',''),'endDate':dates[-1].replace('-','')})
+        records = obj.get('data') or []
+        if not records or any(r.get('indexCode') != code for r in records):
+            raise ValueError('中证返回的指数代码不一致')
+        rows = {day(r['tradeDate']):(number(r.get('close')),number(r.get('tradingValue'))) for r in records}
+        source = '中证指数000688日线成交金额'
+    else:
+        raise ValueError('没有支持的指数代码')
+    if any(d not in rows or rows[d][1] is None or rows[d][1] <= 0 for d in dates):
+        raise ValueError('最近21个指数交易日成交额覆盖不完整')
+    if rows[dates[-1]][0] is None or abs(rows[dates[-1]][0] / market['close'] - 1) > .001:
+        raise ValueError('成交额来源收盘与现用指数不一致')
+    ratio = rows[dates[-1]][1] / statistics.mean(rows[d][1] for d in dates[:-1])
+    return dict(date=market['date'], amount_ratio_20d=ratio,
+                daily_change_pct=market['daily_change_pct'], source=source)
+
+
 def volume_factor(doc):
     market = doc['index']
     candidate, scope = market, '指数成交额'
@@ -336,11 +374,17 @@ def volume_factor(doc):
         candidate, scope = doc.get('etf', {}), '单只观察ETF成交额代理'
     ratio, change = number(candidate.get('amount_ratio_20d')), number(candidate.get('daily_change_pct'))
     if ratio is None or ratio <= 0 or change is None or candidate.get('date') != market['date']:
-        return missing('指数及ETF均缺少同日真实成交额量比；停用旧主观分')
+        try:
+            candidate = index_turnover_ratio(market)
+            scope = '指数同源成交额比值（不进行金额单位换算）'
+            ratio, change = candidate['amount_ratio_20d'], candidate['daily_change_pct']
+        except Exception as exc:
+            return missing('指数及ETF成交额量比缺失；指数备用源: '+str(exc)[:180])
     return factor(5 + 2 * (ratio - 1) + (1 if change >= 0 else -1) * min(abs(change), 3) * .4,
                   candidate['date'], candidate.get('source', '') + ' / ' + scope,
                   '5+2×(成交额比此前20日均值−1)+涨跌方向×min(|涨跌幅|,3)×0.4，限制1–10',
-                  ratio=ratio, daily_change_pct=change, scope=scope, proxy=candidate is not market)
+                  ratio=round(ratio, 4), daily_change_pct=change, scope=scope,
+                  proxy=scope=='单只观察ETF成交额代理')
 
 
 def leverage_factor(margin, market):
@@ -416,7 +460,8 @@ def collect_research(result, previous=None):
     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
         for key in ('cy', 'kc'):
             doc = result['indices'][key]
-            market = doc['index']
+            market = dict(doc['index'], code='399006' if key=='cy' else '000688')
+            doc = dict(doc, index=market)
             m = members[key]
             facts = dict(trend=trend_factor(market), volume=volume_factor(doc),
                          leverage=leverage_factor(result.get('margin', {}).get(key, {}), market),
