@@ -17,8 +17,8 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 TZ = ZoneInfo('Asia/Shanghai')
 CONFIG = {
-    'cy': {'index': 'sz399006', 'etf': '159915', 'tushare': '159915.SZ'},
-    'kc': {'index': 'sh000688', 'etf': '588000', 'tushare': '588000.SH'},
+    'cy': {'index': 'sz399006', 'etf': '159915', 'etf_symbol': 'sz159915', 'tushare': '159915.SZ'},
+    'kc': {'index': 'sh000688', 'etf': '588000', 'etf_symbol': 'sh588000', 'tushare': '588000.SH'},
 }
 
 
@@ -44,7 +44,7 @@ def record_from_history(df, date_col, price_col, amount_col):
     rows = []
     for _, row in work.iterrows():
         price = valid(row[price_col])
-        amount = valid(row[amount_col])
+        amount = valid(row[amount_col]) if amount_col is not None else None
         if price is not None and price > 0:
             rows.append({'date': row['_day'], 'close': price, 'amount': amount})
     if len(rows) < 61:
@@ -73,6 +73,61 @@ def record_from_history(df, date_col, price_col, amount_col):
         'history': [{'date': r['date'], 'close': round(r['close'], 4)} for r in rows[-65:]],
     }
 
+
+
+
+def load_index_with_fallback(ak, symbol, start, end):
+    """Try independent public daily sources; never mistake volume for CNY turnover."""
+    strategies = [
+        ('东方财富', lambda: (ak.stock_zh_index_daily_em(symbol=symbol, start_date=start, end_date=end), 'date', 'close', 'amount')),
+        ('腾讯', lambda: (ak.stock_zh_index_daily_tx(symbol=symbol, start_date=start, end_date=end), 'date', 'close', None)),
+        ('新浪', lambda: (ak.stock_zh_index_daily(symbol=symbol), 'date', 'close', None)),
+    ]
+    errors = []
+    for source, get_data in strategies:
+        try:
+            df, date_col, close_col, amount_col = get_data()
+            # Provider dates can be stale. Record date in payload and reject grossly stale data.
+            df = df.copy()
+            df['_trade_day'] = df[date_col].astype(str).str.slice(0, 10)
+            df = df[(df['_trade_day'] >= start[:4]+'-'+start[4:6]+'-'+start[6:]) &
+                    (df['_trade_day'] <= end[:4]+'-'+end[4:6]+'-'+end[6:])]
+            index = record_from_history(df, date_col, close_col, amount_col)
+            last_day = datetime.strptime(index['date'], '%Y-%m-%d').date()
+            if (datetime.now(TZ).date() - last_day).days > 16:
+                raise ValueError(f'行情过期: {index["date"]}')
+            index['source'] = source
+            index['amount_unit'] = 'CNY' if source == '东方财富' else None
+            index['amount_status'] = 'ok' if source == '东方财富' else 'unavailable_成交量不是成交额'
+            print(f'指数 {symbol} 使用{source}，数据日 {index["date"]}，成交额 {index["amount"]}', flush=True)
+            return index
+        except Exception as exc:
+            desc = f'{source}: {str(exc)[:160]}'
+            errors.append(desc)
+            print(f'指数 {symbol} 备用源尝试失败: {desc}', file=sys.stderr, flush=True)
+    raise RuntimeError('全部行情来源失败: ' + ' | '.join(errors))
+
+def load_etf_with_fallback(ak, cfg, start, end):
+    """Eastmoney ETF turnover when available; Sina historical close only otherwise."""
+    errors = []
+    for source, method in [
+        ('东方财富', lambda: record_from_history(
+            ak.fund_etf_hist_em(symbol=cfg['etf'],period='daily',start_date=start,end_date=end,adjust=''),
+            '日期','收盘','成交额')),
+        ('新浪', lambda: record_from_history(
+            ak.fund_etf_hist_sina(symbol=cfg['etf_symbol']),
+            'date','close',None)),
+    ]:
+        try:
+            etf = method()
+            if (datetime.now(TZ).date()-datetime.strptime(etf['date'],'%Y-%m-%d').date()).days > 16:
+                raise ValueError(f'ETF行情过期: {etf["date"]}')
+            etf['source'] = source
+            etf['amount_unit'] = 'CNY' if source == '东方财富' else None
+            return etf
+        except Exception as exc:
+            errors.append(f'{source}:{str(exc)[:130]}')
+    return {'status':'unavailable','reason':' | '.join(errors)[:300]}
 
 def optional_etf_shares(ts_code):
     """Tushare Pro optional; official interface fund_share needs access points."""
@@ -123,7 +178,7 @@ def build(ak):
     start = (now-timedelta(days=390)).strftime('%Y%m%d')
     end = now.strftime('%Y%m%d')
     result = {'schema_version': 1, 'generated_at':now.isoformat(timespec='seconds'),
-              'source': 'AKShare/东方财富公开行情（非交易所授权逐笔）',
+              'source': 'AKShare/东方财富、腾讯、新浪公开日线（非授权Level-2逐笔）',
               'indices': {}, 'breadth': {'status':'not_collected'},
               'notes': ['公开行情接口可能延迟、中断或调整；逐项保留数据日期',
                         '自动评分仅为透明模型计算，不代表回测胜率或收益预测',
@@ -132,22 +187,20 @@ def build(ak):
     for key, cfg in CONFIG.items():
         print('获取指数', cfg['index'], flush=True)
         try:
-            index_df = ak.stock_zh_index_daily_em(symbol=cfg['index'],start_date=start,end_date=end)
-            index = record_from_history(index_df,'date','close','amount')
+            index = load_index_with_fallback(ak,cfg['index'],start,end)
             success_dates.append(index['date'])
         except Exception as exc:
             print(f'{key}指数下载失败: {exc}', file=sys.stderr)
             result['indices'][key]={'status':'unavailable','reason':str(exc)[:140]}
             continue
         try:
-            etf_df = ak.fund_etf_hist_em(symbol=cfg['etf'],period='daily', start_date=start,end_date=end,adjust='')
-            etf=record_from_history(etf_df,'日期','收盘','成交额')
+            etf=load_etf_with_fallback(ak,cfg,start,end)
         except Exception as exc:
             etf={'status':'unavailable','reason':str(exc)[:140]}
         share=optional_etf_shares(cfg['tushare'])
         result['indices'][key]={'status':'ok','index':index,'etf':etf,'etf_shares':share}
-    if not success_dates:
-        raise RuntimeError('两个指数均失败，拒绝覆盖旧快照')
+    if len(success_dates) != len(CONFIG):
+        raise RuntimeError('至少一个指数的所有行情来源均失败，拒绝覆盖旧快照')
     # Run full-market query only once. Its scope must be explicit.
     result['breadth']=optional_breadth(ak,max(success_dates))
     return result
