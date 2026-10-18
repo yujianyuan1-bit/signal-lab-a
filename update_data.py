@@ -309,6 +309,138 @@ def optional_board_margin(ak,indices):
         print(f'融资数据 {key} 状态 {result[key]["status"]}，已有 {len(rows)}日，最后 {latest_day}',flush=True)
     return result
 
+
+# ---- Historical index bars for reproducible MA/EMA backtests --------------
+# A separate top-level payload prevents interfering with live quotes, ETF,
+# financing, and the existing 65-session history expected by Flow.
+
+def _previous_backtest_series():
+    try:
+        raw = (ROOT / 'data.js').read_text(encoding='utf-8')
+        marker = 'window.SIGNAL_LIVE = '
+        at = raw.find(marker)
+        if at < 0:
+            return {}
+        obj = json.loads(raw[at + len(marker):].strip().rstrip(';'))
+        return obj.get('backtests', {}) if isinstance(obj.get('backtests'), dict) else {}
+    except (OSError, ValueError, TypeError):
+        return {}
+
+
+def _normalize_backtest_bars(df, date_col='date', close_col='close'):
+    if df is None or df.empty:
+        raise ValueError('历史序列为空')
+    copy = df.copy()
+    if date_col not in copy or close_col not in copy:
+        raise ValueError('历史数据缺少日期或收盘字段')
+    # Dates in AKShare are datetime.date or YYYY-MM-DD strings.
+    copy['_day'] = copy[date_col].astype(str).str.slice(0, 10)
+    copy = copy.sort_values('_day').drop_duplicates('_day', keep='last')
+    rows = []
+    for _, rec in copy.iterrows():
+        day = rec['_day']
+        val = valid(rec[close_col])
+        try:
+            datetime.strptime(day, '%Y-%m-%d')
+        except ValueError:
+            continue
+        if val is not None and val > 0:
+            rows.append([day, round(val, 4)])
+    if len(rows) < 450:
+        raise ValueError(f'历史日线样本过少（{len(rows)}条），拒绝提供回测胜率')
+    return rows
+
+
+def _merge_backtest_bars(long_bars, recent_bars):
+    """Join identical index-price series; refuse inconsistent source series."""
+    historic = {x[0]: x[1] for x in long_bars}
+    recent = {x['date']: float(x['close']) for x in recent_bars
+              if x.get('date') and valid(x.get('close')) is not None}
+    common = sorted(set(historic) & set(recent))
+    if len(common) < 10:
+        raise ValueError(f'历史数据与现用日线重叠不足10天（仅{len(common)}天），拒绝拼接')
+    mismatches = [abs(historic[d] / recent[d] - 1) for d in common]
+    mismatches.sort()
+    if mismatches[len(mismatches) // 2] > .003 or mismatches[-1] > .015:
+        raise ValueError('不同数据源指数点位差异过大，拒绝拼接')
+    historic.update(recent)
+    # Only trust backtest bars through the latest verified current quote.
+    latest = max(recent)
+    out = [[d, historic[d]] for d in sorted(historic) if d <= latest]
+    return out[-4500:]
+
+
+def _build_backtest_history(ak, key, config, quote, previous):
+    current = quote.get('index', {}) if isinstance(quote, dict) else {}
+    recent = current.get('history', [])
+    latest = current.get('date')
+    if not latest or len(recent) < 12:
+        return {'status': 'unavailable', 'reason': '缺少已核实的当前指数日线', 'bars': []}
+    old = previous.get(key, {}) if isinstance(previous.get(key), dict) else {}
+    old_bars = old.get('bars', [])
+    prior_source = old.get('source', '旧版历史缓存')
+    candidates = []
+    if len(old_bars) >= 550:
+        candidates.append((prior_source, old_bars))
+    else:
+        print(f'{key} 缺少足量历史回测数据，首次向公开来源回补', flush=True)
+        # Sina offers a complete history in one request; Tencent is segmented
+        # by year; Eastmoney is used only as the last public fallback.
+        from datetime import datetime as _dt
+        from signal import SIGALRM, ITIMER_REAL, signal, setitimer
+        def timeout_handler(_sig, _frame):
+            raise TimeoutError('历史指数接口超过50秒无响应')
+        start = '20100101' if key == 'cy' else '20200101'
+        end = datetime.now(TZ).strftime('%Y%m%d')
+        providers = [
+            ('新浪', lambda: ak.stock_zh_index_daily(symbol=config['index'])),
+            ('腾讯', lambda: ak.stock_zh_index_daily_tx(symbol=config['index'], start_date=start, end_date=end)),
+            ('东方财富', lambda: ak.stock_zh_index_daily_em(symbol=config['index'], start_date=start, end_date=end)),
+        ]
+        for provider, fetch in providers:
+            try:
+                old_handler = signal(SIGALRM, timeout_handler)
+                setitimer(ITIMER_REAL, 50)
+                try:
+                    raw = fetch()
+                finally:
+                    setitimer(ITIMER_REAL, 0)
+                    signal(SIGALRM, old_handler)
+                loaded = _normalize_backtest_bars(raw)
+                if loaded[-1][0] < recent[0]['date']:
+                    raise ValueError('历史数据与当前日线之间存在过大空档')
+                combined = _merge_backtest_bars(loaded, recent)
+                if combined[-1][0] != latest:
+                    raise ValueError('历史末端与最新指数数据不匹配')
+                return {'status': 'ok' if len(combined) >= 550 else 'insufficient',
+                        'code': config['index'], 'source': provider, 'as_of': latest,
+                        'first_date': combined[0][0], 'count': len(combined),
+                        'bars': combined,
+                        'note': '指数历史日收盘行情，非ETF或Level-2成交。'}
+            except Exception as exc:
+                print(f'{key} 历史源 {provider} 获取或校验失败：{str(exc)[:130]}', file=sys.stderr, flush=True)
+    if not candidates and len(old_bars) >= 450:
+        candidates.append((prior_source, old_bars))
+    for source, bars in candidates:
+        try:
+            combined = _merge_backtest_bars(bars, recent)
+            if combined[-1][0] != latest:
+                raise ValueError('历史末端与最新指数数据不匹配')
+            return {'status': 'ok' if len(combined) >= 550 else 'insufficient',
+                    'code': config['index'], 'source': source,
+                    'as_of': latest, 'first_date': combined[0][0],
+                    'count': len(combined), 'bars': combined,
+                    'note': '交易所指数价格（日收盘）；非ETF、非逐笔成交数据。'}
+        except Exception as exc:
+            print(f'{key} 历史序列未采用：{str(exc)[:140]}', file=sys.stderr, flush=True)
+    if len(old_bars) >= 450:
+        return {'status': 'stale', 'source': prior_source, 'as_of':old.get('as_of'),
+                'count':len(old_bars),'bars':old_bars,
+                'reason': '新旧序列校验未通过，保留旧历史数据（请核对日期）'}
+    return {'status': 'unavailable', 'bars': [],
+            'reason': '公开指数历史数据源不可用或未通过一致性校验；不会生成虚构胜率'}
+
+
 def build(ak):
     now = datetime.now(TZ)
     start = (now-timedelta(days=390)).strftime('%Y%m%d')
@@ -340,6 +472,14 @@ def build(ak):
     # Run full-market query only once. Its scope must be explicit.
     result['breadth']=optional_breadth(ak,max(success_dates))
     result['margin']=optional_board_margin(ak,result['indices'])
+    previous_backtests = _previous_backtest_series()
+    result['backtests'] = {}
+    for key, cfg in CONFIG.items():
+        result['backtests'][key] = _build_backtest_history(
+            ak, key, cfg, result['indices'].get(key, {}), previous_backtests)
+        result_item = result['backtests'][key]
+        print(f'回测日线 {key}: {result_item.get("status")}，{result_item.get("count",0)}天，'
+              f'截至 {result_item.get("as_of","N/A")}',flush=True)
     return result
 
 
