@@ -21,21 +21,21 @@
 </style>
 </head>
 <body>
-<header><div class="logo"><div class="logo-mark">S</div><div>SignalLab <span style="font-weight:400;color:#8098b0">/ A股</span><small>MULTI-FACTOR DECISION LAB</small></div></div><div class="head-actions"><span class="pill">● 离线研究版 · 非实时</span><button class="button" id="exportBtn">导出记录</button><button class="button primary" id="importBtn">导入记录</button><input type="file" id="fileInput" accept=".json" hidden></div></header>
+<header><div class="logo"><div class="logo-mark">S</div><div>SignalLab <span style="font-weight:400;color:#8098b0">/ A股</span><small>MULTI-FACTOR DECISION LAB</small></div></div><div class="head-actions"><span class="pill">● 收盘研究 · 数据待载入</span><button class="button" id="exportBtn">导出记录</button><button class="button primary" id="importBtn">导入记录</button><input type="file" id="fileInput" accept=".json" hidden></div></header>
 <main class="wrap">
-<div class="intro"><div><div class="eyebrow">CHINA A-SHARE / MARKET INTELLIGENCE</div><h1>现在，是好的买点吗？</h1><div class="muted">趋势 · 估值 · 市场广度 · ETF资金 · 融资杠杆 · <span style="color:var(--green)">真实 CVD 背离</span>，合成 1–10 分买入吸引力。</div></div><div class="snapshot">参考行情日期 <strong>2026.10.16</strong><br>部分指标为分析判断，<strong>不是实时交易信号</strong></div></div>
+<div class="intro"><div><div class="eyebrow">CHINA A-SHARE / MARKET INTELLIGENCE</div><h1>现在，是好的买点吗？</h1><div class="muted">趋势 · 估值 · 市场广度 · ETF资金 · 融资杠杆 · <span style="color:var(--green)">真实 CVD 背离</span>，合成 1–10 分买入吸引力。</div></div><div class="snapshot">公开数据自动研究<br>逐项标注来源与日期，<strong>不是实时交易信号</strong></div></div>
 <div class="tabs main-module-tabs"><button class="tab active" data-index="cy">创业板指 · 399006</button><button class="tab" data-index="kc">科创50 · 000688</button><button class="tab" id="compareTab">双指数比较 ↗</button><button class="tab" id="flowTab" type="button" aria-controls="flowView" aria-expanded="false">📊 订单流 / 融资压力</button><a class="tab bt-open" href="./backtest.html">📈 EMA / MA 回测 ↗</a></div>
 <div id="scoreDashboard">
   <section class="live-panel" id="autoFeedPanel" aria-live="polite"><div class="live-row"><div><div class="live-head">自动数据接入 <span class="badge-mini" id="feedBadge">尚未同步</span></div><div class="live-meta" id="feedMeta">需要运行 update_data.py 更新 data.js，或启用GitHub Actions定时任务。</div></div><button class="button" id="feedRefresh">↻ 重新读取数据</button></div><div id="feedMetrics" class="live-metrics"></div><div class="live-warn" id="feedWarning">这是收盘数据更新版；其他暂未接入的项目不会冒充实时数据。</div></section>
 <div class="dash">
- <section class="card pad score-card"><div class="section-label">综合买入吸引力 <span class="badge-mini" id="scenarioTag">研究快照</span></div><div class="index-name" id="indexName">创业板指</div><div class="index-code" id="indexCode">399006 · 观察ETF 159915</div><div class="price" id="indexPrice">2,772.38</div>
+ <section class="card pad score-card"><div class="section-label">综合买入吸引力 <span class="badge-mini" id="scenarioTag">研究快照</span></div><div class="index-name" id="indexName">创业板指</div><div class="index-code" id="indexCode">399006 · 观察ETF 159915</div><div class="price" id="indexPrice">—</div>
   <div class="score-ring"><svg viewBox="0 0 240 240"><circle class="ring-bg" cx="120" cy="120" r="101"/><circle id="ringValue" class="ring-value" cx="120" cy="120" r="101" stroke-dasharray="634.602" stroke-dashoffset="634.602"/></svg><div class="ring-center"><span class="bigscore" id="scoreValue">—</span><span class="outof">/ 10 买入吸引力</span></div></div>
   <div class="score-status" id="scoreStatus">正在计算...</div>
   <div class="coverage"><div class="flex-row"><span class="tiny">已纳入的评分权重</span><span id="coverNum" class="tiny">—</span></div><div class="bar" style="margin-top:8px"><div id="coverBar"></div></div><div class="tiny" style="margin-top:9px" id="coverageNote">数据完整度和分数分开计算。</div></div>
   <div class="subgrid"><div class="stat-mini"><label>已核实权重</label><strong id="verifiedScore">—</strong></div><div class="stat-mini"><label>当前CVD</label><strong id="cvdState" style="font-size:17px">待验证</strong></div></div><div class="note" id="adviceText">评分不是未来收益率，也不是交易指令。</div>
  </section>
  <div class="right">
-  <div class="toprow"><div class="card pad"><div class="metric-title">近期价格变化 · 5个交易日</div><div class="metric-number" id="fiveDay">—</div><div class="metric-foot" id="trendDesc">收盘历史来自已核对的公开行情表。</div></div><div class="card pad"><div class="metric-title">最近一次已核实的估值分位</div><div class="metric-number" id="valuationText">—</div><div class="metric-foot" id="valuationDesc">两大指数口径必须一致，且需要关注日期。</div></div></div>
+  <div class="toprow"><div class="card pad"><div class="metric-title">近期价格变化 · 5个交易日</div><div class="metric-number" id="fiveDay">—</div><div class="metric-foot" id="trendDesc">收盘历史来自已核对的公开行情表。</div></div><div class="card pad"><div class="metric-title">当前指数估值 · PE规则</div><div class="metric-number" id="valuationText">—</div><div class="metric-foot" id="valuationDesc">来源各自定义PE，关注日期与计算口径。</div></div></div>
   <section class="card pad"><div class="panel-header"><div><h2>九维评分矩阵</h2><p>点开任意指标修改分数、依据及权重；修改后自动重算</p></div><button class="button" id="methodBtn">模型算法 ⓘ</button></div><div class="matrix" id="factorMatrix"></div>
     <div id="factorEditor" class="factor-detail"></div>
   </section>
@@ -50,9 +50,9 @@
  <div class="divider"></div><label class="fld check"><input type="checkbox" id="cvdTrust"><span style="font-size:12px;color:#c0d0de">我已核对数据源与主动买卖方向，允许将CVD评分纳入模型</span></label>
  <div class="tiny" style="margin-top:9px">勾选不代表软件自动验证来源。时间窗口、集合竞价、成交量单位应保持一致；CSV保存在本次页面内存中，不上传服务器。</div>
  </section>
- <section class="card pad"><div class="panel-header"><div><h2>研究结论与缺口</h2><p>明确区分量化事实、分析判断和未得到的数据</p></div><span class="badge-mini">3–6个月持有周期</span></div><div class="smalllist" id="insights"></div><div class="divider"></div><div class="section-label" style="margin-bottom:10px">资料来源</div><div class="source-list" id="sources"></div><div class="divider"></div><div class="flex-row" style="flex-wrap:wrap"><button class="button" id="resetCurrent">恢复当前指数初始判断</button><button class="button" id="resetAll">重置全部</button></div></section>
+ <section class="card pad"><div class="panel-header"><div><h2>研究结论与缺口</h2><p>明确区分量化事实、分析判断和未得到的数据</p></div><span class="badge-mini">3–6个月持有周期</span></div><div class="smalllist" id="insights"></div><div class="divider"></div><div class="section-label" style="margin-bottom:10px">资料来源</div><div class="source-list" id="sources"></div><div class="divider"></div><div class="flex-row" style="flex-wrap:wrap"><button class="button" id="resetCurrent">恢复当前指数自动数据</button><button class="button" id="resetAll">重置全部</button></div></section>
 </div>
-<div class="footer">SignalLab A 研究原型 v1.0 · 本地HTML，数据手动更新；2026年10月16日为首版市场快照，并非自动联网。评分归一化到1–10，但未做样本外回测，不应据此直接下单。数据若过期、缺失或来源不可核实，优先参考“已核实权重”，避免把低覆盖率数字误读为高置信信号。</div>
+<div class="footer">SignalLab A 九维研究 v6.0 · 收盘自动采集公开数据，逐项展示日期、来源、代理范围与缺失原因。评分归一化到1–10，但未做样本外回测，不应据此直接下单。数据若过期、缺失或来源不可核实，优先参考“已核实权重”，避免把低覆盖率数字误读为高置信信号。</div>
 </div>
 <section id="flowView" hidden aria-label="订单流与融资压力实验室">
  <div class="flow-shell">
@@ -64,150 +64,105 @@
 <script src="./data.js"></script>
 <script>
 'use strict';
-const KEY='signallab_a_v1';
+const KEY='signallab_a_v2'; // v1自定义快照仍保留在浏览器，v2不继承旧占位分
 const FACTORS=[
-{id:'value',name:'估值位置',weight:15,desc:'同口径历史估值百分位越低，潜在安全边际通常越好；仍需结合盈利质量。',basis:'低历史分位有利于中期吸引力；高估值会扣分。'},
-{id:'earnings',name:'盈利与预期',weight:12,desc:'企业盈利同比、盈利预测修正、产业需求是否改善。',basis:'盈利预期上修且可兑现加分；盈利下修扣分。'},
-{id:'liquidity',name:'宏观流动性',weight:10,desc:'政策利率、社融、信用脉冲及风险偏好等。',basis:'宽信用和贴现率下降加分；只靠单一利好不加满分。'},
+{id:'value',name:'估值位置',weight:15,desc:'同一指数来源的当前PE；暂缺足够历史时使用明确的绝对PE标尺。',basis:'绝对PE规则不是历史分位；PE不等于原等权PS，跨指数口径不同。'},
+{id:'earnings',name:'盈利表现',weight:12,desc:'当前成分股统一报告期已披露净利润同比及盈利公司比例。',basis:'实际财报研究代理，覆盖至少80%；不表示分析师预期修正。'},
+{id:'liquidity',name:'宏观流动性',weight:10,desc:'M2同比变化与一年期LPR变化的流动性代理。',basis:'按最新可见月度数据计算；不覆盖全部信用脉冲，不用于历史时点回测。'},
 {id:'breadth',name:'市场广度',weight:14,desc:'指数成分股站上60日均线比例及其5日变化；不把全A上涨家数等同成分股广度。',basis:'低位广度持续回升优于指数被少数权重拉升。'},
 {id:'volume',name:'量价结构',weight:10,desc:'相对20日成交额、上涨与下跌日的成交差、价格反应。',basis:'低位放量承接、反弹持续性好加分。'},
-{id:'etf',name:'ETF申赎',weight:10,desc:'观察同一指数主要ETF合计份额变化，不混淆净申购和二级市场成交量。',basis:'持续净申购及价格止跌相互印证时加分。'},
-{id:'leverage',name:'融资杠杆',weight:9,desc:'融资余额变动速度及价格与融资余额背离；去杠杆过程不等于已经见底。',basis:'杠杆出清且价格企稳加分；杠杆拥挤扣分。'},
+{id:'etf',name:'ETF申赎',weight:10,desc:'观察159915或588000单只ETF的5交易日份额变化。',basis:'交易所份额代理；不是同指数全部ETF净申赎，也不是资金净流入金额。'},
+{id:'leverage',name:'融资杠杆',weight:9,desc:'创业板/科创板融资余额与同期价格的5日变化。',basis:'板块融资代理，不等于指数成分股；余额下降不单独视为企稳。'},
 {id:'trend',name:'价格趋势',weight:10,desc:'日线MA20/60、近期涨跌幅及更高低点结构。',basis:'短期剧跌通常扣分，确认止跌后逐渐加分。'},
 {id:'cvd',name:'CVD真实订单流',weight:10,desc:'同一ETF的真实主动买卖差与价格背离；重点关注CVD创新低但价格守住前低。',basis:'吸收型背离+价格确认加分；没有真实逐笔，必须缺失。'}
 ];
-const SOURCE={cy:[['创业板2026-10-16点位与历史收盘','https://www.lixinger.com/equity/index/detail/sz/399006/399006/fundamental/valuation/ps-ttm?metrics-type=ew'],['创业板等权市销率历史分位（2026-10-16）','https://www.lixinger.com/equity/index/detail/sz/399006/399006/fundamental/valuation/ps-ttm?metrics-type=ew']],kc:[['科创50历史收盘（2026-10-16）','https://cn.investing.com/indices/sse-star-50-historical-data'],['科创50估值旧数据（2026-09-18，已过期，仅供核对）','https://www.lixinger.com/equity/index/detail/sh/000688/688/fundamental/valuation/ps-ttm?metrics-type=ew']]};
-const defaults={
- cy:{name:'创业板指',code:'399006',etf:'159915',price:2772.38,date:'2026-10-16',fiveDay:-8.90, valuation:{text:'17.36%',desc:'等权市销率历史分位 · 2026.10.16（注意非PE）'}, factors:{
- value:{score:8.4,kind:'verified',date:'2026-10-16',note:'等权PS-TTM历史分位17.36%，采用分位映射 10−0.09×17.36≈8.4。'},
- earnings:{score:5,kind:'judgment',date:'2026-10-16',note:'中性占位判断，未获得同口径最新业绩预期修正。'},
- liquidity:{score:5,kind:'judgment',date:'2026-10-16',note:'中性判断，尚未系统核验信用脉冲和利率。'},
- breadth:{score:4.2,kind:'judgment',date:'2026-10-16',note:'此前市场观察为“广度小幅改善、权重仍偏弱”，指数成分股60日广度未核实。'},
- volume:{score:4,kind:'judgment',date:'2026-10-16',note:'此前分析为整体市场成交不及20日平均，缺少严格同口径的成分股量价序列。'},
- etf:{score:7,kind:'judgment',date:'2026-10-16',note:'此前观察主要ETF份额增加，但本页未直接导入交易所连续申赎序列。'},
- leverage:{score:4,kind:'judgment',date:'2026-10-15',note:'前述分析显示板块融资余额持续下行；去杠杆是否完成尚不清楚。'},
- trend:{score:2.2,kind:'verified',date:'2026-10-16',note:'截至10月16日约5日跌幅−8.90%，该分数为透明的趋势判断映射，非统计胜率。'},
- cvd:{score:null,kind:'missing',date:'',note:'缺少真实Level-2逐笔主动成交数据。'}
- }},
- kc:{name:'科创50',code:'000688',etf:'588000',price:1358.65,date:'2026-10-16',fiveDay:-6.77,valuation:{text:'待更新',desc:'最近公开估值页时间为9月18日，未当成10月16日数据'},factors:{
- value:{score:null,kind:'missing',date:'',note:'暂不使用9月18日的估值分位冒充10月16日现值。'},
- earnings:{score:5,kind:'judgment',date:'2026-10-16',note:'暂无最新成分股盈利预测修正统计，暂取中性研究判断。'},
- liquidity:{score:5,kind:'judgment',date:'2026-10-16',note:'尚无同口径宏观流动性指标自动数据。'},
- breadth:{score:3.7,kind:'judgment',date:'2026-10-16',note:'此前分析提示科创板市场广度偏弱；注意不等于科创50成分股广度。'},
- volume:{score:4.2,kind:'judgment',date:'2026-10-16',note:'近期下跌和局部缩量并存，未完成完整量价回测。'},
- etf:{score:7.2,kind:'judgment',date:'2026-10-16',note:'此前观察相关ETF增份额，未导入跟踪科创50全部ETF合并数据。'},
- leverage:{score:3.5,kind:'judgment',date:'2026-10-15',note:'科创板融资余额持续下降，不能视为结束去杠杆。'},
- trend:{score:2.7,kind:'verified',date:'2026-10-16',note:'截至10月16日约5日跌幅−6.77%，分数为趋势判断映射。'},
- cvd:{score:null,kind:'missing',date:'',note:'缺少真实Level-2逐笔主动成交数据。'}
- }}
-};
-const deep=x=>JSON.parse(JSON.stringify(x));let db;try{let s=localStorage.getItem(KEY);db=s?JSON.parse(s):deep(defaults)}catch(e){db=deep(defaults)};for(const k of ['cy','kc']){if(!db[k]||!db[k].factors)db[k]=deep(defaults[k]);for(const f of FACTORS){if(!db[k].factors[f.id])db[k].factors[f.id]=deep(defaults[k].factors[f.id]);}}let current='cy',selected='value';let hasVerifiedTrade=false;let trades=[];let cvdRows=[];
+const SOURCE={cy:[],kc:[]};
+const defaults={cy:{name:'创业板指',code:'399006',etf:'159915',price:null,date:'',fiveDay:null,valuation:{text:'—',desc:'等待可核实估值'},factors:{}},kc:{name:'科创50',code:'000688',etf:'588000',price:null,date:'',fiveDay:null,valuation:{text:'—',desc:'等待可核实估值'},factors:{}}};
+for(const k of ['cy','kc'])for(const f of FACTORS)defaults[k].factors[f.id]={score:null,kind:'missing',date:'',mode:'auto',note:'等待自动数据；无数据不按中性分填充'};
+const deep=x=>JSON.parse(JSON.stringify(x));let db;try{let s=localStorage.getItem(KEY);db=s?JSON.parse(s):deep(defaults);if(!db||typeof db!=='object')db=deep(defaults)}catch(e){db=deep(defaults)};for(const k of ['cy','kc']){if(!db[k]||!db[k].factors)db[k]=deep(defaults[k]);for(const f of FACTORS){if(!db[k].factors[f.id])db[k].factors[f.id]=deep(defaults[k].factors[f.id]);}}let current='cy',selected='value';let hasVerifiedTrade=false;let trades=[];let cvdRows=[];
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){toast('浏览器禁止持久化，请用「导出记录」保存')}}
 function toast(msg){const el=$('#toast');el.textContent=msg;el.style.display='block';clearTimeout(window._toast);window._toast=setTimeout(()=>el.style.display='none',2400)}
-function scoreOf(key){const facts=db[key].factors;let sum=0,weight=0,verified=0,available=0;for(const f of FACTORS){let m=facts[f.id];if(m&&Number.isFinite(m.score)&&m.kind!=='missing'){let w=m.weight??f.weight;sum+=m.score*w;weight+=w;available+=w;if(m.kind==='verified')verified+=w}}let all=FACTORS.reduce((s,f)=>s+(facts[f.id]?.weight??f.weight),0);return {score:weight?sum/weight:null,coverage:all?weight/all:0,verified:all?verified/all:0,count:FACTORS.filter(f=>facts[f.id]?.score!=null).length}}
+function scoreOf(key){const facts=db[key].factors;let sum=0,weight=0,verified=0,available=0;for(const f of FACTORS){let m=facts[f.id];if(m&&Number.isFinite(m.score)&&m.kind!=='missing'){let w=Number.isFinite(m.weight)?clamp(m.weight,0,30):f.weight;sum+=m.score*w;weight+=w;available+=w;if(m.kind==='verified')verified+=w}}let all=FACTORS.reduce((s,f)=>s+(Number.isFinite(facts[f.id]?.weight)?clamp(facts[f.id].weight,0,30):f.weight),0);return {score:weight?sum/weight:null,coverage:all?weight/all:0,verified:all?verified/all:0,count:FACTORS.filter(f=>facts[f.id]?.score!=null).length}}
 function status(score){if(score==null)return '资料不足，无法评分';if(score>=8)return '观察级别：买入吸引力较高';if(score>=6.5)return '观察级别：偏积极，等待确认';if(score>=5)return '观察级别：中性，等待更好信号';if(score>=3.5)return '观察级别：谨慎，尚未企稳';return '观察级别：弱势，风险优先'}
 function color(score){return score==null?'#91a0b5':score>=6.5?'#41dba5':score>=4.5?'#eac176':'#ff8794'}
-function render(){let d=db[current],s=scoreOf(current),known=(s.verified*100).toFixed(0);$('#indexName').textContent=d.name;$('#indexCode').textContent=`${d.code} · 观察ETF ${d.etf}`;$('#indexPrice').textContent=Number(d.price).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});$('#scoreValue').textContent=s.score==null?'—':s.score.toFixed(1);$('#ringValue').style.strokeDashoffset=634.602*(1-(s.score==null?0:s.score/10));$('#ringValue').style.stroke=color(s.score);$('#scoreStatus').textContent=status(s.score);$('#scoreStatus').style.color=color(s.score);$('#coverNum').textContent=Math.round(s.coverage*100)+'%';$('#coverBar').style.width=(s.coverage*100)+'%';$('#verifiedScore').textContent=known+'%';$('#coverageNote').textContent=`${s.count}/9 项有评分，其中部分为研究者主观判断，不能等同已核实证据。`;
-$('#fiveDay').textContent=Number.isFinite(d.fiveDay)?(d.fiveDay>=0?'+':'')+d.fiveDay.toFixed(2)+'%':'—';$('#fiveDay').style.color=Number.isFinite(d.fiveDay)?(d.fiveDay<0?'var(--red)':'var(--green)'):'var(--sub)';$('#valuationText').textContent=d.valuation.text;$('#valuationDesc').textContent=d.valuation.desc;$('#cvdState').textContent=d.factors.cvd.kind==='verified'?'已录入':'未验证';$('#scenarioTag').textContent=d.date+' 研究快照';$('#adviceText').textContent=(s.verified<0.5?'⚠ 核实数据权重较低，综合分属于“混合试算分”，不应作为下单依据。':'多个数据维度获得了核实，仍需验证信号稳定性。')+' 当前缺少完整指数广度与真实CVD。';
+function render(){let d=db[current],s=scoreOf(current),known=(s.verified*100).toFixed(0);$('#indexName').textContent=d.name;$('#indexCode').textContent=`${d.code} · 观察ETF ${d.etf}`;$('#indexPrice').textContent=(Number.isFinite(d.price)?d.price.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2}):'—');$('#scoreValue').textContent=s.score==null?'—':s.score.toFixed(1);$('#ringValue').style.strokeDashoffset=634.602*(1-(s.score==null?0:s.score/10));$('#ringValue').style.stroke=color(s.score);$('#scoreStatus').textContent=status(s.score);$('#scoreStatus').style.color=color(s.score);$('#coverNum').textContent=Math.round(s.coverage*100)+'%';$('#coverBar').style.width=(s.coverage*100)+'%';$('#verifiedScore').textContent=known+'%';$('#coverageNote').textContent=`${s.count}/9 项参与；自动可用 ${FACTORS.filter(f=>d.factors[f.id].mode!=='manual'&&d.factors[f.id].score!=null).length}/9。代理口径见指标说明，分数不等于胜率。`;
+$('#fiveDay').textContent=Number.isFinite(d.fiveDay)?(d.fiveDay>=0?'+':'')+d.fiveDay.toFixed(2)+'%':'—';$('#fiveDay').style.color=Number.isFinite(d.fiveDay)?(d.fiveDay<0?'var(--red)':'var(--green)'):'var(--sub)';$('#valuationText').textContent=d.valuation.text;$('#valuationDesc').textContent=d.valuation.desc;$('#cvdState').textContent=d.factors.cvd.kind==='verified'?'已录入':'未验证';$('#scenarioTag').textContent=d.date+' 研究快照';$('#adviceText').textContent=(s.verified<0.5?'⚠ 核实数据权重较低，综合分属于“混合试算分”，不应作为下单依据。':'多个数据维度获得了核实，仍需验证信号稳定性。')+' 当前缺失：'+FACTORS.filter(f=>d.factors[f.id].score==null).map(f=>f.name).join('、')+'。';
 renderFactors();renderEditor();renderInsights();renderSources();document.querySelectorAll('.tab[data-index]').forEach(x=>x.classList.toggle('active',x.dataset.index===current));$('#cvdTag').textContent=d.factors.cvd.kind==='verified'?'已纳入订单流':'未接入真实逐笔';$('#cvdTag').classList.toggle('warn',d.factors.cvd.kind!=='verified')}
-function renderFactors(){const d=db[current];$('#factorMatrix').innerHTML=FACTORS.map(f=>{let m=d.factors[f.id];let val=m.score;let label=m.kind==='verified'?'数据/规则':m.kind==='judgment'?'分析判断':'待验证';return `<button class="factor ${f.id===selected?'selected':''}" data-factor="${f.id}"><div class="top"><strong>${esc(f.name)}</strong><span class="tiny">${m.weight??f.weight}%</span></div><div class="point" style="color:${color(val)}">${val==null?'—':Number(val).toFixed(1)}<em> /10</em></div><div class="fact-footer"><i class="${m.kind}"></i>${label} · ${esc(m.date||'无数据')}</div></button>`}).join('');document.querySelectorAll('.factor').forEach(el=>el.addEventListener('click',()=>{selected=el.dataset.factor;renderFactors();renderEditor()}))}
+function renderFactors(){const d=db[current];$('#factorMatrix').innerHTML=FACTORS.map(f=>{let m=d.factors[f.id];let val=m.score;let label=m.mode==='manual'?'手动判断':m.score==null?(m.status==='not_connected'?'未接通':'数据缺失'):m.proxy?'自动·代理':'自动·数据规则';return `<button class="factor ${f.id===selected?'selected':''}" data-factor="${f.id}" title="${esc(m.note)}"><div class="top"><strong>${esc(f.name)}</strong><span class="tiny">${m.weight??f.weight}%</span></div><div class="point" style="color:${color(val)}">${val==null?'—':Number(val).toFixed(1)}<em> /10</em></div><div class="fact-footer"><i class="${m.kind}"></i>${label} · ${esc(m.date||'无数据')}</div></button>`}).join('');document.querySelectorAll('.factor').forEach(el=>el.addEventListener('click',()=>{selected=el.dataset.factor;renderFactors();renderEditor()}))}
 function renderEditor(){const f=FACTORS.find(x=>x.id===selected),m=db[current].factors[f.id],isCvd=f.id==='cvd';let str=`<div class="section-label"><div>编辑指标：${esc(f.name)} <span class="tiny" style="margin-left:7px">${esc(f.desc)}</span></div><span class="badge-mini">权重 ${(m.weight??f.weight)}%</span></div><div style="font-size:12px;color:#9db2c6;line-height:1.8;margin:10px 0 17px">评分依据：${esc(f.basis)}</div>`;
-str+=`<div class="detail-grid"><div class="fld"><label>分数：<strong id="editPoint">${m.score==null?'未评分':Number(m.score).toFixed(1)+' / 10'}</strong></label><input type="range" id="editSlider" min="1" max="10" step="0.1" value="${m.score??5}" ${isCvd&&!hasVerifiedTrade?'disabled':''}><button class="button" id="clearScore" style="margin-top:4px">标为缺失 / 不参与评分</button></div><div class="fld"><label>来源性质</label><select id="editKind"><option value="judgment" ${m.kind==='judgment'?'selected':''}>分析判断（主观）</option><option value="verified" ${m.kind==='verified'?'selected':''}>有来源核实（数据+规则）</option><option value="missing" ${m.kind==='missing'?'selected':''}>待验证（不计分）</option></select><label>数据日期</label><input type="date" id="editDate" value="${esc(m.date||'')}"></div><div class="fld"><label>指标权重（0–30）</label><input id="editWeight" type="number" min="0" max="30" step="1" value="${m.weight??f.weight}"></div><div class="fld"><label>依据与反证条件</label><textarea id="editNote">${esc(m.note)}</textarea></div></div>`;
+str+=`<div class="note" style="margin:0 0 14px">${esc(m.note)}${m.lastGood?' 最近成功记录：'+esc(m.lastGood.date||'')+'，当前不计分。':''}</div><button class="button" id="restoreAuto" style="margin-bottom:14px">恢复本项自动数据</button><div class="detail-grid"><div class="fld"><label>分数：<strong id="editPoint">${m.score==null?'未评分':Number(m.score).toFixed(1)+' / 10'}</strong></label><input type="range" id="editSlider" min="1" max="10" step="0.1" value="${m.score??5}" ${isCvd&&!hasVerifiedTrade?'disabled':''}><button class="button" id="clearScore" style="margin-top:4px">标为缺失 / 不参与评分</button></div><div class="fld"><label>来源性质</label><select id="editKind"><option value="judgment" ${m.kind==='judgment'?'selected':''}>分析判断（主观）</option><option value="verified" ${m.kind==='verified'?'selected':''}>有来源核实（数据+规则）</option><option value="missing" ${m.kind==='missing'?'selected':''}>待验证（不计分）</option></select><label>数据日期</label><input type="date" id="editDate" value="${esc(m.date||'')}"></div><div class="fld"><label>指标权重（0–30）</label><input id="editWeight" type="number" min="0" max="30" step="1" value="${m.weight??f.weight}"></div><div class="fld"><label>依据与反证条件</label><textarea id="editNote">${esc(m.note)}</textarea></div></div>`;
 if(isCvd)str+='<div class="alert" style="margin-top:14px">CVD指标在导入真实逐笔记录并确认来源之前锁定；可以先看图，但未确认来源时不得计分。</div>';
 $('#factorEditor').innerHTML=str;
+$('#restoreAuto').addEventListener('click',()=>{m.mode='auto';if(isCvd){hasVerifiedTrade=false;$('#cvdTrust').checked=false;}applyFeed();toast('已恢复自动数据')});
 $('#editSlider').addEventListener('input',e=>{$('#editPoint').textContent=(+e.target.value).toFixed(1)+' / 10'});
-$('#editSlider').addEventListener('change',e=>{if(isCvd&&!hasVerifiedTrade)return;m.score=+e.target.value;if(m.kind==='missing')m.kind='judgment';save();render()});
-$('#editKind').addEventListener('change',e=>{if(isCvd&&e.target.value==='verified'&&!hasVerifiedTrade){toast('先导入真实逐笔并勾选来源校验');renderEditor();return}m.kind=e.target.value;if(m.kind==='missing')m.score=null;else if(m.score==null)m.score=5;save();render()});
-$('#editDate').addEventListener('change',e=>{m.date=e.target.value;save();renderFactors()});
+$('#editSlider').addEventListener('change',e=>{if(isCvd&&!hasVerifiedTrade)return;m.mode='manual';m.score=+e.target.value;m.kind='judgment';m.date=db[current].date;save();render()});
+$('#editKind').addEventListener('change',e=>{if(isCvd&&e.target.value==='verified'&&!hasVerifiedTrade){toast('先导入真实逐笔并勾选来源校验');renderEditor();return}m.mode='manual';m.kind=e.target.value;m.date=db[current].date;if(m.kind==='missing')m.score=null;save();render()});
+$('#editDate').addEventListener('change',e=>{m.mode='manual';m.date=e.target.value;save();renderFactors()});
 $('#editWeight').addEventListener('change',e=>{m.weight=Math.max(0,Math.min(30,Number(e.target.value)||0));save();render()});
-$('#editNote').addEventListener('change',e=>{m.note=e.target.value;save();renderInsights()});
-$('#clearScore').addEventListener('click',()=>{m.score=null;m.kind='missing';if(isCvd)hasVerifiedTrade=false;save();render();toast('已设为缺失，不参与综合评分')});
+$('#editNote').addEventListener('change',e=>{m.mode='manual';m.date=db[current].date;m.note=e.target.value;save();renderInsights()});
+$('#clearScore').addEventListener('click',()=>{m.mode='manual';m.date=db[current].date;m.score=null;m.kind='missing';if(isCvd)hasVerifiedTrade=false;save();render();toast('已设为缺失，不参与综合评分')});
 }
-function renderInsights(){let d=db[current],s=scoreOf(current),verified=FACTORS.filter(f=>d.factors[f.id].kind==='verified'&&d.factors[f.id].score!=null).map(f=>f.name),missing=FACTORS.filter(f=>d.factors[f.id].kind==='missing'||d.factors[f.id].score==null).map(f=>f.name);let positives=FACTORS.filter(f=>Number.isFinite(d.factors[f.id].score)&&d.factors[f.id].score>=6.5).sort((a,b)=>d.factors[b.id].score-d.factors[a.id].score),risks=FACTORS.filter(f=>Number.isFinite(d.factors[f.id].score)&&d.factors[f.id].score<=4).sort((a,b)=>d.factors[a.id].score-d.factors[b.id].score);$('#insights').innerHTML=`<div class="item"><strong>综合试算 ${s.score==null?'—':s.score.toFixed(1)}/10</strong>，其中“已核实权重”只有 <strong>${(s.verified*100).toFixed(0)}%</strong>。不能将主观评分误认成经过回测的胜率。</div><div class="item"><strong style="color:var(--green)">支持因素：</strong>${positives.length?positives.map(f=>esc(f.name)+' '+d.factors[f.id].score.toFixed(1)).join('、'):'尚无评分较高的因素'}</div><div class="item"><strong style="color:var(--red)">压制因素：</strong>${risks.length?risks.map(f=>esc(f.name)+' '+d.factors[f.id].score.toFixed(1)).join('、'):'暂无明显低分因素'}</div><div class="item"><strong>已核实维度：</strong>${verified.join('、')||'暂无'}</div><div class="item"><strong>缺失维度：</strong>${missing.join('、')||'全部有评分'}。任何未获取数据都不会按中性5分填充。</div><div class="item"><strong>下一步：</strong>优先核实成分股60日市场广度、主要ETF份额、融资余额、真实逐笔CVD；观察价格止跌后资金结构是否同步改善。</div>`}
-function renderSources(){let links=SOURCE[current];$('#sources').innerHTML=links.map(([n,u])=>`<div>↗ <a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a></div>`).join('')+'<div>评分中的“分析判断”来自先前市场分析，不等于以上链接对其逐项背书。</div>'}
+function renderInsights(){let d=db[current],s=scoreOf(current),verified=FACTORS.filter(f=>d.factors[f.id].kind==='verified'&&d.factors[f.id].score!=null).map(f=>f.name),missing=FACTORS.filter(f=>d.factors[f.id].kind==='missing'||d.factors[f.id].score==null).map(f=>f.name);let positives=FACTORS.filter(f=>Number.isFinite(d.factors[f.id].score)&&d.factors[f.id].score>=6.5).sort((a,b)=>d.factors[b.id].score-d.factors[a.id].score),risks=FACTORS.filter(f=>Number.isFinite(d.factors[f.id].score)&&d.factors[f.id].score<=4).sort((a,b)=>d.factors[a.id].score-d.factors[b.id].score);$('#insights').innerHTML=`<div class="item"><strong>综合试算 ${s.score==null?'—':s.score.toFixed(1)}/10</strong>，其中“已核实权重”只有 <strong>${(s.verified*100).toFixed(0)}%</strong>。不能将主观评分误认成经过回测的胜率。</div><div class="item"><strong style="color:var(--green)">支持因素：</strong>${positives.length?positives.map(f=>esc(f.name)+' '+d.factors[f.id].score.toFixed(1)).join('、'):'尚无评分较高的因素'}</div><div class="item"><strong style="color:var(--red)">压制因素：</strong>${risks.length?risks.map(f=>esc(f.name)+' '+d.factors[f.id].score.toFixed(1)).join('、'):'暂无明显低分因素'}</div><div class="item"><strong>已核实维度：</strong>${verified.join('、')||'暂无'}</div><div class="item"><strong>缺失维度：</strong>${missing.join('、')||'全部有评分'}。任何未获取数据都不会按中性5分填充。</div><div class="item"><strong>下一步：</strong>查看缺失维度的接口原因、有效日期及样本覆盖；代理数据不能等同指数全量数据。</div>`}
+function renderSources(){const facts=window.SIGNAL_LIVE?.research?.indices?.[current]||{};const safeLink=u=>{try{const x=new URL(u);return x.protocol==='https:'?x.href:null}catch(e){return null}};const links=[['国证指数399006','https://www.cnindex.com.cn/module/index-detail.html?indexCode=399006'],['中证指数000688','https://www.csindex.com.cn/zh-CN/indices/index-detail/000688'],['深交所ETF规模','https://www.szse.cn/market/fund/volume/etf/index.html'],['上交所ETF规模','https://www.sse.com.cn/assortment/fund/etf/list/scale/'],['东方财富财报','https://data.eastmoney.com/bbsj/'],['货币供应量','https://data.eastmoney.com/cjsj/hbgyl.html']];$('#sources').innerHTML=links.filter(([n,u])=>safeLink(u)).map(([n,u])=>`<div>↗ <a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a></div>`).join('')+FACTORS.map(f=>`<div>${esc(f.name)}：${esc(facts[f.id]?.source||'未连接')} · ${esc(facts[f.id]?.date||'无日期')}</div>`).join('')+'<div>各维规则及实际口径在指标说明内。当前采集值不用于估值、盈利、宏观的历史收益回测。</div>'}
 function download(name,content,type){let a=document.createElement('a');let url=URL.createObjectURL(new Blob([content],{type}));a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function parseCSV(text){const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim());function line(s){let arr=[],x='',q=false;for(let i=0;i<s.length;i++){let c=s[i];if(c==='"'){if(q&&s[i+1]==='"'){x+='"';i++}else q=!q}else if(c===','&&!q){arr.push(x.trim());x=''}else x+=c}arr.push(x.trim());return arr}if(lines.length<3)throw Error('至少包含表头和两行记录');let h=line(lines[0]).map(x=>x.toLowerCase());let data=[];for(let n=1;n<lines.length;n++){let p=line(lines[n]);let o={};h.forEach((k,i)=>o[k]=p[i]);let price=Number(o.price),vol=Number(o.volume),delta=Number(o.delta),side=String(o.side||'').trim().toUpperCase(),dir=side==='B'||side==='BUY'||side==='主动买' ?1:side==='S'||side==='SELL'||side==='主动卖'?-1:0;let step=$('#cvdMode').value==='delta'?delta:vol*dir;if(!Number.isFinite(price)||price<=0||!Number.isFinite(step)||(!dir&&$('#cvdMode').value==='side'))continue;data.push({time:o.time||String(n),price,step})}if(data.length<2)throw Error('没有合法成交记录，请检查列名或方向B/S');return data}
+function parseCSV(text){const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim());function line(s){let arr=[],x='',q=false;for(let i=0;i<s.length;i++){let c=s[i];if(c==='"'){if(q&&s[i+1]==='"'){x+='"';i++}else q=!q}else if(c===','&&!q){arr.push(x.trim());x=''}else x+=c}arr.push(x.trim());return arr}if(lines.length<3)throw Error('至少包含表头和两行记录');let h=line(lines[0]).map(x=>x.toLowerCase());let data=[];for(let n=1;n<lines.length;n++){let p=line(lines[n]);let o={};h.forEach((k,i)=>o[k]=p[i]);let price=Number(o.price),vol=Number(o.volume),delta=Number(o.delta),side=String(o.side||'').trim().toUpperCase(),dir=side==='B'||side==='BUY'||side==='主动买' ?1:side==='S'||side==='SELL'||side==='主动卖'?-1:0;let step=$('#cvdMode').value==='delta'?delta:vol*dir;if(!String(o.price||'').trim()||!Number.isFinite(price)||price<=0||!Number.isFinite(step)||($('#cvdMode').value==='side'&&(!dir||!Number.isFinite(vol)||vol<=0))||($('#cvdMode').value==='delta'&&!String(o.delta??'').trim()))continue;data.push({time:o.time||String(n),price,step})}if(data.length<2)throw Error('没有合法成交记录，请检查列名或方向B/S');return data}
 function buildCVD(rows){let cvd=0;return rows.map(r=>({...r,cvd:cvd+=r.step}))}
 function drawCVD(){if(cvdRows.length<2){$('#cvdChart').innerHTML='<div style="position:absolute;inset:0;display:grid;place-items:center;color:#7086a1;font-size:12px;text-align:center;padding:20px">导入包含真实主动买卖方向的逐笔数据后<br>这里显示价格与CVD走势</div>';return}let w=720,h=170,p=20;let maxPts=420;let rows=cvdRows.length>maxPts?cvdRows.filter((_,i)=>i%Math.ceil(cvdRows.length/maxPts)===0):cvdRows;let make=(key,color,minY,maxY)=>{let vals=rows.map(x=>x[key]),lo=minY??Math.min(...vals),hi=maxY??Math.max(...vals);return `<polyline points="${vals.map((v,i)=>`${p+(w-2*p)*i/(vals.length-1)},${h-p-(h-2*p)*(v-lo)/(hi-lo||1)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`};$('#cvdChart').innerHTML=`<svg viewBox="0 0 720 170" preserveAspectRatio="none"><path d="M0 85 H720" stroke="#38465a" stroke-dasharray="5 6"/>${make('price','#65ddae')}${make('cvd','#a1adff')}</svg><div style="position:absolute;top:7px;left:12px;font-size:11px;color:#a5b6ca">● <span style="color:#65ddae">价格</span> · <span style="color:#a1adff">CVD</span> （两条曲线分别归一化，不能比较绝对值）</div>`}
 function validateInputJson(v){return !!(v&&v.cy?.factors&&v.kc?.factors&&['cy','kc'].every(k=>FACTORS.every(f=>{let d=v[k].factors[f.id];return d && ['judgment','verified','missing'].includes(d.kind)&&(d.score===null||(Number.isFinite(d.score)&&d.score>=1&&d.score<=10))}))) }
 $('#exportBtn').addEventListener('click',()=>download('SignalLab_A股评分_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(db,null,2),'application/json;charset=utf-8'));
-$('#importBtn').addEventListener('click',()=>$('#fileInput').click());$('#fileInput').addEventListener('change',async e=>{let f=e.target.files?.[0];if(!f)return;try{let v=JSON.parse(await f.text());if(!validateInputJson(v))throw Error('文件结构不匹配');db=v;hasVerifiedTrade=false;db.cy.factors.cvd={score:null,kind:'missing',date:'',note:'重新载入时CVD需要重新验证真实逐笔数据'};db.kc.factors.cvd={score:null,kind:'missing',date:'',note:'重新载入时CVD需要重新验证真实逐笔数据'};save();render();toast('导入成功；CVD因原始数据未随JSON存储，已重置为待验证')}catch(err){alert('导入失败：'+err.message)}e.target.value=''});
-document.querySelectorAll('.tab[data-index]').forEach(b=>b.addEventListener('click',()=>{current=b.dataset.index;selected='value';hasVerifiedTrade=false;trades=[];cvdRows=[];$('#cvdTrust').checked=false;drawCVD();render()}));$('#compareTab').addEventListener('click',()=>{let c=scoreOf('cy'),k=scoreOf('kc');alert(`双指数对比（离线研究试算）\n创业板指：${c.score?.toFixed(1)??'—'}/10，已核实权重${Math.round(c.verified*100)}%\n科创50：${k.score?.toFixed(1)??'—'}/10，已核实权重${Math.round(k.verified*100)}%\n\n注意：数据覆盖与验证不足时不能把分差当成可信排名。`)});
-$('#methodBtn').addEventListener('click',()=>alert('算法：纳入的各指标以其用户可编辑权重进行加权平均，再归一化到1–10分。\n\n总分 = Σ(已计分指标×权重)/Σ(已计分权重)。\n\n“已纳入评分权重”=有评分指标权重/全部权重。\n“已核实权重”=标注为有来源核实的指标权重/全部权重。\n\n默认数据包含研究判断，未经过历史收益回测；没有原始CVD时该项完全不计分。估值历史百分位默认映射：10−0.09×百分位，截断为1–10。其余分数为判断映射，不是概率。'));
-$('#resetCurrent').addEventListener('click',()=>{if(!confirm('恢复本指数默认判断？'))return;db[current]=deep(defaults[current]);hasVerifiedTrade=false;cvdRows=[];$('#cvdTrust').checked=false;drawCVD();save();render();toast('已恢复')});$('#resetAll').addEventListener('click',()=>{if(!confirm('重置两只指数的所有自定义评分？'))return;db=deep(defaults);hasVerifiedTrade=false;cvdRows=[];$('#cvdTrust').checked=false;drawCVD();save();render();toast('已重置')});
+$('#importBtn').addEventListener('click',()=>$('#fileInput').click());$('#fileInput').addEventListener('change',async e=>{let f=e.target.files?.[0];if(!f)return;try{let v=JSON.parse(await f.text());if(!validateInputJson(v))throw Error('文件结构不匹配');db=v;for(const k of ['cy','kc'])for(const f of FACTORS)db[k].factors[f.id].mode='manual';hasVerifiedTrade=false;db.cy.factors.cvd={score:null,kind:'missing',date:'',note:'重新载入时CVD需要重新验证真实逐笔数据'};db.kc.factors.cvd={score:null,kind:'missing',date:'',note:'重新载入时CVD需要重新验证真实逐笔数据'};save();applyFeed();toast('导入成功；CVD因原始数据未随JSON存储，已重置为待验证')}catch(err){alert('导入失败：'+err.message)}e.target.value=''});
+document.querySelectorAll('.tab[data-index]').forEach(b=>b.addEventListener('click',()=>{current=b.dataset.index;selected='value';hasVerifiedTrade=false;for(const k of ['cy','kc']){db[k].factors.cvd.score=null;db[k].factors.cvd.kind='missing';}trades=[];cvdRows=[];$('#cvdTrust').checked=false;drawCVD();render()}));$('#compareTab').addEventListener('click',()=>{let c=scoreOf('cy'),k=scoreOf('kc');alert(`双指数对比（离线研究试算）\n创业板指：${c.score?.toFixed(1)??'—'}/10，已核实权重${Math.round(c.verified*100)}%\n科创50：${k.score?.toFixed(1)??'—'}/10，已核实权重${Math.round(k.verified*100)}%\n\n注意：数据覆盖与验证不足时不能把分差当成可信排名。`)});
+$('#methodBtn').addEventListener('click',()=>alert('算法：纳入的各指标以其用户可编辑权重进行加权平均，再归一化到1–10分。\n\n总分 = Σ(已计分指标×权重)/Σ(已计分权重)。\n\n“已纳入评分权重”=有评分指标权重/全部权重。\n“已核实权重”=标注为有来源核实的指标权重/全部权重。\n\n自动评分逐项使用公开数据与显示的固定规则；数据失败不按5分填充。代理口径会标明；没有真实逐笔时CVD不计分。当前估值为绝对PE标尺，不是历史分位。九维总分未做历史收益回测，各项不是概率。'));
+$('#resetCurrent').addEventListener('click',()=>{if(!confirm('恢复本指数自动数据并清除手动覆盖？'))return;db[current]=deep(defaults[current]);hasVerifiedTrade=false;cvdRows=[];$('#cvdTrust').checked=false;drawCVD();save();applyFeed();toast('已恢复自动数据')});$('#resetAll').addEventListener('click',()=>{if(!confirm('重置两只指数的所有自定义评分？'))return;db=deep(defaults);hasVerifiedTrade=false;cvdRows=[];$('#cvdTrust').checked=false;drawCVD();save();applyFeed();toast('已重置为自动数据')});
 $('#downloadSample').addEventListener('click',()=>download('cvd_trade_template.csv','time,price,volume,side\n2026-10-16 09:30:01.120,1.234,1000,B\n2026-10-16 09:30:01.290,1.233,500,S\n','text/csv;charset=utf-8'));
 $('#cvdFile').addEventListener('change',async e=>{let f=e.target.files?.[0];if(!f)return;try{let data=parseCSV(await f.text());trades=data;cvdRows=buildCVD(data);hasVerifiedTrade=false;$('#cvdTrust').checked=false;db[current].factors.cvd={score:null,kind:'missing',date:'',note:'逐笔记录已导入，但方向及数据源尚未人工确认'};save();drawCVD();$('#cvdInfo').textContent=`已导入 ${data.length.toLocaleString()} 笔记录，末笔CVD ${cvdRows.at(-1).cvd.toFixed(0)}。方向及背离需确认。`;render();toast('CSV读取成功，先核对来源与方向')}catch(err){alert('读取CSV失败：'+err.message)}e.target.value=''});
-$('#cvdTrust').addEventListener('change',e=>{if(!trades.length){e.target.checked=false;toast('请先导入真实逐笔CSV');return}hasVerifiedTrade=e.target.checked;let m=db[current].factors.cvd;if(hasVerifiedTrade){m.kind='judgment';m.score=5;m.date=new Date().toISOString().slice(0,10);m.note='已导入有方向逐笔数据，基础中性5分；背离仍需人工确认。请点指标修改评分。';toast('已允许纳入，CVD暂用中性5分，需手动判断背离')}else{m.kind='missing';m.score=null;toast('CVD已退出计分')}save();render()});
-// 数据文件来自站点同目录的 data.js。它只会覆盖已核实的行情量价，保留其他项目原始状态。
+$('#cvdTrust').addEventListener('change',e=>{if(!trades.length){e.target.checked=false;toast('请先导入真实逐笔CSV');return}hasVerifiedTrade=e.target.checked;let m=db[current].factors.cvd;if(hasVerifiedTrade){m.kind='missing';m.score=null;m.mode='manual';m.date=db[current].date;m.note='已核对逐笔来源与方向；请人工评估后选择分数，尚不计分。';toast('已解锁手动评估；未选择分数前不计分')}else{m.kind='missing';m.score=null;toast('CVD已退出计分')}save();render()});
+// Nine auditable factors. A failed refresh clears an automatic score immediately.
 const liveInfo = {initialized:false};
 const clamp = (x,lo,hi) => Math.max(lo,Math.min(hi,x));
 const nfmt = (x,d=2) => Number.isFinite(x) ? Number(x).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d}) : '—';
+function legacyFactors(obj){
+ const d=obj?.index||{},etf=obj?.etf||{};const out={};
+ if([d.close,d.ma20,d.ma60,d.five_day_change_pct].every(Number.isFinite))out.trend={status:'ok',date:d.date,score:+clamp(5.5+(d.close>=d.ma20?1:-1)+(d.ma20>=d.ma60?1:-.7)+clamp(d.five_day_change_pct/4,-2,2),1,10).toFixed(1),source:d.source,rule:'旧数据兼容：MA20/60与5日涨幅固定规则'};
+ const v=Number.isFinite(d.amount_ratio_20d)?d:etf;
+ if(v.date===d.date&&Number.isFinite(v.amount_ratio_20d)&&Number.isFinite(v.daily_change_pct))out.volume={status:'ok',date:v.date,score:+clamp(5+2*(v.amount_ratio_20d-1)+Math.sign(v.daily_change_pct)*Math.min(Math.abs(v.daily_change_pct),3)*.4,1,10).toFixed(1),source:v.source,scope:v===d?'指数成交额':'单只ETF成交额代理',proxy:v!==d,rule:'成交额比此前20日均值与当日涨跌固定规则'};
+ return out;
+}
 function applyFeed(){
-  const feed=window.SIGNAL_LIVE;
-  const panel=$('#feedBadge'), warn=$('#feedWarning');
-  if(!feed || feed.schema_version!==1 || !feed.indices){
-    panel.textContent='未连接';
-    $('#feedMeta').textContent='还没有成功生成当日 data.js；请运行更新程序或检查GitHub Actions日志。';
-    $('#feedMetrics').innerHTML='';
-    warn.textContent='显示的仍然是2026-10-16首版研究快照，不能当作最新行情。';
-    return;
+ const feed=window.SIGNAL_LIVE;liveInfo.initialized=!!feed?.indices;
+ const generated=Date.parse(feed?.generated_at||'');
+ // Wall-clock health also protects against a schedule that silently stopped.
+ const feedStale=!Number.isFinite(generated)||Date.now()-generated>7*86400000||generated>Date.now()+86400000;
+ for(const key of ['cy','kc']){
+  const obj=feed?.indices?.[key],d=obj?.index;const valid=obj?.status==='ok'&&d&&/^\d{4}-\d{2}-\d{2}$/.test(d.date)&&Number.isFinite(d.close);
+  if(valid){db[key].price=d.close;db[key].date=d.date;db[key].fiveDay=d.five_day_change_pct;}
+  const facts=feed?.research?.version===1?(feed.research.indices?.[key]||{}):legacyFactors(obj);
+  for(const f of FACTORS){
+   const m=db[key].factors[f.id],r=facts[f.id];
+   if(f.id==='cvd'&&hasVerifiedTrade&&key===current)continue;
+   const manualAge=(Math.max(Date.now(),Date.parse((d?.date||'')+'T16:00:00+08:00'))-Date.parse((m.date||'')+'T16:00:00+08:00'))/86400000;
+   if(f.id!=='cvd'&&m.mode==='manual'&&Number.isFinite(manualAge)&&manualAge>=0&&manualAge<=14)continue;
+   const age=r?.date&&d?.date?(Date.parse(d.date)-Date.parse(r.date))/86400000:Infinity;
+   const limit=f.id==='earnings'?200:f.id==='liquidity'?75:['leverage','etf'].includes(f.id)?7:0;
+   const usable=valid&&!feedStale&&f.id!=='cvd'&&r?.status==='ok'&&Number.isFinite(r.score)&&r.score>=1&&r.score<=10&&age>=0&&age<=limit;
+   const reason=!valid?'指数行情无效':feedStale?'数据文件超过7天未更新或时间无效':r?.reason||'本项未返回可用数据';
+   db[key].factors[f.id]={weight:m.weight,mode:'auto',score:usable?r.score:null,kind:usable?'verified':'missing',status:usable?'ok':r?.status==='not_connected'?'not_connected':'unavailable',date:r?.date||'',proxy:!!r?.proxy,lastGood:r?.last_good,
+    note:usable?`${r.source||'公开数据'}；数据日期 ${r.date}。${r.rule||''}。${r.scope||''}${r.period?'；报告/观察期 '+r.period:''}${r.coverage!=null?'；覆盖 '+(r.coverage*100).toFixed(1)+'%':''}${r.lag_trading_days?'；滞后 '+r.lag_trading_days+'个交易日':''}`:`不计分：${usable?'':reason}${r?.status==='ok'?'；日期或分数校验未通过':''}`};
   }
-  liveInfo.initialized=true;
-  for(const key of ['cy','kc']){
-    const obj=feed.indices[key];
-    if(!obj || obj.status!=='ok' || !obj.index)continue;
-    const d=obj.index;
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(d.date)||!Number.isFinite(d.close))continue;
-    // Do not overwrite a newer manually imported historical record.
-    if(db[key].date && d.date < db[key].date)continue;
-    db[key].price=d.close;
-    db[key].date=d.date;
-    db[key].fiveDay=d.five_day_change_pct;
-    const t=db[key].factors.trend;
-    const trendValue=clamp(5.5+(d.close>=d.ma20?1:-1)+(d.ma20>=d.ma60?1:-.7)+clamp(d.five_day_change_pct/4,-2,2),1,10);
-    t.score=+trendValue.toFixed(1);t.kind='verified';t.date=d.date;
-    t.note=`来源：AKShare/东方财富${d.date}日线；收盘${nfmt(d.close)}，MA20=${nfmt(d.ma20)}，MA60=${nfmt(d.ma60)}，5日涨跌=${nfmt(d.five_day_change_pct)}%。固定规则：5.5+价格是否在MA20上方(±1)+MA20是否高于MA60(+1/−0.7)+5日涨幅÷4（截断±2），分数限制1–10；非历史回测胜率。`;
-    const v=db[key].factors.volume;
-    if(Number.isFinite(d.amount_ratio_20d)&&Number.isFinite(d.daily_change_pct)){
-      const volumeScore=clamp(5+2*(d.amount_ratio_20d-1)+Math.sign(d.daily_change_pct)*Math.min(Math.abs(d.daily_change_pct),3)*.4,1,10);
-      v.score=+volumeScore.toFixed(1);v.kind='verified';v.date=d.date;
-      v.note=`来源：AKShare/东方财富${d.date}成交额；今日/此前20个交易日平均=${nfmt(d.amount_ratio_20d,3)}；当日涨跌=${nfmt(d.daily_change_pct)}%。评分映射5+2×(量比−1)+当日涨跌方向×min(涨跌幅绝对值,3)×0.4，截断1–10。这里只说明量价状态，不代表未来上涨概率。`;
-    }
-    // A stale factor is not a current market observation. Keep its explanation but remove its score.
-    for (const id of ['value','earnings','liquidity','breadth','etf','leverage']) {
-      const m=db[key].factors[id];
-      const age=(Date.parse(d.date+'T16:00:00+08:00')-Date.parse((m.date||'1970-01-01')+'T16:00:00+08:00'))/86400000;
-      if (m.kind!=='missing' && age>12) {
-        m.note='自动停用过期（超过12自然日）的旧分析，需重新核实。原有说明：'+m.note;
-        m.score=null;m.kind='missing';
-      }
-    }
-    // CVD may never be carried from localStorage, as raw data is deliberately not persisted.
-    if(!hasVerifiedTrade){const cv=db[key].factors.cvd;cv.score=null;cv.kind='missing';cv.date='';cv.note='本次网页未导入经核验的Level-2真实逐笔主动买卖数据，CVD不计分。';}
-    // Deliberately no auto-verification of valuation, earnings, constituent breadth, ETF share flows or margin.
-  }
-  save();render();showFeed();
+  const v=facts.value;db[key].valuation=v?.status==='ok'&&!feedStale?{text:'PE '+nfmt(v.pe,2),desc:'绝对PE研究标尺 · '+v.date+'；非历史百分位'}:{text:'—',desc:'估值数据缺失或已过期'};
+ }
+ save();render();showFeed();
 }
 function showFeed(){
-  const feed=window.SIGNAL_LIVE;
-  if(!feed?.indices)return;
-  const obj=feed.indices[current];
-  const d=obj?.index;
-  $('#feedBadge').textContent=d?.date?'已同步日线':'该指数同步失败';
-  $('#feedMeta').textContent=`来源：${feed.source}；更新脚本运行于 ${feed.generated_at?.replace('T',' ')||'未知'}；行情交易日 ${d?.date||'未知'}。${obj?.status==='unavailable'?obj.reason:''}`;
-  const etf=obj?.etf, share=obj?.etf_shares;
-  $('#feedMetrics').innerHTML=d?[
-     ['指数收盘',nfmt(d.close)],['MA20 / MA60',nfmt(d.ma20,1)+' / '+nfmt(d.ma60,1)],
-     ['5日涨跌',(d.five_day_change_pct>=0?'+':'')+nfmt(d.five_day_change_pct)+'%'],
-     ['成交额比20日均值',Number.isFinite(d.amount_ratio_20d)?nfmt(d.amount_ratio_20d,2)+'×':'—'],
-     ['跟踪ETF收盘',etf?.status==='unavailable'?'接口失败':nfmt(etf?.close,3)],
-     ['ETF份额5日变化',Number.isFinite(share?.five_session_change_pct)?nfmt(share.five_session_change_pct)+'%':'未获得权限'],
-     ['全A上涨比例',feed.breadth?.status==='ok'?nfmt(feed.breadth.up_ratio*100,1)+'%':'数据缺失'],
-     ['CVD真实逐笔','未连接']
-  ].map(([k,v])=>`<div class="live-tile"><label>${esc(k)}</label><strong>${esc(v)}</strong></div>`).join(''):'';
-  $('#feedWarning').textContent='注意：只有日线趋势与量价自动刷新并参与评分；全A市场广度≠指数成分股广度，单只ETF份额≠全部ETF净申赎。CVD没有真实逐笔就不会评分。'+(d?.date&&new Date()-new Date(d.date+'T16:00:00+08:00')>1000*60*60*24*5?' 当前行情可能已过期。':'');
-  document.querySelector('header .pill').textContent='● 日线自动同步 · 非Level-2';
+ const feed=window.SIGNAL_LIVE,obj=feed?.indices?.[current],d=obj?.index;
+ const facts=db[current].factors,auto=FACTORS.filter(f=>facts[f.id].mode==='auto'&&facts[f.id].score!=null).length;
+ $('#feedBadge').textContent=`自动可用 ${auto}/9`;
+ $('#feedMeta').textContent=`采集时间 ${feed?.generated_at?.replace('T',' ')||'未连接'}；指数交易日 ${d?.date||'未知'}。任务成功与各项数据健康分别检查。`;
+ const raw=feed?.research?.indices?.[current]||{};
+ $('#feedMetrics').innerHTML=FACTORS.map(f=>{const m=facts[f.id];return `<div class="live-tile"><label>${esc(f.name)}${m.proxy?' · 代理':''}</label><strong>${m.mode==='manual'?'手动':m.score==null?'未计分':nfmt(m.score,1)+'/10'}</strong><div class="tiny">${esc(m.date||raw[f.id]?.reason||'无有效数据')}</div></div>`}).join('');
+ $('#feedWarning').textContent='代理范围：量价可能用单只ETF；申赎仅观察ETF份额；融资为板块样本；宏观为M2/LPR；盈利为已披露财报。估值是绝对PE规则。真实CVD未接通，分钟PVD不进入该维评分。缺失项目不按中性分填充。';
+ document.querySelector('header .pill').textContent=`● 九维健康 ${auto}/9 · 收盘研究`;
 }
 $('#feedRefresh').addEventListener('click',()=>{
   const script=document.createElement('script');script.src='./data.js?reload='+Date.now();

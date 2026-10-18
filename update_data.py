@@ -245,7 +245,23 @@ def _one_margin_date(ak,key,date,price):
         previous=signal.signal(signal.SIGALRM,alarm_handler)
         signal.setitimer(signal.ITIMER_REAL, 16)
     try:
-        df=method(date=date.replace('-',''))
+        try:
+            df=method(date=date.replace('-',''))
+        except Exception:
+            if key!='cy':
+                raise
+            # Same exchange and same historical aggregation scope. Direct
+            # bounded XLSX parsing also handles numeric columns that some
+            # AKShare versions incorrectly assume are strings.
+            import io
+            import pandas as pd
+            from research_factors import request
+            raw=request('https://www.szse.cn/api/report/ShowReport',
+                        {'SHOWTYPE':'xlsx','CATALOGID':'1837_xxpl','txtDate':date,
+                         'tab2PAGENO':1,'TABKEY':'tab2'},
+                        referer='https://www.szse.cn/disclosure/margin/margin/index.html',
+                        binary=True,timeout=8)
+            df=pd.read_excel(io.BytesIO(raw),dtype={'证券代码':str})
         return _margin_snapshot(df,exchange,date,price)
     finally:
         if use_alarm:
@@ -264,6 +280,7 @@ def optional_board_margin(ak,indices):
     started=time.monotonic()
     max_backfill_seconds=450  # leave time for historical index fetch and GitHub push
     for key in ('cy','kc'):
+        board_started=time.monotonic()
         item=indices.get(key,{})
         index=item.get('index') if isinstance(item,dict) else None
         history=(index or {}).get('history',[])
@@ -280,13 +297,13 @@ def optional_board_margin(ak,indices):
             continue
         recent=history[-185:]
         needs=[d for d in reversed(recent) if d.get('date') not in records]
-        # Backfill up to 185 sessions, 34 requests per board per run.
+        # Give both exchanges equal time; incremental history survives failures.
         # Preserve successes across runs; exchanges may temporarily block calls.
         attempts=0
         messages=[]
         new_records=0
-        for day in needs[:34]:
-            if time.monotonic()-started>max_backfill_seconds:
+        for day in needs[:185]:
+            if time.monotonic()-started>max_backfill_seconds or time.monotonic()-board_started>210:
                 print('两融回填触及本次时间预算，将在下次任务继续补齐',flush=True)
                 break
             attempts+=1
@@ -774,12 +791,13 @@ def build(ak):
             etf=load_etf_with_fallback(ak,cfg,start,end)
         except Exception as exc:
             etf={'status':'unavailable','reason':str(exc)[:140]}
-        share=optional_etf_shares(cfg['tushare'])
+        share={'status':'pending','reason':'由交易所份额采集器更新，无需Token'}
         result['indices'][key]={'status':'ok','index':index,'etf':etf,'etf_shares':share}
     if len(success_dates) != len(CONFIG):
         raise RuntimeError('至少一个指数的所有行情来源均失败，拒绝覆盖旧快照')
-    # Run full-market query only once. Its scope must be explicit.
-    result['breadth']=optional_breadth(ak,max(success_dates))
+    # All-A up/down counts do not measure either index's constituent breadth.
+    # The research collector below computes each actual basket's MA60 ratio.
+    result['breadth']={'status':'superseded','reason':'已改用指数成分股MA60广度，全A上涨家数不参与评分'}
     result['margin']=optional_board_margin(ak,result['indices'])
     previous_backtests = _previous_backtest_series()
     result['backtests'] = {}
@@ -808,6 +826,30 @@ def build(ak):
                 'available_days': len(rows),
                 'last_date': rows[-1]['date'] if rows else None,
                 'kind': 'minute_clv_body_proxy'}
+    # The research collector is optional to market history, but every factor
+    # has an explicit health state. A successful workflow is not nine successes.
+    from research_factors import collect_research, IDS, missing
+    try:
+        raw = (ROOT/'data.js').read_text(encoding='utf-8')
+        previous = json.loads(raw.split('window.SIGNAL_LIVE = ', 1)[1].strip().rstrip(';')).get('research', {})
+    except (OSError, ValueError, IndexError):
+        previous = {}
+    try:
+        result['research'] = collect_research(result, previous)
+    except Exception as exc:
+        print('九维采集失败，日线及历史仍保留: '+str(exc)[:160], file=sys.stderr, flush=True)
+        result['research'] = {'version':1, 'indices':{
+            k:{name:missing('九维采集整体失败: '+str(exc)[:160]) for name in IDS} for k in CONFIG},
+            'cache':previous.get('cache', {}), 'health':{k:{'ok':0,'total':9,'missing':list(IDS)} for k in CONFIG}}
+    for key in CONFIG:
+        shares=result['research'].get('indices',{}).get(key,{}).get('etf',{})
+        result['indices'][key]['etf_shares']={
+            'status':shares.get('status','unavailable'), 'date':shares.get('date'),
+            'source':shares.get('source'), 'reason':shares.get('reason'),
+            'shares_ten_thousand':shares.get('shares',0)/10000 if shares.get('shares') is not None else None,
+            'five_session_change_pct':shares.get('five_session_change_pct'),
+            'lag_trading_days':shares.get('lag_trading_days'),
+            'scope':'单只观察ETF，非全部ETF合计'}
     return result
 
 
