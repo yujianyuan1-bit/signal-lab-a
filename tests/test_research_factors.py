@@ -124,6 +124,7 @@ class ResearchTests(unittest.TestCase):
         previous = dict(indices={k: {'value':good} for k in ('cy', 'kc')})
         with patch.object(r, 'constituents', side_effect=ValueError('offline')), \
              patch.object(r, 'index_turnover_ratio', side_effect=ValueError('offline')), \
+             patch.object(r, 'benchmark_history', side_effect=ValueError('offline')), \
              patch.object(r, 'liquidity_factor', side_effect=ValueError('offline')), \
              patch.object(r, 'valuation_factor', side_effect=ValueError('offline')), \
              patch.object(r, 'shares_factor', side_effect=ValueError('offline')):
@@ -131,6 +132,27 @@ class ResearchTests(unittest.TestCase):
         self.assertIsNone(got['indices']['cy']['value']['score'])
         self.assertEqual(got['indices']['cy']['value']['last_good']['score'], 7)
         self.assertEqual(got['indices']['cy']['cvd']['status'], 'not_connected')
+
+    def test_relative_direction_scale_invariance_and_missing_day(self):
+        m=market()
+        base=dict(status='ok',date=m['date'],history=[dict(x) for x in m['history']])
+        # Target beats a flat Shanghai benchmark, hence Shanghai/target falls.
+        m['history'][-1]['close']=110
+        got=r.relative_strength_factor(m,base)
+        self.assertGreater(got['relative_20d_pct'],0)
+        self.assertGreater(got['score'],5)
+        self.assertEqual(got['recommended_weight'],0)
+        scaled=dict(m,history=[dict(x,close=x['close']*100) for x in m['history']])
+        self.assertEqual(got['score'],r.relative_strength_factor(scaled,base)['score'])
+        del base['history'][-6]
+        with self.assertRaisesRegex(ValueError,'共同交易日'):
+            r.relative_strength_factor(m,base)
+
+    def test_relative_does_not_forward_fill_stale_benchmark(self):
+        m=market()
+        with self.assertRaisesRegex(ValueError,'不匹配'):
+            r.relative_strength_factor(m,dict(status='ok',date='2026-01-01',history=m['history']))
+        self.assertIsNone(r.relative_strength_factor(m,dict(status='unavailable',reason='offline'))['score'])
 
 
 if __name__ == '__main__':
