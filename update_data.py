@@ -10,6 +10,7 @@ import json
 import math
 import os
 import sys
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -70,7 +71,7 @@ def record_from_history(df, date_col, price_col, amount_col):
         'amount_ratio_20d': round(amount_ratio, 3) if amount_ratio is not None else None,
         'twenty_day_low': round(min(prices[-20:]), 4),
         'twenty_day_high': round(max(prices[-20:]), 4),
-        'history': [{'date': r['date'], 'close': round(r['close'], 4)} for r in rows[-65:]],
+        'history': [{'date': r['date'], 'close': round(r['close'], 4)} for r in rows[-245:]],
     }
 
 
@@ -260,6 +261,8 @@ def optional_board_margin(ak,indices):
     """
     previous=_load_previous_margin()
     result={}
+    started=time.monotonic()
+    max_backfill_seconds=450  # leave time for historical index fetch and GitHub push
     for key in ('cy','kc'):
         item=indices.get(key,{})
         index=item.get('index') if isinstance(item,dict) else None
@@ -272,20 +275,25 @@ def optional_board_margin(ak,indices):
         scope={'cy':'创业板融资标的股票(300/301)，非创业板指成分股','kc':'科创板融资标的股票(688/689)，非科创50成分股'}[key]
         if not history:
             result[key]={'status':'unavailable','scope':scope,'source':source,
-                         'series':sorted(records.values(),key=lambda x:x['date'])[-90:],
+                         'series':sorted(records.values(),key=lambda x:x['date'])[-195:],
                          'reason':'指数没有交易日期，无法确认两融数据日期'}
             continue
-        recent=history[-40:]
+        recent=history[-185:]
         needs=[d for d in reversed(recent) if d.get('date') not in records]
-        # Max 12 dates per board per run; oldest holes will be filled incrementally.
-        # Prefer last reported sessions; data may lag close by one exchange day.
+        # Backfill up to 185 sessions, 34 requests per board per run.
+        # Preserve successes across runs; exchanges may temporarily block calls.
         attempts=0
         messages=[]
-        for day in needs[:12]:
+        new_records=0
+        for day in needs[:34]:
+            if time.monotonic()-started>max_backfill_seconds:
+                print('两融回填触及本次时间预算，将在下次任务继续补齐',flush=True)
+                break
             attempts+=1
             try:
                 row=_one_margin_date(ak,key,day['date'],day['close'])
                 records[day['date']]=row
+                new_records+=1
                 print(f'两融 {key} {day["date"]} {row["stock_count"]} 只, {row["financing_balance"]:.0f} 元',flush=True)
             except Exception as exc:
                 msg=f'{day["date"]} {str(exc)[:100]}'
@@ -293,9 +301,9 @@ def optional_board_margin(ak,indices):
                 print('两融接口暂不可用：'+key+' '+msg,file=sys.stderr,flush=True)
                 # If last two calls fail (e.g. entire exchange down), stop trying
                 # older dates to avoid GitHub Actions rate-limits and long hangs.
-                if len(messages)>=3 and not records:
+                if len(messages)>=5 and new_records==0:
                     break
-        rows=sorted(records.values(),key=lambda x:x['date'])[-90:]
+        rows=sorted(records.values(),key=lambda x:x['date'])[-195:]
         latest_day=rows[-1]['date'] if rows else None
         last_index_day=index.get('date')
         trading_dates=[x['date'] for x in recent]
@@ -304,6 +312,8 @@ def optional_board_margin(ak,indices):
                      'source':source,'scope':scope,'balance_unit':'CNY','series':rows,
                      'date':latest_day,'lag_trading_days':lag,
                      'coverage_trading_days':len(rows),'attempted':attempts,
+                     'backfill_target_days':min(185,len(recent)),
+                     'missing_trading_days':sum(1 for d in recent if d['date'] not in records),
                      'reason':(messages[0] if messages else None),
                      'warning':'融资标的板块代理指标；不等于指数成分股或实际账户强平数据'}
         print(f'融资数据 {key} 状态 {result[key]["status"]}，已有 {len(rows)}日，最后 {latest_day}',flush=True)
@@ -441,6 +451,201 @@ def _build_backtest_history(ak, key, config, quote, previous):
             'reason': '公开指数历史数据源不可用或未通过一致性校验；不会生成虚构胜率'}
 
 
+"""Daily SignalLab minute-bar pressure proxy -- NOT a true trade-direction CVD.
+
+Collects actually published 1-minute ETF OHLCV, derives a bounded closing-
+location / candle-body proxy in CNY, stores verifiable bars and incremental
+historical summaries. A true signed-order flow series requires aggressor flags
+or reliable best-bid/ask quotes and trade-by-trade data.
+"""
+
+import signal
+
+TZ = ZoneInfo('Asia/Shanghai')
+
+
+def _number(x):
+    try:
+        v = float(str(x).replace(',', ''))
+        return v if math.isfinite(v) else None
+    except (ValueError, TypeError):
+        return None
+
+
+def _parse_minute_frame(df):
+    required = ['时间', '开盘', '收盘', '最高', '最低', '成交额']
+    if df is None or df.empty or any(x not in df.columns for x in required):
+        raise ValueError('ETF分钟数据为空，或缺少OHLC/成交额字段')
+    bars = {}
+    for _, row in df.iterrows():
+        timestamp = str(row['时间'])[:16]
+        if len(timestamp) != 16 or timestamp[4:5] != '-' or timestamp[10:11] != ' ':
+            continue
+        try:
+            parsed = datetime.strptime(timestamp, '%Y-%m-%d %H:%M')
+        except ValueError:
+            continue
+        hrmin = parsed.strftime('%H:%M')
+        # Exclude overnight, lunch break, and out-of-session bars.
+        if not ('09:30' <= hrmin <= '11:31' or '13:00' <= hrmin <= '15:00'):
+            continue
+        vals = [_number(row[name]) for name in ('开盘', '收盘', '最高', '最低', '成交额')]
+        if any(v is None for v in vals):
+            continue
+        op, cl, hi, lo, amount = vals
+        if min(op, cl, hi, lo) <= 0 or amount < 0 or hi < lo or hi < max(op, cl) - 1e-7 or lo > min(op, cl) + 1e-7:
+            continue
+        # Minute bars are not trade-order directions! The signed amount is a
+        # transparent price-position proxy and cannot be validated as CVD.
+        span = hi - lo
+        if span <= 0:
+            weight = 0.0
+        else:
+            clv = (2 * cl - hi - lo) / span
+            body = (cl - op) / span
+            weight = max(-1.0, min(1.0, 0.65 * clv + 0.35 * body))
+        signed = amount * weight
+        bars[timestamp] = {'date':timestamp[:10], 'time':hrmin,
+            'open':op,'close':cl, 'high':hi, 'low':lo,
+            'amount':amount,'proxy_delta':signed}
+    if not bars:
+        raise ValueError('有效ETF一分钟OHLCV记录为零')
+    return [bars[k] for k in sorted(bars)]
+
+
+def _group_minutes(bars, latest_index_date, latest_etf):
+    grouped = {}
+    for b in bars:
+        grouped.setdefault(b['date'], []).append(b)
+    summaries = []
+    latest_bars = None
+    for day in sorted(grouped):
+        if day > latest_index_date:
+            continue
+        rows = grouped[day]
+        # Do not pass off a half-day download as a full session.
+        positives = sum(r['amount'] > 0 for r in rows)
+        if len(rows) < 180 or positives < 120 or rows[-1]['time'] < '14:55':
+            print(f'分钟资金代理：{day}分钟数 {len(rows)}，非零分钟 {positives}，尾盘 {rows[-1]["time"]}，跳过不完整交易日', flush=True)
+            continue
+        if latest_etf and day == latest_etf.get('date') and _number(latest_etf.get('close')):
+            eclose = float(latest_etf['close'])
+            if abs(rows[-1]['close'] / eclose - 1) > 0.02:
+                print(f'分钟资金代理：{day}收盘与日线ETF相差超过2%，不采用', file=sys.stderr, flush=True)
+                continue
+        volume = sum(x['amount'] for x in rows)
+        proxy = sum(x['proxy_delta'] for x in rows)
+        if volume <= 0:
+            continue
+        avg = proxy / volume
+        if abs(avg) > 1 + 1e-10:
+            raise ValueError('归一化压力值越界')
+        summaries.append({'date':day,'close':round(rows[-1]['close'],6),
+            'amount':round(volume,2),'pressure_amount':round(proxy,2),
+            'pressure_ratio':round(avg,6), 'bar_count':len(rows),
+            'nonzero_minutes':positives})
+        latest_bars = [[r['time'],round(r['close'],6),round(r['proxy_delta'],2),round(r['amount'],2)] for r in rows]
+    return summaries, latest_bars
+
+
+def _preserved_days(old):
+    clean={}
+    for row in old.get('days', []) if isinstance(old, dict) else []:
+        if not isinstance(row,dict):
+            continue
+        date=row.get('date'); v=_number(row.get('pressure_amount')); a=_number(row.get('amount'));cl=_number(row.get('close'))
+        if isinstance(date,str) and len(date)==10 and a is not None and a>0 and v is not None and cl is not None and cl>0 and abs(v)<=a*1.0001:
+            clean[date] = row
+    return clean
+
+
+def build_minute_proxy(ak, cfg, index_record, etf_record, previous):
+    """Best-effort additive data; failure must never break existing live feeds."""
+    latest = (index_record or {}).get('date')
+    old = previous if isinstance(previous,dict) else {}
+    days=_preserved_days(old)
+    code = cfg['etf']
+    result={'kind':'minute_clv_body_proxy','etf':code,'status':'unavailable',
+        'source':'AKShare / 东方财富 fund_etf_hist_min_em (1min, 非逐笔)',
+        'method':'0.65*CLV + 0.35*实体幅度, 乘以每分钟成交额（元）',
+        'caveat':'非真实逐笔CVD：OHLC无法识别谁主动成交，不得称为主力净买额',
+        'days':[], 'latest_minute':None,'quality':'unvalidated_proxy', 'reason':None}
+    if not latest:
+        result['days'] = [days[d] for d in sorted(days)][-150:]
+        result['available_days'] = len(result['days'])
+        result['last_date'] = result['days'][-1]['date'] if result['days'] else None
+        result['status'] = 'stale' if result['days'] else 'unavailable'
+        result['reason']='无已核对指数交易日期';return result
+    fresh_rows=[]; latest_minute=None;error=None
+    timer_on=hasattr(signal,'SIGALRM')
+    before = signal.getsignal(signal.SIGALRM) if timer_on else None
+    try:
+        if timer_on:
+            def _raise_timeout(signum, frame):
+                raise TimeoutError('ETF一分钟行情接口40秒无响应')
+            signal.signal(signal.SIGALRM,_raise_timeout)
+            signal.setitimer(signal.ITIMER_REAL, 40)
+        try:
+            raw = ak.fund_etf_hist_min_em(symbol=code, period='1', adjust='',
+                                           start_date='1979-01-01 09:30:00',
+                                           end_date='2222-01-01 15:01:00')
+        finally:
+            if timer_on:
+                signal.setitimer(signal.ITIMER_REAL,0)
+        bars = _parse_minute_frame(raw)
+        fresh_rows, latest_minute = _group_minutes(bars, latest, etf_record)
+        if not fresh_rows:
+            raise ValueError('分钟记录均不完整或与ETF日线不一致')
+    except Exception as exc:
+        error=str(exc)[:200]
+        print('分钟压力代理 '+code+' 数据暂不可用：'+error, file=sys.stderr, flush=True)
+    finally:
+        if timer_on:
+            signal.setitimer(signal.ITIMER_REAL,0)
+            signal.signal(signal.SIGALRM,before)
+    for row in fresh_rows:
+        days[row['date']]=row
+    ordered=[days[d] for d in sorted(days) if d <= latest][-150:]
+    result['days']=ordered
+    result['last_date']=ordered[-1]['date'] if ordered else None
+    idxdates=[r['date'] for r in index_record.get('history',[]) if isinstance(r,dict) and r.get('date')]
+    lag=sum(d>result['last_date'] and d<=latest for d in idxdates) if result['last_date'] else None
+    result['lag_trading_days']=lag
+    result['status'] = ('ok' if ordered and lag is not None and lag<=1 else
+                       'stale' if ordered else 'unavailable')
+    if latest_minute and fresh_rows and fresh_rows[-1]['date']==ordered[-1]['date']:
+        result['latest_minute']={'date':fresh_rows[-1]['date'],'bars':latest_minute}
+    elif old.get('latest_minute') and old.get('latest_minute',{}).get('date')==result['last_date']:
+        result['latest_minute']=old['latest_minute']
+    result['reason']=error
+    result['available_days']=len(ordered)
+    result['last_index_date']=latest
+    return result
+
+
+def build_all_cvd_proxy(ak, config, indices, previous):
+    result={}
+    for k,cfg in config.items():
+        doc=indices.get(k,{})
+        r=build_minute_proxy(ak,cfg,doc.get('index') if isinstance(doc,dict) else None,
+                             doc.get('etf') if isinstance(doc,dict) else None,
+                             previous.get(k, {}) if isinstance(previous,dict) else {})
+        result[k]=r
+        print(f'ETF分钟资金代理 {k} {r["status"]} {r.get("last_date")} {r["available_days"]}日', flush=True)
+    return result
+
+
+def _previous_cvd_proxy():
+    try:
+        raw=(ROOT/'data.js').read_text(encoding='utf-8')
+        marker='window.SIGNAL_LIVE = '
+        pos=raw.find(marker)
+        if pos<0: return {}
+        obj=json.loads(raw[pos+len(marker):].strip().rstrip(';'))
+        return obj.get('cvd_proxy', {}) if isinstance(obj.get('cvd_proxy', {}), dict) else {}
+    except (OSError, ValueError, TypeError):
+        return {}
+
 def build(ak):
     now = datetime.now(TZ)
     start = (now-timedelta(days=390)).strftime('%Y%m%d')
@@ -450,7 +655,7 @@ def build(ak):
               'indices': {}, 'breadth': {'status':'not_collected'},
               'notes': ['公开行情接口可能延迟、中断或调整；逐项保留数据日期',
                         '自动评分仅为透明模型计算，不代表回测胜率或收益预测',
-                        '没有真实Level-2逐笔主动买卖数据，无法自动计算真实CVD']}
+                        '没有真实Level-2逐笔主动买卖数据，无法自动计算真实CVD；新增ETF分钟价格压力代理不等于真实CVD']}
     success_dates=[]
     for key, cfg in CONFIG.items():
         print('获取指数', cfg['index'], flush=True)
@@ -480,6 +685,25 @@ def build(ak):
         result_item = result['backtests'][key]
         print(f'回测日线 {key}: {result_item.get("status")}，{result_item.get("count",0)}天，'
               f'截至 {result_item.get("as_of","N/A")}',flush=True)
+    # CVD proxy is strictly experimental, entirely optional and cannot change
+    # A-share daily download success. Never fake actual aggressor CVD.
+    previous_proxy = _previous_cvd_proxy()
+    try:
+        result['cvd_proxy']=build_all_cvd_proxy(ak, CONFIG, result['indices'], previous_proxy)
+    except Exception as exc:
+        print('分钟资金代理整体异常，原有指数评分和回测数据保持正常：'+str(exc)[:150], file=sys.stderr, flush=True)
+        result['cvd_proxy'] = {}
+        for key in CONFIG:
+            old = previous_proxy.get(key, {})
+            old = old if isinstance(old, dict) else {}
+            days = _preserved_days(old)
+            rows = [days[d] for d in sorted(days)][-150:]
+            result['cvd_proxy'][key] = {
+                **old, 'status': 'stale' if rows else 'unavailable',
+                'reason': str(exc)[:120], 'days': rows,
+                'available_days': len(rows),
+                'last_date': rows[-1]['date'] if rows else None,
+                'kind': 'minute_clv_body_proxy'}
     return result
 
 

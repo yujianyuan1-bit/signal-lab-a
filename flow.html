@@ -2,15 +2,53 @@
 :root{color-scheme:dark;--bg:#090f1c;--panel:#111e30;--panel2:#18273d;--ink:#e7f0f8;--sub:#93a4b9;--aqua:#43d8b0;--red:#fb8b99;--line:#293c54;--amber:#f7bd70}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#193047 0%,var(--bg) 45%);color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft Yahei',sans-serif}.wrap{max-width:1080px;margin:auto;padding:18px 14px 100px}a{color:var(--aqua);text-decoration:none}.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}.brand{display:flex;align-items:center;gap:10px;font-weight:780;font-size:19px;letter-spacing:-.4px}.logo{height:38px;width:38px;border-radius:12px;background:linear-gradient(140deg,#72bdf5,#3de1ae);color:#091525;display:grid;place-items:center;font-weight:900}.ghost{border:1px solid var(--line);padding:8px 12px;border-radius:10px;color:#d0e9e7}.hero{background:linear-gradient(130deg,#132c3e,#112036 58%,#1a2540);border:1px solid #29465b;border-radius:21px;padding:23px 20px;margin-bottom:16px}h1{font-size:clamp(23px,5vw,35px);line-height:1.25;margin:0 0 11px}p{margin:8px 0;color:var(--sub)}.eyebrow{color:var(--aqua);letter-spacing:.1em;font-size:11px;font-weight:700}.tag{display:inline-block;border-radius:7px;font-size:11px;font-weight:650;padding:3px 9px;background:#27364a;color:#bbd0e0}.tag.warn{color:#f5c48a;background:#4a3320}.tabs{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}.tab{background:#182b3e;border:1px solid #355069;color:#c9dbea;padding:11px 16px;border-radius:12px;cursor:pointer;font-size:14px}.tab.active{background:#164539;border-color:#3cd7a9;color:#d8fff3}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}.card h2{font-size:20px;margin:0}.card h3{font-size:14px;margin:0}.stat{padding:13px 14px;background:var(--panel2);border:1px solid #354961;border-radius:13px}.stat small{color:var(--sub);display:block}.stat strong{font-size:20px}.details{margin-top:12px;color:var(--sub);font-size:12px}.source{font-size:12px;color:var(--sub)}.note{border:1px solid #795633;background:#30241b;color:#f0c99d;border-radius:12px;padding:12px 14px;margin:14px 0;font-size:13px}.clean{border:1px solid #245e50;background:#132a2a;color:#a6edcf}.sectionTop{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:16px}.sectLead{font-size:12px;color:var(--sub)}.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.inputZone{border:1px dashed #456681;border-radius:13px;padding:14px;background:#102136}.inputZone label{font-weight:600;display:block;margin-bottom:6px}input[type=file]{display:block;width:100%;max-width:100%;font-size:12px}select,input[type=number],input[type=range]{width:100%;color:var(--ink);background:#16283d;border:1px solid #38506b;border-radius:9px;padding:9px;font-size:13px}input[type=range]{padding:0;accent-color:var(--aqua)}button{border:1px solid #36516d;border-radius:9px;padding:8px 12px;color:var(--ink);background:#18304a;font-size:13px;cursor:pointer}button.primary{background:#3fd5aa;color:#0a2430;font-weight:750}button:disabled{opacity:.5}.lab{background:#0c192a;border-radius:14px;min-height:140px;border:1px solid #30455c;overflow:hidden;padding:10px}.empty{min-height:120px;display:grid;place-items:center;text-align:center;padding:16px;color:#90a2b6;font-size:13px}.legend{display:flex;gap:15px;font-size:12px;color:var(--sub);margin-top:6px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.d1{background:var(--aqua)}.d2{background:#b0b9ff}.heatkey{font-size:11px;color:var(--sub);margin-top:5px}svg{display:block;width:100%;height:auto}.meter{display:flex;gap:4px;margin:12px 0}.meter>span{height:9px;flex:1;background:#21374e;border-radius:3px}.meter>span.on{background:#50d6af}table{width:100%;font-size:12px;border-collapse:collapse}td,th{text-align:left;padding:8px 5px;border-bottom:1px solid #273b55;color:#b6c9d9}td:last-child{text-align:right}th{font-weight:650;color:#e2edf5}#topPrice{font-size:26px}.footer{margin:20px 0;color:#70839a;font-size:12px}code{font-size:12px;color:#bedce9;overflow-wrap:anywhere}details{margin-top:9px}summary{cursor:pointer;color:#b9d8e4;font-size:13px}hr{border:0;border-top:1px solid #284158;margin:14px 0}@media(max-width:660px){.cols{grid-template-columns:1fr}.hero{padding:19px 16px}.head{align-items:center}.brand{font-size:16px}.wrap{padding:12px 11px 60px}}
 
 body.embed .wrap{max-width:1120px;padding:16px 14px 36px}
+.btStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:13px 0}
+.btStat{background:#18283b;border:1px solid #304864;padding:13px 10px;border-radius:12px;min-width:0}
+.btStat strong{display:block;font-size:clamp(17px,3vw,25px);line-height:1.35;overflow-wrap:anywhere;color:#f0f6ff}
+.btStat span{display:block;color:#9db1c6;font-size:11px}
+.btTabs{display:flex;gap:7px;flex-wrap:wrap;margin:13px 0}.btTabs button[aria-pressed=true]{background:#175243;border-color:#58dfb3}
+.btTableWrap{overflow:auto;-webkit-overflow-scrolling:touch}.btTableWrap table{min-width:565px}
+.btGood{color:#59dfb5!important}.btBad{color:#ff97a0!important}
+.btNote{font-size:12px;color:#9fb3c8;margin-top:9px}
+@media(max-width:660px){.btStats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 body.embed header.head{display:none}
 body.embed .hero{margin-bottom:15px}
 body.embed .footer{padding-bottom:20px}
 </style></head><body><div class="wrap"><header class="head"><div class="brand"><div class="logo">S</div><span>SignalLab <span style="color:#9aacc5">/ Flow</span></span></div><a class="ghost" href="./">← 返回评分首页</a></header>
-<section class="hero"><div class="eyebrow">ORDER FLOW RESEARCH · BETA 0.1</div><h1>订单流拟合 · 融资压力热力图</h1><p>为创业板和科创50设计的研究工具。只展示可以追溯数据源的计算；没有逐笔或融资余额序列时，不会画出虚构的CVD、强平热力图。</p><div class="row"><span class="tag warn">非真实强平地图</span><span class="tag">适配 GitHub Pages</span><span class="tag">站内模块 · 不影响原评分</span></div><div class="tabs"><button class="tab active" data-key="cy">创业板指 399006</button><button class="tab" data-key="kc">科创50 000688</button></div></section>
+<section class="hero"><div class="eyebrow">ORDER FLOW RESEARCH · A股专用 5.0</div><h1>订单流拟合 · 融资压力热力图</h1><p>为创业板和科创50设计的研究工具。只展示可以追溯数据源的计算；没有逐笔或融资余额序列时，不会画出虚构的CVD、强平热力图。</p><div class="row"><span class="tag warn">非真实强平地图</span><span class="tag">适配 GitHub Pages</span><span class="tag">站内模块 · 不影响原评分</span></div><div class="tabs"><button class="tab active" data-key="cy">创业板指 399006</button><button class="tab" data-key="kc">科创50 000688</button></div></section>
 <section class="card"><div class="sectionTop"><div><h2>已连接的日线背景</h2><div class="sectLead">从现有 data.js 读取 · 指数无单独订单簿</div></div><span class="tag" id="feedTag">读取中</span></div><div class="grid"><div class="stat"><small>指数最新收盘</small><strong id="topPrice">—</strong></div><div class="stat"><small>行情日期</small><strong id="topDate">—</strong></div><div class="stat"><small>MA20 / MA60</small><strong id="topMa">—</strong></div><div class="stat"><small>跟踪ETF</small><strong id="topEtf">—</strong></div></div><div class="details" id="feedDetail">正在尝试加载原网站的公开日线快照…</div></section>
-<section class="card"><div class="sectionTop"><div><h2>01 · CVD / 主动成交差</h2><div class="sectLead">按数据质量分级：交易所方向 ＞ 报价推断 ＞ Tick规则推断</div></div><span class="tag warn" id="cvdFlag">等待逐笔数据</span></div><div class="note">⚠️ 只有价格、日K和成交额，不能准确还原CVD。这里不会把阳线成交量、ETF净申购或主力资金净流入伪装成主动买盘。</div><div class="cols"><div class="inputZone"><label for="tradeFile">导入ETF逐笔成交CSV</label><input id="tradeFile" type="file" accept=".csv,text/csv"><p style="font-size:12px">列名：<code>time,price,volume,side</code>；或有 <code>bid,ask</code>；也可仅有价格和成交量，软件会标为低置信度推断。</p><button id="tradeTemplate" type="button">下载逐笔CSV空模板</button></div><div class="inputZone"><label for="method">主动买卖方向判定</label><select id="method"><option value="auto">自动优先原始方向，其次报价，再Tick规则</option><option value="tick">仅用价格变化Tick规则（低置信）</option></select><p style="font-size:12px">CSV应来自当前选中的ETF：<strong id="tradeEtf">159915</strong>；默认跨整个文件累计、不自动清零，集合竞价需单独处理。</p><div id="tradeSummary" style="font-size:12px;color:#96b2c5">未导入。</div></div></div><div class="lab" style="margin-top:16px" id="cvdGraph"><div class="empty">导入有真实成交记录的ETF CSV后展示价格和CVD<br>未导入时不生成任何模拟趋势</div></div><div class="legend"><span><i class="dot d1"></i>ETF成交价（独立归一化）</span><span><i class="dot d2"></i>估算CVD（独立归一化）</span></div><div class="note clean" id="divergence">背离判断：暂缺逐笔数据。即便模型识别候选背离，也需要后续价格反应确认。</div></section>
+<section class="card"><div class="sectionTop"><div><h2>01 · CVD / 主动成交差</h2><div class="sectLead">按数据质量分级：交易所方向 ＞ 报价推断 ＞ Tick规则推断</div></div><span class="tag warn" id="cvdFlag">等待逐笔数据</span></div><div class="stat" id="autoProxyPanel" style="margin:14px 0 16px">
+<div class="row" style="justify-content:space-between"><h3>自动分钟成交压力代理 · PVD</h3><span class="tag warn" id="autoProxyBadge">等待1分钟行情</span></div>
+<div class="source" style="margin-top:5px">观察ETF：<strong id="autoProxyEtf">159915</strong> · 东方财富1分钟真实OHLC/成交额 · 用K线位置估算资金压力；<strong>非真实逐笔CVD，也不是主力净买额</strong>。</div>
+<div class="grid" style="margin-top:12px"><div class="stat"><small>最近已核验交易日 · 模型净压力比例</small><strong id="autoProxyRatio">—</strong></div><div class="stat"><small>累计有效交易日</small><strong id="autoProxyCount">—</strong></div></div>
+<div class="source" id="autoProxyMeta" style="margin:12px 0">尚未运行ETF分钟自动采集。</div>
+<h3 style="margin:14px 0 8px">ETF日线价格 / 累计拟合压力</h3>
+<div class="lab" id="autoProxyDailyChart"><div class="empty">需要至少2个完整分钟交易日形成日线曲线</div></div>
+<div class="legend"><span><i class="dot d1"></i>ETF日收盘（独立归一化）</span><span><i class="dot d2"></i>拟合累计压力（独立归一化）</span></div>
+<h3 style="margin:14px 0 8px">最近交易日 · 盘中1分钟曲线</h3>
+<div class="lab" id="autoProxyMinuteChart"><div class="empty">等待近期ETF一分钟真实OHLC数据</div></div>
+<div class="stat" style="margin:12px 0"><h3>资金痕迹共振观察 · 未经回测验证</h3><div id="cvdConfluence" class="source" style="margin-top:7px">等待价格、ETF分钟和融资数据。</div></div>
+<div class="note clean" id="autoProxySignal">底背离筛选：待至少16个交易日完整可比记录、成交价格与压力数据连续积累后开启。</div>
+<div class="source">**模型方法**：每分钟以收盘价在最高/最低价区间的位置（CLV）和K线实体方向估算成交压力，再乘本分钟真实成交额。即使拟合值为正，也不能证明主动买入额大于卖出额。本信号不自动计入1–10分买入评分，需真实逐笔数据和样本外验证。</div>
+</div><div class="note">⚠️ 只有价格、日K和成交额，不能准确还原CVD。这里不会把阳线成交量、ETF净申购或主力资金净流入伪装成主动买盘。</div><div class="cols"><div class="inputZone"><label for="tradeFile">导入ETF逐笔成交CSV</label><input id="tradeFile" type="file" accept=".csv,text/csv"><p style="font-size:12px">列名：<code>time,price,volume,side</code>；或有 <code>bid,ask</code>；也可仅有价格和成交量，软件会标为低置信度推断。</p><button id="tradeTemplate" type="button">下载逐笔CSV空模板</button></div><div class="inputZone"><label for="method">主动买卖方向判定</label><select id="method"><option value="auto">自动优先原始方向，其次报价，再Tick规则</option><option value="tick">仅用价格变化Tick规则（低置信）</option></select><p style="font-size:12px">CSV应来自当前选中的ETF：<strong id="tradeEtf">159915</strong>；默认跨整个文件累计、不自动清零，集合竞价需单独处理。</p><div id="tradeSummary" style="font-size:12px;color:#96b2c5">未导入。</div></div></div><div class="lab" style="margin-top:16px" id="cvdGraph"><div class="empty">导入有真实成交记录的ETF CSV后展示价格和CVD<br>未导入时不生成任何模拟趋势</div></div><div class="legend"><span><i class="dot d1"></i>ETF成交价（独立归一化）</span><span><i class="dot d2"></i>估算CVD（独立归一化）</span></div><div class="note clean" id="divergence">背离判断：暂缺逐笔数据。即便模型识别候选背离，也需要后续价格反应确认。</div></section>
 <section class="card"><div class="sectionTop"><div><h2>02 · 融资去杠杆压力热力图</h2><div class="sectLead">公开融资余额增量 + 相应指数价格 + 自选情景参数</div></div><span class="tag warn" id="heatFlag">场景模型 · 非强平数据</span></div><div class="stat" id="autoMarginPanel" style="margin:12px 0 16px"><small>交易所两融明细 · 自动汇总（板块代理，不是指数成分股）</small><strong id="autoMarginAmount">等待数据</strong><div class="source" id="autoMarginMeta">自动更新程序成功获取并验证至少8个交易日后，会在这里展示融资余额与压力场景。可继续手动导入CSV。</div></div><div class="note">这不是交易所披露的“清算位置”。个体账户的负债、其他抵押物、券商约定的维持担保比例均不可见；计算的是在假定条件下的相对融资压力集中带。请勿把热点当成必然强平点。</div><div class="cols"><div class="inputZone"><label for="finFile">导入融资余额序列CSV</label><input id="finFile" type="file" accept=".csv,text/csv"><p style="font-size:12px">需列：<code>date,price,financing_balance</code>。价格为当前指数的当日收盘，余额须是稳定一致的股票集合口径汇总（元）；若导入指数成分股口径，与自动汇总的板块代理口径不同，请勿混合。</p><button id="finTemplate" type="button">下载融资CSV空模板</button><div class="source" id="finSummary" style="margin-top:8px">尚未导入真实融资余额，热力图不会绘制。</div></div><div class="inputZone"><h3>情景假设（不是实际账户参数）</h3><div class="grid"><div><label for="initR" style="font-size:12px">建仓初期担保比例</label><select id="initR"><option value="1.8">180%</option><option value="2" selected>200%</option><option value="2.5">250%</option></select></div><div><label for="maintenance" style="font-size:12px">压力触发假设</label><select id="maintenance"><option value="1.3">130%</option><option value="1.4">140%</option><option value="1.5" selected>150%</option><option value="1.6">160%</option></select></div></div><label style="font-size:12px;display:block;margin-top:10px" for="halfLife">历史融资增量衰减半衰期：<strong id="halfLifeValue">40</strong>交易日</label><input id="halfLife" type="range" min="10" max="100" step="5" value="40"><div class="source">融资余额的日增量≠当日全部新增仓位；净减少也不等于全部强平。这里使用衰减的正向净增量构建情景样本。</div></div></div><div class="lab" id="heatGraph" style="margin-top:16px"><div class="empty">等待融资余额历史数据 · 不显示虚拟清算簇</div></div><div class="heatkey" id="heatLegend">色彩强弱代表模型内部的相对压力权重，不代表预计强平金额。</div><details><summary>模型算法与缺陷</summary><p style="font-size:12px">逐日用正的融资余额净变化构造假想“加仓 cohort”，将当天指数价格作为进入参考点，并按<code>假设压力价 = 当日价格 × 维持比例 / 初期比例</code>投影至价格轴；按历史远近衰减，对相邻价格带做核密度平滑。未观测到的账户担保物、多标的持仓及偿还行为无法恢复。这不是一个真实强平公式对全部账户的适用结果。</p></details></section>
-<section class="card"><h2>03 · 怎么让拟合越来越准？</h2><div class="meter"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div><table><tr><th>数据层级</th><th>当前使用</th></tr><tr><td>指数、ETF收盘与均线</td><td>现有日线自动更新</td></tr><tr><td>成交逐笔+买卖方向</td><td>CSV接入后计算；免费推断误差待验证</td></tr><tr><td>全成分股历史两融明细</td><td>当前自动连接板块代理（非指数成分股），成分股权重口径后续升级</td></tr><tr><td>期指IF/IC/IM持仓及期权OI</td><td>下一阶段，单独建持仓压力因子</td></tr><tr><td>对照真实L2验证</td><td>需取得样本，不能自称“准确率”</td></tr></table><p class="source">ETF与指数资金流不完全相同；科创50股票成分/权重变动也需要按时点处理。本站不使用演示数字填充真实数据空缺。</p></section>
+<section class="card" id="pressureBacktest">
+<div class="sectionTop"><div><h2>03 · 压力地图历史100日回测</h2><div class="sectLead">每日收盘计算当时可知的压力热区，再看未来真实指数收盘有没有触及</div></div><span class="tag warn" id="btFlag">历史核验中</span></div>
+<div class="note">这是<strong>融资余额代理模型的历史检验</strong>，不是交易所实际清算单命中率。回测仅使用观察日以前的融资资料（默认滞后一交易日）；未来收盘价只参与事后评价，不参与生成当时热区。触及≠强平发生。</div>
+<div class="btTabs" id="btPeriods"><button type="button" data-h="5" aria-pressed="false">未来5日</button><button type="button" data-h="10" aria-pressed="false">未来10日</button><button type="button" data-h="20" aria-pressed="true">未来20日</button></div>
+<div class="btStats">
+<div class="btStat"><span>过去100交易日有效预测</span><strong id="btSignals">—</strong></div>
+<div class="btStat"><span>已到期样本触及率</span><strong id="btHit">—</strong></div>
+<div class="btStat"><span>最近30日留出段</span><strong id="btHold">—</strong></div>
+<div class="btStat"><span>触及后5日反弹比例</span><strong id="btBounce">—</strong></div>
+</div>
+<div class="lab" id="btGraph"><div class="empty">正在检查是否取得足够历史融资数据与真实指数日线</div></div>
+<div class="legend" style="flex-wrap:wrap"><span><i class="dot d1"></i>后续触及</span><span><i class="dot" style="background:#ffad82"></i>后续未触及</span><span><i class="dot" style="background:#6b7d99"></i>资料不足或未到期</span></div>
+<div class="btTableWrap"><table><thead><tr><th>未来窗口</th><th>有效预测</th><th>已到期</th><th>触及率</th><th>留出段触及率</th><th>触及后5日均收益</th></tr></thead><tbody id="btRows"><tr><td colspan="6">等待真实资料</td></tr></tbody></table></div>
+<div class="source" id="btMeta" style="margin-top:10px">模型以板块融资余额的正向净变化代理加杠杆样本；历史数据不足时不会生成假的100日回测。</div>
+<details><summary>口径、限制和防未来数据泄漏</summary><p class="source">每天以当日指数收盘为起点，只使用上一个交易日及以前的融资余额、融资增量与当时收盘价格；计算模型压力价＝建仓参考收盘×假设压力比例/假设建仓担保比例。结合历史衰减与高斯平滑，选择当时价格下方约1%–30%的最高密度热区。日后价格在指定交易日内收盘跌到该热区附近（允许0.3%价格带）称为“触及”。若触及后第5个交易日收盘高于首次触及时收盘，则计为反弹。最近100个指数交易日按时间前70、后30划为研究段和留出观察段，未到期的预测排除，不主动选最优参数；结果高度相关、样本量可能较少。热区本身不是强平价格，亦没有剔除融资余额口径随标的调整的影响。</p></details>
+</section>
+<section class="card"><h2>04 · 怎么让拟合越来越准？</h2><div class="meter"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div><table><tr><th>数据层级</th><th>当前使用</th></tr><tr><td>指数、ETF收盘与均线</td><td>现有日线自动更新</td></tr><tr><td>成交逐笔+买卖方向</td><td>CSV接入后计算；免费推断误差待验证</td></tr><tr><td>全成分股历史两融明细</td><td>当前自动连接板块代理（非指数成分股），成分股权重口径后续升级</td></tr><tr><td>期指IF/IC/IM持仓及期权OI</td><td>下一阶段，单独建持仓压力因子</td></tr><tr><td>对照真实L2验证</td><td>需取得样本，不能自称“准确率”</td></tr></table><p class="source">ETF与指数资金流不完全相同；科创50股票成分/权重变动也需要按时点处理。本站不使用演示数字填充真实数据空缺。</p></section>
 <footer class="footer">SignalLab Flow · 研究与可视化软件，非投资建议。所有本地CSV均在本机浏览器解析，不上传。网络接口异常时仍可使用本地导入功能。</footer></div>
 <script src="./data.js"></script><script>
 'use strict';const $=s=>document.querySelector(s),N=x=>Number.isFinite(Number(x))?Number(x):null;const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let current='cy',trades=null,financing=null,finSource='auto';const etfCodes={cy:'159915',kc:'588000'};
@@ -95,9 +133,193 @@ function renderHeat(){
   const top=vals.slice().sort((a,b)=>b.density-a.density).slice(0,3);
   $('#heatLegend').textContent=`情景压力参考点：${top.map(x=>Math.round(x.p)).join(' / ')}。这些是模型密度峰值，既非真实强平价，也不是经过回测的预测。`;
 }
-$('#tradeTemplate').addEventListener('click',()=>dl('trade_columns.csv','time,price,volume,side,bid,ask\n'));$('#finTemplate').addEventListener('click',()=>dl('margin_columns.csv','date,price,financing_balance\n'));$('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-key]');if(!b)return;current=b.dataset.key;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));trades=null;setAutoFinancing();renderHeader();renderTrades();renderHeat();});$('#method').addEventListener('change',()=>{if(trades?.raw){let raw=trades.raw;trades=classify(raw);trades.raw=raw;renderTrades()}});$('#tradeFile').addEventListener('change',async e=>{try{const f=e.target.files?.[0];if(!f)return;const raw=parseCSV(await f.text());trades=classify(raw);trades.raw=raw;if(trades.out.length<2)throw Error('不足两笔有效成交，检查price、volume、side列名');renderTrades()}catch(err){alert('逐笔CSV读取失败：'+err.message)}e.target.value=''});$('#finFile').addEventListener('change',async e=>{try{const f=e.target.files?.[0];if(!f)return;const raw=parseCSV(await f.text());let rows=raw.map(r=>({date:String(r.date??''),price:Number(r.price),financing_balance:Number(r.financing_balance)})).filter(r=>r.date&&Number.isFinite(r.price)&&r.price>0&&Number.isFinite(r.financing_balance)&&r.financing_balance>=0).sort((a,b)=>a.date.localeCompare(b.date));rows=rows.filter((r,i)=>i===0||r.date!==rows[i-1].date);if(rows.length<8)throw Error('有效数据不足8日');financing=rows;finSource='csv';$('#autoMarginMeta').textContent='当前使用手动CSV绘图；切换指数可恢复自动两融数据。';renderHeat()}catch(err){alert('融资CSV读取失败：'+err.message)}e.target.value=''});['#initR','#maintenance','#halfLife'].forEach(sel=>$(sel).addEventListener('input',()=>{$('#halfLifeValue').textContent=$('#halfLife').value;renderHeat()}));setAutoFinancing();renderHeader();renderTrades();renderHeat();
+
+// ── 100-session, no-lookahead financing pressure backtest ────────────────
+let btHorizon=20;
+function btFmtRatio(r){return r==null?'—':(r*100).toFixed(1)+'%'}
+function btFinite(v){return typeof v==='number'&&Number.isFinite(v)}
+function btIndexBars(){
+  const all=window.SIGNAL_LIVE?.backtests?.[current];
+  let bars=Array.isArray(all?.bars)&&['ok','insufficient','stale'].includes(all?.status)?all.bars:[];
+  if(!bars.length)bars=(window.SIGNAL_LIVE?.indices?.[current]?.index?.history||[]).map(x=>[x.date,x.close]);
+  let prev='';return bars.map(x=>({date:String(x[0]),close:Number(x[1])})).filter(x=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(x.date)||!btFinite(x.close)||x.close<=0||x.date<=prev)return false;prev=x.date;return true});
+}
+function btTargetAt(bars,balances,i,params){
+  // The index close for evaluation day i is known at end-of-day. Margin
+  // observation from day i is NOT; use prior day only (T-1 assumption).
+  if(i<30)return null;
+  const byDate=new Map(balances.map(x=>[x.date,x]));
+  const past=[];
+  for(let k=Math.max(0,i-150);k<i;k++){
+    let z=byDate.get(bars[k].date);
+    if(z&&btFinite(z.financing_balance)&&z.financing_balance>=0)past.push({i:k,b:z.financing_balance,p:bars[k].close});
+  }
+  if(past.length<22 || past[past.length-1].i!==i-1)return null;
+  // Most recent 25 sessions must have at least 22 verified observations.
+  if(past.filter(x=>x.i>=i-25).length<22)return null;
+  const ratio=params.maint/params.init;
+  if(!(ratio>0&&ratio<1))return null;
+  const C=bars[i].close, cohorts=[];
+  for(let j=1;j<past.length;j++){
+    const a=past[j-1],b=past[j];
+    if(b.i-a.i!==1)continue; // don't treat a multi-day balance difference as one entry cohort
+    const inc=b.b-a.b;
+    if(inc<=0)continue;
+    const level=b.p*ratio;
+    if(level<C*.67 || level>C*.995)continue;
+    const age=i-b.i;
+    cohorts.push({level,weight:inc*Math.pow(.5,age/params.half)});
+  }
+  if(cohorts.length<2)return null;
+  let best=null,score=-1;
+  for(let z=0;z<=75;z++){
+    const p=C*(.70+z*(.295/75));
+    const dens=cohorts.reduce((sum,x)=>sum+x.weight*Math.exp(-.5*Math.pow((x.level-p)/(C*.012),2)),0);
+    if(dens>score){score=dens;best=p;}
+  }
+  if(!(score>0&&best<C*.995))return null;
+  return {level:best,distance:1-best/C,cohorts:cohorts.length};
+}
+function btCompute(bars,balances,h,params){
+  const start=Math.max(0,bars.length-100),mid=Math.max(0,bars.length-30);
+  const events=[];
+  for(let i=start;i<bars.length;i++){
+    const level=btTargetAt(bars,balances,i,params);
+    if(!level){events.push({i,date:bars[i].date,valid:false});continue;}
+    const matured=i+h<bars.length,limit=Math.min(bars.length-1,i+h);
+    let touch=null;
+    if(matured){for(let k=i+1;k<=limit;k++){if(bars[k].close<=level.level*1.003){touch=k;break}}}
+    const bounce=touch!==null&&touch+5<bars.length?bars[touch+5].close/bars[touch].close-1:null;
+    events.push({i,date:bars[i].date,valid:true,matured,hit:touch!==null,level:level.level,distance:level.distance,bounce,cohorts:level.cohorts,holdout:i>=mid});
+  }
+  function stat(a){const valid=a.filter(x=>x.valid),full=valid.filter(x=>x.matured),hits=full.filter(x=>x.hit),reb=hits.filter(x=>x.bounce!==null);return{valid:valid.length,mature:full.length,hits:hits.length,rate:full.length?hits.length/full.length:null,rebCount:reb.length,bounceRate:reb.length?reb.filter(x=>x.bounce>0).length/reb.length:null,bounceMean:reb.length?reb.reduce((s,x)=>s+x.bounce,0)/reb.length:null};}
+  return{events,all:stat(events),train:stat(events.filter(x=>!x.holdout)),test:stat(events.filter(x=>x.holdout)),maxPossible:Math.min(100,bars.length)};
+}
+function btPlot(result){
+  const rows=result.events;if(!rows.length)return '<div class="empty">没有可用于检查的交易日</div>';
+  const W=750,H=164,le=18,right=18,bar=(W-le-right)/rows.length;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="最近100交易日模型信号以及未来是否触及所估计的融资压力区间"><text x="18" y="18" font-size="12" fill="#a8bad0">每格1个交易日 · 绿色=未来收盘触及 · 橙色=未触及 · 灰色=不可评估</text>`;
+  rows.forEach((r,j)=>{const fill=!r.valid||!r.matured?'#596b80':r.hit?'#4cdbaf':'#ffa576';let x=le+j*bar;svg+=`<rect x="${x.toFixed(2)}" y="46" width="${Math.max(2,bar-1).toFixed(2)}" height="70" rx="1" fill="${fill}" opacity="${r.valid&&r.matured?'.9':'.42'}"><title>${r.date}：${!r.valid?'资料不足':!r.matured?'未到期':r.hit?'触及压力区':'未触及'}</title></rect>`});
+  const splitAt=Math.max(0,rows.length-30);
+  svg+=`<path d="M${(le+splitAt*bar).toFixed(2)} 37 V128" stroke="#d8e4f5" stroke-width="1" stroke-dasharray="4 4" opacity=".8"/><text x="${le}" y="145" font-size="12" fill="#9bb1c6">${rows[0].date}</text><text x="${W-right}" y="145" text-anchor="end" font-size="12" fill="#9bb1c6">${rows.at(-1).date}</text></svg>`;return svg;
+}
+function renderPressureBacktest(){
+ const root=$('#btGraph');if(!root)return;
+ const bars=btIndexBars();const margin=financing||[];
+ const params={init:Number($('#initR').value),maint:Number($('#maintenance').value),half:Number($('#halfLife').value)};
+ const market=window.SIGNAL_LIVE?.indices?.[current]?.index;
+ const currentDay=market?.date;
+ if(bars.length<125||margin.length<23||!currentDay||bars.at(-1).date!==currentDay){
+  const details=`已取得指数历史${bars.length}交易日、融资余额${margin.length}交易日。至少需要125日真实指数收盘及23日连续性足够的融资历史，并要求当前行情日期一致。`;
+  $('#btFlag').textContent='资料不足';root.innerHTML=`<div class="empty">${details}</div>`;
+  ['btSignals','btHit','btHold','btBounce'].forEach(x=>$('#'+x).textContent='—');
+  $('#btRows').innerHTML='<tr><td colspan="6">数据不足，不计算或填充胜率</td></tr>';
+  $('#btMeta').textContent=`${details} 当前数据源：${finSource==='csv'?'本地导入CSV':'交易所板块融资代理'}。可反复运行GitHub Actions回填历史；不允许用伪造数据补齐。`;
+  return;
+ }
+ const metrics={};[5,10,20].forEach(h=>metrics[h]=btCompute(bars,margin,h,params));
+ const selected=metrics[btHorizon];$('#btFlag').textContent=selected.all.mature?'历史样本已计算':'有效样本仍不足';
+ $('#btSignals').textContent=selected.all.valid+' / '+selected.maxPossible;
+ $('#btHit').textContent=btFmtRatio(selected.all.rate);
+ $('#btHold').textContent=selected.test.mature?`${btFmtRatio(selected.test.rate)} (${selected.test.mature}例)`:'—';
+ $('#btBounce').textContent=selected.all.rebCount?`${btFmtRatio(selected.all.bounceRate)} (${selected.all.rebCount}例)`:'—';
+ root.innerHTML=btPlot(selected);
+ $('#btRows').innerHTML=[5,10,20].map(h=>{const x=metrics[h];return `<tr><td>${h}日</td><td>${x.all.valid}</td><td>${x.all.mature}</td><td>${btFmtRatio(x.all.rate)}</td><td>${btFmtRatio(x.test.rate)} (${x.test.mature})</td><td>${btFmtRatio(x.all.bounceMean)} (${x.all.rebCount})</td></tr>`}).join('');
+ const size=margin.length,valid=selected.all.valid,fully=selected.all.mature;
+ const avgDist=selected.events.filter(x=>x.valid).reduce((s,x)=>s+x.distance,0)/Math.max(1,valid);
+ $('#btMeta').textContent=`测试窗口：最近${selected.maxPossible}个指数交易日（截至 ${bars.at(-1).date}）；两融有效${size}日；本窗口可生成压力位${valid}天，其中未来${btHorizon}日已到期${fully}天；历史前70天 / 后30天固定划分（按指数交易日）。候选压力位距当日收盘平均 ${valid?(avgDist*100).toFixed(1)+'%':'—'}。${finSource==='csv'?'使用手动CSV余额':'使用自动公开板块融资余额'}；收盘触及率只描述历史价格是否到达该水平，无法验证真实强平。`;
+}
+$('#btPeriods').addEventListener('click',e=>{const b=e.target.closest('button[data-h]');if(!b)return;btHorizon=Number(b.dataset.h);document.querySelectorAll('#btPeriods button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderPressureBacktest();});
+
+
+// Non-trade CVD proxy is strictly separate from user-uploaded real tick data.
+function proxyPlot(rows,key,color,w=740,h=225){
+ if(rows.length<2)return '';
+ const vals=rows.map(x=>Number(x[key])).filter(Number.isFinite),low=Math.min(...vals),high=Math.max(...vals),span=high-low||1,m=22;
+ return '<polyline fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="'+rows.map((r,i)=>(m+(w-2*m)*i/(rows.length-1)).toFixed(1)+','+(h-m-(h-2*m)*(r[key]-low)/span).toFixed(1)).join(' ')+'"/>';
+}
+function proxyChart(rows,unit){
+ if(rows.length<2)return '<div class="empty">完整交易日数量暂不足，不生成趋势图</div>';
+ const v=rows.length>450?rows.filter((_,i)=>i%Math.ceil(rows.length/450)===0):rows;
+ if(v.at(-1)!==rows.at(-1))v.push(rows.at(-1));
+ const label=s=>String(s).replace(/[&<>]/g,'');
+ return `<svg viewBox="0 0 740 246" role="img" aria-label="ETF价格和估算资金压力走势，独立归一化，非真实逐笔CVD"><path d="M22 112 H718" stroke="#344b62" stroke-dasharray="4 5"/>${proxyPlot(v,'price','#4de0b7',740,225)}${proxyPlot(v,'proxy','#adbaff',740,225)}<text x="24" y="241" fill="#99b3cd" font-size="12">${label(rows[0].date)}</text><text x="716" y="241" text-anchor="end" fill="#99b3cd" font-size="12">${label(rows.at(-1).date)}</text></svg><div class="source">${unit}；两线单独缩放，仅用于观察方向，不代表绝对买卖金额。</div>`;
+}
+function renderProxyConfluence(){
+ const idx=window.SIGNAL_LIVE?.indices?.[current]?.index;
+ const his=(idx?.history||[]).filter(x=>Number.isFinite(+x.close));
+ const proxy=window.SIGNAL_LIVE?.cvd_proxy?.[current];
+ const m=window.SIGNAL_LIVE?.margin?.[current];
+ const all=(proxy?.days||[]).slice().sort((a,b)=>a.date.localeCompare(b.date));
+ const recent=his.slice(-11),prices=recent.map(x=>+x.close);
+ let flat=null;
+ if(recent.length>=11)flat=Math.min(...prices.slice(-5))>=Math.min(...prices.slice(-10,-5));
+ const indexDates=his.slice(-10).map(x=>x.date);
+ const overlap=indexDates.filter(x=>all.some(y=>y.date===x)).length;
+ let pressure=null;
+ if(proxy?.status==='ok' && all.length>=6 && overlap>=8){
+   const b=all.slice(-6).map(x=>+x.pressure_ratio);
+   pressure=(b.slice(-3).reduce((a,b)=>a+b,0)-b.slice(0,3).reduce((a,b)=>a+b,0))/3>=.05;
+ }
+ let margin=null;
+ const mr=(m?.series||[]).slice().sort((a,b)=>a.date.localeCompare(b.date));
+ if(m?.status==='ok' && mr.length>=6 && flat!==null){
+   const nums=mr.slice(-6).map(x=>Number(x.financing_balance));
+   if(nums.every(Number.isFinite)){
+    const a=nums.slice(0,3).reduce((x,y)=>x+y,0)/3;
+    const b=nums.slice(-3).reduce((x,y)=>x+y,0)/3;
+    margin=b<a*.999 && flat;
+   }
+ }
+ const rows=[
+  ['指数价格守住前5日低位（假设）',flat],
+  ['ETF分钟拟合压力近3日相对前3日改善≥5个百分点',pressure],
+  ['板块融资代理余额较前3日降低≥0.1%，且指数未再创新低',margin],
+ ];
+ const count=rows.filter(x=>x[1]===true).length;
+ $('#cvdConfluence').innerHTML=rows.map(([label,state])=>`<div style="margin:6px 0">${state===null?'⚪ 数据不足':state?'🟢 条件出现':'⚫ 条件未出现'} · ${label}</div>`).join('')+`<div style="margin-top:10px">当前已满足 ${count}/3 条研究条件；未满足与缺数据不等价。这不是买入信号或历史胜率，所有阈值都需要与随机买入基线做滚动样本外回测。</div>`;
+}
+function renderAutoProxy(){
+ const info=window.SIGNAL_LIVE?.cvd_proxy?.[current];
+ $('#autoProxyEtf').textContent=etfCodes[current];
+ let rows=Array.isArray(info?.days)?info.days.filter(r=>Number.isFinite(+r.close)&&Number.isFinite(+r.pressure_amount)&&Number.isFinite(+r.amount)&&r.amount>0).slice().sort((a,b)=>a.date.localeCompare(b.date)):[];
+ const latest=rows.at(-1),usable=info?.status==='ok';
+ $('#autoProxyCount').textContent=rows.length?rows.length+' 日':'—';
+ $('#autoProxyRatio').textContent=latest&&usable?(latest.pressure_ratio*100).toFixed(2)+'%':'—';
+ $('#autoProxyBadge').textContent=usable?'分钟代理·近期数据':info?.status==='stale'?'分钟数据过期':'未接通/无分钟记录';
+ $('#autoProxyMeta').textContent=`${rows.length?'最近有效：'+latest.date+'；':''}已验证天数 ${rows.length}；指数收盘 ${info?.last_index_date||'—'}；来源：${info?.source||'待接入'}；${info?.reason?'抓取异常：'+info.reason.slice(0,100):''}（分钟拟合，非逐笔）`;
+ let cumulative=0;
+ const daily=rows.map(r=>({date:r.date,price:Number(r.close),proxy:(cumulative+=Number(r.pressure_amount))}));
+ $('#autoProxyDailyChart').innerHTML=proxyChart(daily,'真实ETF日收盘 vs 以成交额为权重的代理压力');
+ const minute=info?.latest_minute;
+ if(minute&&Array.isArray(minute.bars)&&minute.bars.length>=20&&minute.date===latest?.date){
+  let total=0;
+  const intraday=minute.bars.filter(x=>Array.isArray(x)&&x.length>=4&&Number.isFinite(+x[1])&&Number.isFinite(+x[2])).map(x=>({date:x[0],price:Number(x[1]),proxy:(total+=Number(x[2]))}));
+  $('#autoProxyMinuteChart').innerHTML=proxyChart(intraday,'单日分钟代理压力，从首分钟零点累积');
+ }else $('#autoProxyMinuteChart').innerHTML='<div class="empty">最近有效日的分钟原始记录尚未保存，不生成盘中曲线</div>';
+ renderProxyConfluence();
+ const marketDays=window.SIGNAL_LIVE?.indices?.[current]?.index?.history||[];
+ const recentIndex=marketDays.slice(-20).map(x=>x.date);
+ const validCount=recentIndex.length?recentIndex.filter(x=>rows.some(r=>r.date===x)).length:0;
+ if(!usable||rows.length<16||recentIndex.length<18||validCount/recentIndex.length<.90){
+  $('#autoProxySignal').textContent=`底背离：历史覆盖尚不足或代理数据过期，不能判定（最新20个指数交易日的分钟覆盖${validCount}/${recentIndex.length}，需≥90%且至少16个有效日）。`;
+  return;
+ }
+ const last=daily.at(-1), lookback=daily.slice(-16,-3);
+ if(!last||lookback.length<10){$('#autoProxySignal').textContent='底背离：缺少足够的独立参考区间。';return;}
+ const prior=lookback.reduce((a,b)=>a.price<b.price?a:b);
+ // Candidate only if latest ETF price makes an identifiable new low and
+ // the sum of proxy signed amounts is less negative than its prior minimum.
+ if(last.price<prior.price*.997&&last.proxy>prior.proxy){
+  $('#autoProxySignal').textContent=`候选底背离（分钟代理，尚未经验证）：${prior.date}价格 ${prior.price.toFixed(3)} → ${last.date} ${last.price.toFixed(3)} 创新低，累计压力代理却未创新低。仅提示卖压结构差异；需后续企稳确认。`;
+ }else{
+  $('#autoProxySignal').textContent=`当前不满足“价格显著新低、拟合累计压力未创新低”的条件。此前低点 ${prior.date}（${prior.price.toFixed(3)}），最近 ${last.date}（${last.price.toFixed(3)}）。不据此交易。`;
+ }
+}
+
+$('#tradeTemplate').addEventListener('click',()=>dl('trade_columns.csv','time,price,volume,side,bid,ask\n'));$('#finTemplate').addEventListener('click',()=>dl('margin_columns.csv','date,price,financing_balance\n'));$('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-key]');if(!b)return;current=b.dataset.key;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));trades=null;setAutoFinancing();renderHeader();renderAutoProxy();renderTrades();renderHeat();renderPressureBacktest();});$('#method').addEventListener('change',()=>{if(trades?.raw){let raw=trades.raw;trades=classify(raw);trades.raw=raw;renderTrades()}});$('#tradeFile').addEventListener('change',async e=>{try{const f=e.target.files?.[0];if(!f)return;const raw=parseCSV(await f.text());trades=classify(raw);trades.raw=raw;if(trades.out.length<2)throw Error('不足两笔有效成交，检查price、volume、side列名');renderTrades()}catch(err){alert('逐笔CSV读取失败：'+err.message)}e.target.value=''});$('#finFile').addEventListener('change',async e=>{try{const f=e.target.files?.[0];if(!f)return;const raw=parseCSV(await f.text());let rows=raw.map(r=>({date:String(r.date??''),price:Number(r.price),financing_balance:Number(r.financing_balance)})).filter(r=>r.date&&Number.isFinite(r.price)&&r.price>0&&Number.isFinite(r.financing_balance)&&r.financing_balance>=0).sort((a,b)=>a.date.localeCompare(b.date));rows=rows.filter((r,i)=>i===0||r.date!==rows[i-1].date);if(rows.length<8)throw Error('有效数据不足8日');financing=rows;finSource='csv';$('#autoMarginMeta').textContent='当前使用手动CSV绘图；切换指数可恢复自动两融数据。';renderHeat();renderPressureBacktest()}catch(err){alert('融资CSV读取失败：'+err.message)}e.target.value=''});['#initR','#maintenance','#halfLife'].forEach(sel=>$(sel).addEventListener('input',()=>{$('#halfLifeValue').textContent=$('#halfLife').value;renderHeat();renderPressureBacktest()}));setAutoFinancing();renderHeader();renderAutoProxy();renderTrades();renderHeat();renderPressureBacktest();
 // Keep the chosen index in sync with the main score dashboard.
 function applyCurrentTab(){document.querySelectorAll('.tabs [data-key]').forEach(x=>x.classList.toggle('active',x.dataset.key===current));}
 applyCurrentTab();
-window.addEventListener('message',ev=>{if(ev.origin!==location.origin || ev.data?.type!=='signallab-index')return;const key=ev.data.index;if(!['cy','kc'].includes(key)||key===current)return;current=key;trades=null;setAutoFinancing();applyCurrentTab();renderHeader();renderTrades();renderHeat();});
+window.addEventListener('message',ev=>{if(ev.origin!==location.origin || ev.data?.type!=='signallab-index')return;const key=ev.data.index;if(!['cy','kc'].includes(key)||key===current)return;current=key;trades=null;setAutoFinancing();applyCurrentTab();renderHeader();renderAutoProxy();renderTrades();renderHeat();renderPressureBacktest();});
 </script></body></html>
