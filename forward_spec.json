@@ -1,0 +1,15 @@
+{
+  "version": "cy-breadth-repair-forward-v1",
+  "activation_date": "2026-10-19",
+  "index": "cy",
+  "setup": "breadth_score < 2",
+  "trigger": "within the next 1..10 observed consecutive trading sessions, close > MA5 and breadth_score > previous_session_score",
+  "expiry_sessions": 10,
+  "horizons": [20, 60],
+  "round_trip_cost_pct_points": 0.2,
+  "entry": "next trading session index open, research price proxy",
+  "exit": "holding-session20/60 index close, entry session included",
+  "historical_backfill": false,
+  "missing_policy": "cancel waiting state on missing breadth or observation gaps; never infer or backfill historical signals",
+  "scope": "observational research only; no composite score or production buy/sell rule changes"
+}
