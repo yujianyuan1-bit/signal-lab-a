@@ -1,0 +1,44 @@
+name: 588000历史份额独立采集
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: probe先检验三个日期，full采集冻结的1000日及预热期
+        type: choice
+        options: [probe, full]
+        default: probe
+
+permissions:
+  contents: read
+
+concurrency:
+  group: etf-history-research
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 验证采集器
+        run: python -m unittest discover -s tests -p test_etf_share_collector.py
+      - name: 跨期接口探测
+        run: python research/collect_etf_shares.py --mode probe --output etf-probe
+      - name: 冻结窗口完整采集
+        if: inputs.mode == 'full'
+        run: python research/collect_etf_shares.py --mode full --output etf-full
+      - name: 保存原始响应与缺口报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: etf-shares-${{ github.run_id }}
+          path: |
+            etf-probe/
+            etf-full/
+          if-no-files-found: warn
+          retention-days: 14
