@@ -9,6 +9,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: signal-lab-data-update
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,9 +29,12 @@ jobs:
         env:
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         run: python update_data.py
+      - name: 记录冻结规则的前瞻观察
+        continue-on-error: true
+        run: python forward_log.py --data data.js
       - name: 保存并推送更新
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data.js
+          git add data.js research/forward
           git diff --staged --quiet || (git commit -m "auto: update A-share close data" && git push)
