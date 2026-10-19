@@ -7,7 +7,7 @@ const now='2026-10-19T09:00:00+08:00',asof='2026-10-16';
 const node=()=>({value:'',textContent:'',innerHTML:'',checked:false,hidden:true,style:{},dataset:{},events:{},classList:{toggle(){},add(){},remove(){}},addEventListener(t,fn){(this.events[t]??=[]).push(fn)},setAttribute(){},click(){(this.events.click||[]).forEach(fn=>fn({target:this}))}});
 function fixture(){const data={schema_version:1,generated_at:now,indices:{},research:{version:1,indices:{}}};for(const k of ['cy','kc']){data.indices[k]={status:'ok',index:{date:asof,close:100,ma20:110,ma60:120,five_day_change_pct:-2}};data.research.indices[k]={};for(const id of ['value','earnings','liquidity','breadth','volume','etf','leverage','trend','relative'])data.research.indices[k][id]={status:'ok',score:6,date:asof,source:'fixture',rule:'fixture',pe:30};data.research.indices[k].cvd={status:'not_connected',score:null,reason:'no real ticks'};}return data;}
 function browser(feed){const nodes={},tabs=['cy','kc'].map(k=>Object.assign(node(),{dataset:{index:k}}));const get=id=>nodes[id]??(nodes[id]=node());const storage=new Map();class Clock extends Date{constructor(...args){super(...(args.length?args:[now]))}static now(){return +new Date(now)}}
-const context={console,Date:Clock,URL,Blob,setTimeout(){},clearTimeout(){},confirm:()=>true,alert(){},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},location:{hash:'',origin:'http://localhost'},document:{querySelector:s=>get(s),getElementById:id=>get('#'+id),querySelectorAll:s=>s==='.tab[data-index]'?tabs:[],createElement:()=>node(),body:{append(){},appendChild(){}}},window:{SIGNAL_LIVE:feed,scrollTo(){}}};vm.createContext(context);vm.runInContext(script,context);return{context,nodes,tabs,get,run:s=>vm.runInContext(s,context)};}
+const context={console,Date:Clock,URL,Blob,setTimeout(){},clearTimeout(){},confirm:()=>true,alert(){},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},location:{hash:'',origin:'http://localhost'},document:{querySelector:s=>get(s),getElementById:id=>get('#'+id),querySelectorAll:s=>s==='.tab[data-index]'?tabs:[],createElement:()=>node(),body:{append(){},appendChild(){}}},window:{SIGNAL_LIVE:feed,scrollTo(){}}};vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(root,'research-evidence.js'),'utf8'),context);vm.runInContext(script,context);return{context,nodes,tabs,get,run:s=>vm.runInContext(s,context)};}
 {
  const b=browser(fixture());
  for(const k of ['cy','kc']){assert.equal(b.run(`scoreOf('${k}').count`),8);assert.equal(b.run(`db.${k}.factors.cvd.score`),null);assert.equal(b.run(`db.${k}.factors.relative.weight??FACTORS.find(f=>f.id==='relative').weight`),0);}
@@ -35,6 +35,26 @@ const context={console,Date:Clock,URL,Blob,setTimeout(){},clearTimeout(){},confi
  const b=browser(d);assert.equal(b.run("scoreOf('cy').count"),2);assert.equal(b.run('db.cy.factors.volume.proxy'),true);
 }
 console.log('PASS dashboard: 9/10 observations, 8 weighted factors, failed refresh clearing, manual override, missing/stale feeds, legacy data and CVD index isolation');
+{
+ const b=browser(fixture());
+ assert.match(b.get('#localModelEvidence').innerHTML,/4\/5/);
+ assert.match(b.get('#breadthEvidence').innerHTML,/11\/17/);
+ assert.match(b.get('#breadthEvidence').innerHTML,/5\/9/);
+ assert.match(b.get('#breadthEvidence').innerHTML,/-13\.36%/);
+ assert.match(b.get('#breadthEvidence').innerHTML,/-14\.91%/);
+ assert.match(b.get('#breadthEvidence').innerHTML,/当前汇率闸门：未接入自动更新/);
+ b.tabs[1].click();assert.match(b.get('#localModelEvidence').innerHTML,/2\/6/);
+ assert.match(b.get('#breadthEvidence').innerHTML,/11\/17/);
+ assert.match(b.run('status(8.5)'),/不代表买点/);
+ assert.equal(b.run("scoreOf('cy').score"),6);
+ assert.match(b.run("forwardObservationView({status:'recorded',summary:{version:'cy-breadth-repair-forward-v1',observations:0}},null).title"),/等待首个/);
+ assert.match(b.run("forwardObservationView({status:'failed'},null).title"),/失败/);
+ assert.match(b.run("forwardObservationView({summary:{version:'unexpected',observations:2}},null).title"),/不可用/);
+ assert.match(b.run("forwardObservationView({summary:{version:'cy-breadth-repair-forward-v1',observations:1,horizons:{}}},{date:'2026-10-19',event:true,state_after:{setup_date:null}}).title"),/2026-10-19.*该日记录/);
+ b.run('window.SIGNAL_RESEARCH_EVIDENCE=undefined;renderResearchEvidence()');
+ assert.match(b.get('#localModelEvidence').textContent,/未载入/);
+ console.log('PASS evidence: historical cohorts, per-index switch, risk scope, no live FX implication, unchanged scores and empty/failed forward states');
+}
 if(process.argv[2]){
  const captured={window:{}};vm.runInNewContext(fs.readFileSync(process.argv[2],'utf8'),captured);
  const b=browser(captured.window.SIGNAL_LIVE);
