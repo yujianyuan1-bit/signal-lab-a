@@ -1,4 +1,40 @@
 /* SignalLab Nocturne — shared visual layer. No data or scoring logic. */
+.research-evidence{display:grid;grid-template-columns:1.08fr 1fr;gap:18px;margin-top:24px;align-items:start}
+.evidence-card{overflow:hidden}
+.evidence-kicker{color:var(--sub);font-size:10px;letter-spacing:2px;margin-bottom:14px}
+.evidence-card .panel-header{align-items:flex-start;gap:12px}
+.evidence-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:24px;font-size:13px}
+.evidence-heading span{color:var(--sub);font-size:11px}
+.evidence-reading{display:flex;align-items:center;gap:18px;padding:20px 0 8px}
+.evidence-reading>strong{font-size:54px;letter-spacing:-2px;font-variant-numeric:tabular-nums;font-weight:650}
+.evidence-reading>span{font-size:12px;color:var(--sub);line-height:1.8}
+.evidence-reading b{color:var(--text);font-weight:550}
+.evidence-caveat,.evidence-note,.evidence-rule{font-size:12px;line-height:1.8;color:var(--sub)}
+.evidence-caveat{border-left:2px solid var(--amber);padding-left:12px;color:var(--text);margin-bottom:20px}
+.evidence-table-wrap{overflow-x:auto;max-width:100%}
+.evidence-table{width:100%;border-collapse:collapse;font-size:11px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.evidence-table th,.evidence-table td{text-align:right;padding:11px 8px;border-bottom:1px solid var(--border)}
+.evidence-table th:first-child{text-align:left;padding-left:0}
+.evidence-table thead th{color:var(--sub);font-weight:500}
+.evidence-table small{display:block;font-size:10px;color:var(--sub);margin-top:3px}
+.evidence-details{border-top:1px solid var(--border);padding:14px 0;font-size:12px}
+.evidence-details summary{cursor:pointer;color:var(--blue)}
+.evidence-details ul{list-style:none;padding:0;margin:12px 0 0}
+.evidence-details li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;font-size:11px;color:var(--sub)}
+.evidence-details strong{color:var(--text);font-weight:500;white-space:nowrap}
+.evidence-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.evidence-stats>div{border:1px solid var(--border);border-radius:12px;padding:16px;background:var(--surface2)}
+.evidence-stats span{font-size:11px;color:var(--sub)}
+.evidence-stats strong{display:block;font-size:23px;font-weight:600;margin:10px 0;white-space:nowrap;font-variant-numeric:tabular-nums}
+.evidence-stats small{font-size:12px;color:var(--sub);font-weight:400}
+.evidence-stats em{font-size:11px;font-style:normal;color:var(--green)}
+.evidence-risk,.evidence-fx,.evidence-live{padding:16px 0;border-top:1px solid var(--border);font-size:12px;line-height:1.8}
+.evidence-risk>strong{color:var(--amber)}
+.evidence-risk p,.evidence-fx p{margin:7px 0;color:var(--sub)}
+.evidence-live strong{display:block;margin:4px 0;font-weight:550}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:1000px){.research-evidence{grid-template-columns:1fr}.evidence-card{width:100%}}
+@media(max-width:480px){.evidence-stats{gap:8px}.evidence-stats>div{padding:12px}.evidence-stats strong{font-size:20px}.evidence-stats small{display:block;margin-top:5px}.evidence-heading{align-items:flex-start;flex-direction:column}.evidence-details li{flex-direction:column;gap:4px}}
 :root {
   color-scheme: dark;
   --bg: #090c11;
