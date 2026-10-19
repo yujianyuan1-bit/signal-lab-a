@@ -1,0 +1,58 @@
+{
+  "version": "kc-altseason-paper-v1",
+  "activation_date": "2026-10-19",
+  "index": "kc",
+  "target_code": "000688",
+  "benchmark_code": "000001",
+  "rule_source_spec_sha256": "3c892d17478605b6482fc336ca7c8bcf5a77e3fbc1a4a4a6d4f546b69ab56ed9",
+  "rules": {
+    "R1_alt_bleed_reversal": {
+      "ratio_def": "sh_close / target_close",
+      "wait_conditions": {
+        "ratio_lookback_days": 60,
+        "ratio_quantile_min": 0.8,
+        "exclude_current_in_quantile": true,
+        "require_close_below_ma20": true
+      },
+      "trigger_conditions": {
+        "min_daily_excess_return_vs_sh": 0.015,
+        "require_close_above_ma5": true,
+        "require_close_above_prev_high": true,
+        "min_amount_ratio_vs_prev5_mean": 1.0
+      }
+    },
+    "R2_volume_dryup_ignition": {
+      "wait_conditions": {
+        "amt5_lookback_days": 60,
+        "amt5_quantile_max": 0.25,
+        "exclude_current_in_quantile": true,
+        "close_10d_range_max": 0.08
+      },
+      "trigger_conditions": {
+        "min_daily_return": 0.02,
+        "require_close_above_ma20": true,
+        "require_close_above_prev10_close_max": true,
+        "min_amount_ratio_vs_prev5_mean": 1.4
+      }
+    }
+  },
+  "primary_horizon": 20,
+  "horizons": [
+    10,
+    20,
+    40
+  ],
+  "round_trip_cost_pct_points": 0.2,
+  "entry": "signal+1 trading session raw index open, paper research proxy observed in next postclose record; no actual execution claim",
+  "exit": "fixed horizon close, entry session counts as day1",
+  "quantile": "linear (n-1)*q, prior60 excludes current",
+  "R1_amount_operator": ">",
+  "wait_timeout_sessions": 10,
+  "timeout_semantics": "trigger allowed on wait days1..10; after day10 failed trigger expire without rearm that day",
+  "first_state": "empty on first observed day; historical prices only warm features, no historical setups/events imported",
+  "missing_policy": "missing data or observation gap cancels waiting; never reconstruct unobserved events or price fills; missing path cannot be a win",
+  "market_close_gate": "both current clock and payload generated_at must be today after15:10 Asia/Shanghai; payload timestamp cannot be future",
+  "earliest_recording": "2026-10-19 post15:10; next scheduled existing daily workflow17:15, no new scheduler",
+  "scope": "independent observational paper portfolios per rule and horizon; no score/weight/order changes; do not combine correlated portfolios into independent evidence",
+  "review": "3 and6 calendar months from first valid observation; elapsed months alone do not prove statistical adequacy"
+}
