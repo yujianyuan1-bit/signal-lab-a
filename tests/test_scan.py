@@ -1,10 +1,10 @@
-import json, tempfile, unittest
+import json, tempfile, unittest, subprocess
 from pathlib import Path
 from datetime import date, timedelta
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from zhupi_scan import (parse_daily, daily_quality, universe_stats, basic_health,
-    score_state, days_between, build_scan, load_pit, board_of, forward_proxy, normalize_baostock_industry)
+    score_state, days_between, build_scan, load_pit, board_of, forward_proxy, normalize_baostock_industry, fetch_spot_records)
 
 
 def fake_file(dir, day, closing=10., count=5500, cy=1400, kc=600, big=0):
@@ -24,6 +24,30 @@ def fake_file(dir, day, closing=10., count=5500, cy=1400, kc=600, big=0):
 
 
 class ScanTests(unittest.TestCase):
+    def test_retry_recovers(self):
+        calls=[];waits=[]
+        def run(args,**kwargs):
+            calls.append(kwargs)
+            if len(calls)==1:raise subprocess.TimeoutExpired(args,kwargs['timeout'])
+            Path(args[-1]).write_text('[{"代码":"600000"}]')
+        self.assertEqual(fetch_spot_records(runner=run,sleeper=waits.append),[{'代码':'600000'}])
+        self.assertEqual(len(calls),2)
+        self.assertEqual(waits,[5])
+        self.assertEqual(calls[0]['timeout'],120)
+
+    def test_retry_exhausted(self):
+        calls=[];waits=[]
+        def run(args,**kwargs):
+            calls.append(1)
+            raise subprocess.CalledProcessError(1,args,stderr='RemoteDisconnected')
+        with self.assertRaisesRegex(RuntimeError,'不发布旧行情'):fetch_spot_records(runner=run,sleeper=waits.append)
+        self.assertEqual(len(calls),3)
+        self.assertEqual(waits,[5,15])
+
+    def test_empty_rejected(self):
+        def run(args,**kwargs):Path(args[-1]).write_text('[]')
+        with self.assertRaisesRegex(RuntimeError,'空数据'):fetch_spot_records(attempts=1,runner=run)
+
     def test_board_code(self):
         self.assertEqual(board_of('sz301000'),'CY')
         self.assertEqual(board_of('sz302132'),'CY')
