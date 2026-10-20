@@ -80,6 +80,25 @@ class ScanTests(unittest.TestCase):
         f[35]='10/10000/1'
         self.assertEqual(parse_tencent(text(),'2026-10-20'),[])
 
+    def test_live_update_retains_seeded_history(self):
+        from zhupi_scan import merge_scan_history
+        old_group=dict(id='CY',name='创业板',status='OK',stage='R2a',score=70,stats={},health=[],raw_healthy=True)
+        new_group=dict(id='CY',name='创业板',status='OK',stage='WATCH',score=50,stats={},health=[],raw_healthy=True)
+        previous=dict(schema=2,engine_version='2.0.0',daily_groups={'2026-10-16':[old_group],'2026-10-19':[old_group]},quality=[dict(date=d,passed=True) for d in ('2026-10-16','2026-10-19')],events=[])
+        current=dict(schema=2,engine_version='2.0.0',asof='2026-10-20',daily_groups={'2026-10-19':[dict(old_group,status='WARMUP')],'2026-10-20':[new_group]},quality=[dict(date=d,passed=True) for d in ('2026-10-19','2026-10-20')],events=[],source={},caveats=[])
+        out=merge_scan_history(previous,current,[])
+        self.assertEqual(len(out['daily_groups']),3)
+        self.assertEqual(out['daily_groups']['2026-10-19'][0]['status'],'OK')
+        self.assertEqual(out['daily_groups']['2026-10-20'][0]['score'],50)
+        self.assertEqual(len(out['series']['CY']),3)
+
+    def test_live_update_obeys_historical_signal_lock(self):
+        from zhupi_scan import merge_scan_history
+        previous=dict(schema=2,engine_version='2.0.0',daily_groups={},quality=[dict(date=d,passed=True) for d in ('2026-10-16','2026-10-19')],events=[dict(id='CY',date='2026-10-16')])
+        current=dict(schema=2,engine_version='2.0.0',asof='2026-10-20',daily_groups={},quality=[dict(date='2026-10-20',passed=True)],events=[dict(id='CY',date='2026-10-20')],source={},caveats=[])
+        out=merge_scan_history(previous,current,[])
+        self.assertEqual([e['date'] for e in out['events']],['2026-10-16'])
+
     def test_board_code(self):
         self.assertEqual(board_of('sz301000'),'CY')
         self.assertEqual(board_of('sz302132'),'CY')
