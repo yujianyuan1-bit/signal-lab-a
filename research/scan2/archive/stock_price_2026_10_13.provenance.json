@@ -1,0 +1,9 @@
+{
+  "source": "TDX official historical daily archive",
+  "trade_date": "2026-10-13",
+  "retrieved_date": "2026-10-20",
+  "volume_unit": "lots (TDX shares / 100)",
+  "amount_unit": "CNY",
+  "historical_backfill": true,
+  "note": "今日下载的历史日线，不冒充当日实时归档；未复权，不包含行业PIT"
+}
