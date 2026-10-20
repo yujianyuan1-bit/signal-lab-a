@@ -48,6 +48,24 @@ class ScanTests(unittest.TestCase):
         def run(args,**kwargs):Path(args[-1]).write_text('[]')
         with self.assertRaisesRegex(RuntimeError,'空数据'):fetch_spot_records(attempts=1,runner=run)
 
+    def test_sina_date_time_and_units(self):
+        from quote_fallback import parse_quotes
+        fields=['0']*33
+        for i,v in {0:'浦发',1:'10',3:'10.5',4:'11',5:'9',8:'123400',9:'1234567',30:'2026-10-20',31:'15:00:00'}.items():fields[i]=v
+        text='var hq_str_sh600000="'+','.join(fields)+'";'
+        row=parse_quotes(text,'2026-10-20')[0]
+        self.assertEqual(row['成交量'],1234)
+        self.assertEqual(row['成交额'],1234567)
+        self.assertEqual(parse_quotes(text,'2026-10-19'),[])
+        self.assertEqual(parse_quotes(text.replace('15:00:00','14:59:59'),'2026-10-20'),[])
+        self.assertEqual(parse_quotes(text.replace('sh600000','sh900001'),'2026-10-20'),[])
+
+    def test_sina_bad_price_rejected(self):
+        from quote_fallback import parse_quotes
+        fields=['0']*33
+        for i,v in {1:'10',3:'99',4:'11',5:'9',8:'100',9:'1000',30:'2026-10-20',31:'15:00:00'}.items():fields[i]=v
+        self.assertEqual(parse_quotes('var hq_str_sh688001="'+','.join(fields)+'";','2026-10-20'),[])
+
     def test_board_code(self):
         self.assertEqual(board_of('sz301000'),'CY')
         self.assertEqual(board_of('sz302132'),'CY')
