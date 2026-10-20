@@ -66,6 +66,20 @@ class ScanTests(unittest.TestCase):
         for i,v in {1:'10',3:'99',4:'11',5:'9',8:'100',9:'1000',30:'2026-10-20',31:'15:00:00'}.items():fields[i]=v
         self.assertEqual(parse_quotes('var hq_str_sh688001="'+','.join(fields)+'";','2026-10-20'),[])
 
+    def test_tencent_date_and_volume_units(self):
+        from quote_fallback import parse_tencent
+        f=['']*38
+        for i,v in {2:'600000',3:'10',5:'10',30:'20261020161440',33:'11',34:'9',35:'10/100/100000'}.items():f[i]=v
+        def text():return 'v_sh600000="'+'~'.join(f)+'";'
+        row=parse_tencent(text(),'2026-10-20')[0]
+        self.assertEqual(row['成交量'],100)
+        self.assertEqual(row['成交额'],100000)
+        f[35]='10/10000/100000'
+        self.assertEqual(parse_tencent(text(),'2026-10-20')[0]['成交量'],100)
+        self.assertEqual(parse_tencent(text(),'2026-10-19'),[])
+        f[35]='10/10000/1'
+        self.assertEqual(parse_tencent(text(),'2026-10-20'),[])
+
     def test_board_code(self):
         self.assertEqual(board_of('sz301000'),'CY')
         self.assertEqual(board_of('sz302132'),'CY')
