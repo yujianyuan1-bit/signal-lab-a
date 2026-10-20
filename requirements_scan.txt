@@ -1,0 +1,4 @@
+# Python >=3.11. Only necessary for scheduled data capture/trading calendar.
+akshare>=1.16,<2
+exchange-calendars>=4.9,<5
+baostock>=0.8.9,<1

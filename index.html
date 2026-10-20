@@ -25,7 +25,8 @@
 <header><div class="logo"><div class="logo-mark">S</div><div>SignalLab <span style="font-weight:400;color:#8098b0">/ A股</span><small>MULTI-FACTOR DECISION LAB</small></div></div><div class="head-actions"><span class="pill">● 收盘研究 · 数据待载入</span><button class="button" id="exportBtn">导出记录</button><button class="button primary" id="importBtn">导入记录</button><input type="file" id="fileInput" accept=".json" hidden></div></header>
 <main class="wrap">
 <div class="intro"><div><div class="eyebrow">CHINA A-SHARE / RESEARCH OBSERVATORY</div><h1>市场环境与历史信号观察</h1><div class="muted">十维环境状态 · 主力痕迹代理 · R1/R2与广度修复前瞻跟踪。综合分尚未校准为买入胜率、期望收益或仓位比例。</div></div><div class="snapshot">公开数据收盘研究<br>逐项标注来源与日期，<strong>高分不代表高胜率买点</strong></div></div>
-<div class="tabs main-module-tabs"><button class="tab active" data-index="cy">创业板指 · 399006</button><button class="tab" data-index="kc">科创50 · 000688</button><button class="tab" id="compareTab">双指数比较 ↗</button><button class="tab" id="flowTab" type="button" aria-controls="flowView" aria-expanded="false">📊 订单流 / 融资压力</button><a class="tab bt-open" href="./backtest.html">📈 EMA / MA 回测 ↗</a></div>
+<div class="tabs main-module-tabs"><button class="tab active" data-index="cy">创业板指 · 399006</button><button class="tab" data-index="kc">科创50 · 000688</button><button class="tab" id="compareTab">双指数比较 ↗</button><button class="tab" id="flowTab" type="button" aria-controls="flowView" aria-expanded="false">📊 订单流 / 融资压力</button><a class="tab bt-open" href="./backtest.html">📈 EMA / MA 回测 ↗</a>
+<a class="tab bt-open" href="./scanner.html">🐷 板块扫描 2.0 ↗</a></div>
 <div id="scoreDashboard">
   <section class="live-panel" id="autoFeedPanel" aria-live="polite"><div class="live-row"><div><div class="live-head">自动数据接入 <span class="badge-mini" id="feedBadge">尚未同步</span></div><div class="live-meta" id="feedMeta">需要运行 update_data.py 更新 data.js，或启用GitHub Actions定时任务。</div></div><button class="button" id="feedRefresh">↻ 重新读取数据</button></div><div id="feedMetrics" class="live-metrics"></div><div class="live-warn" id="feedWarning">这是收盘数据更新版；其他暂未接入的项目不会冒充实时数据。</div></section>
 <div class="dash">
@@ -262,4 +263,5 @@ render();
 loadForwardObservation();
 if(window.SignalTraces)window.SignalTraces.load(renderTracePanel);
 </script></body></html>
+
 
