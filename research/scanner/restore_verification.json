@@ -1,0 +1,59 @@
+{
+  "checks": [
+    {
+      "symbol": "sh000001",
+      "date": "2026-10-20",
+      "tdx_close": 3735.37,
+      "tencent_close": 3735.37
+    },
+    {
+      "symbol": "sz399006",
+      "date": "2026-10-20",
+      "tdx_close": 2739.2,
+      "tencent_close": 2739.2
+    },
+    {
+      "symbol": "sh000688",
+      "date": "2026-10-20",
+      "tdx_close": 1342.42,
+      "tencent_close": 1342.42
+    },
+    {
+      "symbol": "sz159770",
+      "date": "2026-10-20",
+      "tdx_close": 0.875,
+      "tencent_close": 0.875
+    },
+    {
+      "symbol": "sh515880",
+      "date": "2026-10-20",
+      "tdx_close": 0.529,
+      "tencent_close": 0.529
+    },
+    {
+      "symbol": "sz399363",
+      "date": "2026-10-20",
+      "tdx_close": 9640.9,
+      "tencent_close": 9640.9
+    },
+    {
+      "symbol": "sz159732",
+      "date": "2026-10-20",
+      "tdx_close": 1.1,
+      "tencent_close": 1.1
+    },
+    {
+      "symbol": "sh512480",
+      "date": "2026-10-20",
+      "tdx_close": 0.829,
+      "tencent_close": 0.829
+    },
+    {
+      "symbol": "sh516510",
+      "date": "2026-10-20",
+      "tdx_close": 1.47,
+      "tencent_close": 1.47
+    }
+  ],
+  "frozen_scanner_sha256": "1e6ac21b7625887cbec44a108b78481f1977efba38d35ed517b51861ed25964a"
+}
