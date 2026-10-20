@@ -484,7 +484,14 @@ def collect_spot(directory):
         import akshare as ak
     except ImportError as e:
         raise RuntimeError('请先安装 requirements_scan.txt 中的 AKShare') from e
-    records=fetch_spot_records()
+    quote_source='AKShare stock_zh_a_spot_em / Eastmoney quote snapshot'
+    try:
+        records=fetch_spot_records()
+    except RuntimeError as exc:
+        print('东财不可用，切换带逐只日期验证的新浪完整报价:',exc,file=sys.stderr,flush=True)
+        from quote_fallback import fetch_sina_records
+        records=fetch_sina_records(today)
+        quote_source='Sina full quote / per-stock date+close-time verified; volume shares converted to lots'
     rows=convert_spot_rows(records,today)
     if len(rows)<MIN_TOTAL:raise RuntimeError(f'快照覆盖不足，仅{len(rows)}只，拒绝存档')
     shares=Counter(board_of(r[0]) for r in rows if board_of(r[0]))
@@ -494,7 +501,7 @@ def collect_spot(directory):
     with tmp.open('w',encoding='utf-8',newline='') as f:csv.writer(f).writerows(rows)
     tmp.replace(dst)
     dst.with_suffix('.provenance.json').write_text(json.dumps({
-        'source':'AKShare stock_zh_a_spot_em / Eastmoney quote snapshot',
+        'source':quote_source,
         'trade_date_assumption':today,'retrieved_local':now.isoformat(),
         'note':'第三方盘后截面快照，不是交易所官方逐只已复核的历史日线。'},ensure_ascii=False,indent=2),encoding='utf-8')
     print('快照归档完成:',today,len(rows),'股票；不保证API永远稳定')
@@ -587,7 +594,7 @@ def main(argv=None):
     trade_calendar,cal_label=(make_calendar(a.calendar),'用户提供交易日历') if a.calendar else autodetect_calendar(files)
     out=build_scan(files,pit=pit,calendar=trade_calendar)
     out['source']['calendar_source']=cal_label
-    if a.spot:out['source']['name']='AKShare 东财当日收盘后行情快照 + 逐日归档（非官方历史库）'
+    if a.spot:out['source']['name']='东财 / 新浪日期验证备用源盘后快照 + 逐日归档（详见provenance；非官方历史库）'
     if a.industries:out['source']['industry_note']='BaoStock当日申万一级分类快照；不回填，不作为官方成分版本'
     Path(a.output).write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf-8')
     groups=out['groups']
