@@ -553,6 +553,59 @@ def collect_industry_snapshot(directory):
     return dest
 
 
+def merge_scan_history(previous, current, files, pit=None):
+    """Retain seeded historical research when live raw archive is much shorter."""
+    if not previous or previous.get('schema')!=2 or previous.get('engine_version')!=current.get('engine_version'):
+        return current
+    end=current.get('asof')
+    if not end:return current
+    groups={d:g for d,g in previous.get('daily_groups',{}).items() if d<=end}
+    for day,new_groups in current.get('daily_groups',{}).items():
+        old={g['id']:g for g in groups.get(day,[])}
+        merged=[]
+        for group in new_groups:
+            cached=old.get(group['id'])
+            # A truncated raw window cannot turn an already-computed historical
+            # day into an artificial warmup day. Real new quality errors win.
+            missing_history=group.get('status')=='WARMUP' or group.get('health')==['无连续合格前收盘价']
+            if day<end and cached and cached.get('status')=='OK' and missing_history:group=cached
+            merged.append(group)
+        groups[day]=merged
+    current['daily_groups']=dict(sorted(groups.items()))
+    quality={q['date']:q for q in previous.get('quality',[]) if q['date']<=end}
+    quality.update({q['date']:q for q in current.get('quality',[])})
+    current['quality']=[quality[d] for d in sorted(quality)]
+    series=defaultdict(list)
+    for day,day_groups in current['daily_groups'].items():
+        for g in day_groups:
+            st=g.get('stats') or {}
+            series[g['id']].append(dict(date=day,status=g['status'],stage=g.get('stage'),score=g.get('score'),
+                **{k:rounded(st.get(k),5) for k in ('breadth2','leader7','amount_ratio5','eq_return')}))
+    current['series']=dict(series)
+    events={(e['id'],e['date']):e.copy() for e in previous.get('events',[]) if e['date']<=end}
+    events.update({(e['id'],e['date']):e for e in current.get('events',[])})
+    raw=[parse_daily(Path(p)) for p in files];raw.sort(key=lambda d:d['date'])
+    positions={d['date']:i for i,d in enumerate(raw)}
+    for d in raw:
+        d['global_ok']=quality.get(d['date'],{}).get('passed',False)
+        d['groups']={g['id']:g for g in groups.get(d['date'],[])}
+    kept=[];last={}
+    for key,event in sorted(events.items(),key=lambda item:(item[0][1],item[0][0])):
+        gid,day=key
+        if gid in last and len(days_between(last[gid],day,{q['date'] for q in current['quality']}))+1<20:continue
+        last[gid]=day
+        if day in positions:
+            i=positions[day];defs=groups_for_day(raw[i],pit or [])
+            if gid in defs:
+                internal=dict(event,i=i,symbols=tuple(defs[gid]['symbols']))
+                for h in (5,10,20):event[f'hold{h}']=forward_proxy(internal,raw,h)
+        kept.append(event)
+    current['events']=kept
+    current['source']['history_note']='含2026-10-20下载的通达信1000交易日历史回放；后续实时快照独立归档，不倒填历史行业成分'
+    current['caveats']=list(dict.fromkeys(previous.get('caveats',[])+current.get('caveats',[])))
+    return current
+
+
 def main(argv=None):
     ap=argparse.ArgumentParser(description='猪皮信号2.0 收盘后扫描')
     ap.add_argument('--data-dir',default='daily_archive')
@@ -593,7 +646,11 @@ def main(argv=None):
     pit,issues=load_pit(a.pit)
     for issue in issues:print('PIT:',issue,file=sys.stderr)
     trade_calendar,cal_label=(make_calendar(a.calendar),'用户提供交易日历') if a.calendar else autodetect_calendar(files)
+    previous=None
+    try:previous=json.loads(Path(a.output).read_text(encoding='utf-8'))
+    except (OSError,ValueError):pass
     out=build_scan(files,pit=pit,calendar=trade_calendar)
+    out=merge_scan_history(previous,out,files,pit)
     out['source']['calendar_source']=cal_label
     if a.spot:out['source']['name']='东财 / 腾讯 / 新浪日期验证备用源盘后快照 + 逐日归档（详见provenance；非官方历史库）'
     if a.industries:out['source']['industry_note']='BaoStock当日申万一级分类快照；不回填，不作为官方成分版本'
