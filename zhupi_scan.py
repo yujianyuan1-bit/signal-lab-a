@@ -7,6 +7,7 @@ Not real CVD, net institutional flow, Level-2, or verified industry breadth by d
 """
 from __future__ import annotations
 import argparse, csv, io, json, math, statistics, sys, urllib.error, urllib.request
+import subprocess, tempfile, time
 from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -442,6 +443,30 @@ def convert_spot_rows(records, trade_day):
     return output
 
 
+def fetch_spot_records(attempts=3, timeout=120, runner=None, sleeper=None):
+    """Bound vendor calls in child processes and retry transient failures."""
+    runner=runner or subprocess.run
+    sleeper=sleeper or time.sleep
+    errors=[]
+    code="import akshare as ak,sys; ak.stock_zh_a_spot_em().to_json(sys.argv[1],orient='records',force_ascii=False)"
+    for attempt in range(1,attempts+1):
+        print(f'东财请求 {attempt}/{attempts}，单次上限{timeout}秒',flush=True)
+        try:
+            with tempfile.TemporaryDirectory(prefix='zhupi-spot-') as td:
+                output=Path(td)/'snapshot.json'
+                runner([sys.executable,'-c',code,str(output)],timeout=timeout,check=True,capture_output=True,text=True)
+                records=json.loads(output.read_text(encoding='utf-8'))
+                if not isinstance(records,list) or not records:raise ValueError('行情接口返回空数据或非列表')
+                return records
+        except (subprocess.TimeoutExpired,subprocess.CalledProcessError,OSError,ValueError) as exc:
+            detail=(exc.stderr or '')[-1500:] if isinstance(exc,subprocess.CalledProcessError) else str(exc)
+            message=f'{type(exc).__name__}: {detail}'
+            errors.append(message)
+            print(f'行情请求失败 {attempt}/{attempts}: {message}',file=sys.stderr,flush=True)
+            if attempt<attempts:sleeper((5,15)[min(attempt-1,1)])
+    raise RuntimeError('行情源有限重试仍失败；不发布旧行情。'+' | '.join(errors))
+
+
 def collect_spot(directory):
     """Accumulate CLOSE snapshots over trading days; no fake backfilling of missing history."""
     now=datetime.now(ZoneInfo(EXCHANGE_TZ_LABEL))
@@ -459,9 +484,8 @@ def collect_spot(directory):
         import akshare as ak
     except ImportError as e:
         raise RuntimeError('请先安装 requirements_scan.txt 中的 AKShare') from e
-    df=ak.stock_zh_a_spot_em()
-    if df is None or df.empty:raise RuntimeError('AKShare全A快照为空')
-    rows=convert_spot_rows(df.to_dict('records'),today)
+    records=fetch_spot_records()
+    rows=convert_spot_rows(records,today)
     if len(rows)<MIN_TOTAL:raise RuntimeError(f'快照覆盖不足，仅{len(rows)}只，拒绝存档')
     shares=Counter(board_of(r[0]) for r in rows if board_of(r[0]))
     if any(shares[g]<minimum for g,minimum in MIN_BOARD.items()):
