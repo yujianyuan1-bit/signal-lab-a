@@ -1,0 +1,9 @@
+{
+  "source": "Tencent / Sina dated full quotes; per-stock close-time and volume-unit validated",
+  "quote_sources": {
+    "Tencent dated full quote": 5217
+  },
+  "trade_date_assumption": "2026-10-22",
+  "retrieved_local": "2026-10-22T19:12:16.072079+08:00",
+  "note": "第三方盘后截面快照，不是交易所官方逐只已复核的历史日线。"
+}
