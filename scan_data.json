@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "engine_version": "2.0.0",
-  "generated_utc": "2026-10-22T11:14:55+00:00",
-  "asof": "2026-10-22",
+  "generated_utc": "2026-10-23T11:14:14+00:00",
+  "asof": "2026-10-23",
   "source": {
     "name": "东财 / 腾讯 / 新浪日期验证备用源盘后快照 + 逐日归档（详见provenance；非官方历史库）",
     "url": "https://github.com/guidebee/china-stock-data",
@@ -10033,6 +10033,16 @@
         "CY": 1410
       },
       "reasons": []
+    },
+    {
+      "date": "2026-10-23",
+      "passed": true,
+      "n": 5218,
+      "board_counts": {
+        "KC": 616,
+        "CY": 1410
+      },
+      "reasons": []
     }
   ],
   "groups": [
@@ -10044,44 +10054,44 @@
       "membership_source": null,
       "health": [],
       "stats": {
-        "n": 1409,
+        "n": 1410,
         "members_n": 1410,
-        "matched_raw": 1409,
+        "matched_raw": 1410,
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.03123,
-        "breadth_up": 0.07097,
-        "leader7": 0.0071,
-        "leader_count": 10,
-        "leader_amount_share": 0.02198,
-        "amount": 403991646253.0,
-        "eq_return": -3.15336,
-        "median_return": -0.0,
-        "p90_return": -0.58969,
-        "p10_return": -6.30326,
-        "coverage": 0.99929,
-        "amount_ratio5": 1.04038
+        "breadth2": 0.54681,
+        "breadth_up": 0.86667,
+        "leader7": 0.06454,
+        "leader_count": 91,
+        "leader_amount_share": 0.20444,
+        "amount": 536851086246.0,
+        "eq_return": 2.60439,
+        "median_return": 2.19709,
+        "p90_return": 6.04987,
+        "p10_return": -0.32742,
+        "coverage": 1.0,
+        "amount_ratio5": 1.38974
       },
       "status": "OK",
       "raw_healthy": true,
-      "stage": "R1a",
-      "title": "冰点观察·不接飞刀",
-      "score": 14,
+      "stage": "R2a",
+      "title": "首轮点火·待确认",
+      "score": 74,
       "components": {
-        "上涨扩散": 1.7,
-        "领涨活跃": 1.5,
-        "成交额变化": 5.5,
+        "上涨扩散": 25,
+        "领涨活跃": 13.7,
+        "成交额变化": 13.6,
         "持续扩散": 1.3,
-        "相对强度": 3.1,
-        "市场参与": 1.1
+        "相对强度": 8.8,
+        "市场参与": 12
       },
       "penalty": 0,
       "reason": [
-        "涨幅≥2%股票3.1%，前日11.6%（变化-8.5%）",
-        "领涨≥7%股票0.7%，领涨成交额占比2.2%",
-        "成交额相对之前5日：1.04倍",
-        "相对全A等权当日涨幅：-0.38个百分点"
+        "涨幅≥2%股票54.7%，前日3.1%（变化+51.6%）",
+        "领涨≥7%股票6.5%，领涨成交额占比20.4%",
+        "成交额相对之前5日：1.39倍",
+        "相对全A等权当日涨幅：+0.75个百分点"
       ],
       "warning": false
     },
@@ -10093,46 +10103,49 @@
       "membership_source": null,
       "health": [],
       "stats": {
-        "n": 616,
+        "n": 615,
         "members_n": 616,
         "matched_raw": 616,
-        "outlier_count": 0,
-        "outlier_symbols": [],
-        "outlier_share": 0.0,
-        "breadth2": 0.01461,
-        "breadth_up": 0.08279,
-        "leader7": 0.00162,
-        "leader_count": 1,
-        "leader_amount_share": 0.00134,
-        "amount": 207064732255.0,
-        "eq_return": -3.17952,
-        "median_return": -3.02045,
-        "p90_return": -0.15665,
-        "p10_return": -6.16759,
-        "coverage": 1.0,
-        "amount_ratio5": 0.97117
+        "outlier_count": 1,
+        "outlier_symbols": [
+          "sh688809"
+        ],
+        "outlier_share": 0.00162,
+        "breadth2": 0.66829,
+        "breadth_up": 0.90244,
+        "leader7": 0.11057,
+        "leader_count": 68,
+        "leader_amount_share": 0.26256,
+        "amount": 291302739468.0,
+        "eq_return": 3.27991,
+        "median_return": 0.0,
+        "p90_return": 7.24971,
+        "p10_return": 0.03021,
+        "coverage": 0.99838,
+        "amount_ratio5": 1.38943
       },
       "status": "OK",
       "raw_healthy": true,
-      "stage": "R1a",
-      "title": "冰点观察·不接飞刀",
-      "score": 10,
+      "stage": "R2c",
+      "title": "疑似高潮·严防追高",
+      "score": 64,
       "components": {
-        "上涨扩散": 0.8,
-        "领涨活跃": 0.3,
-        "成交额变化": 4.0,
+        "上涨扩散": 25,
+        "领涨活跃": 17,
+        "成交额变化": 13.6,
         "持续扩散": 0.6,
-        "相对强度": 3.0,
-        "市场参与": 1.3
+        "相对强度": 12.1,
+        "市场参与": 12
       },
-      "penalty": 0,
+      "penalty": 16,
       "reason": [
-        "涨幅≥2%股票1.5%，前日10.2%（变化-8.8%）",
-        "领涨≥7%股票0.2%，领涨成交额占比0.1%",
-        "成交额相对之前5日：0.97倍",
-        "相对全A等权当日涨幅：-0.41个百分点"
+        "涨幅≥2%股票66.8%，前日1.5%（变化+65.4%）",
+        "领涨≥7%股票11.1%，领涨成交额占比26.3%",
+        "成交额相对之前5日：1.39倍",
+        "相对全A等权当日涨幅：+1.43个百分点",
+        "高广度且领涨高度同步，可能已进入短线高潮"
       ],
-      "warning": false
+      "warning": true
     }
   ],
   "daily_groups": {
@@ -104806,6 +104819,109 @@
         ],
         "warning": false
       }
+    ],
+    "2026-10-23": [
+      {
+        "id": "CY",
+        "name": "创业板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [],
+        "stats": {
+          "n": 1410,
+          "members_n": 1410,
+          "matched_raw": 1410,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.54681,
+          "breadth_up": 0.86667,
+          "leader7": 0.06454,
+          "leader_count": 91,
+          "leader_amount_share": 0.20444,
+          "amount": 536851086246.0,
+          "eq_return": 2.60439,
+          "median_return": 2.19709,
+          "p90_return": 6.04987,
+          "p10_return": -0.32742,
+          "coverage": 1.0,
+          "amount_ratio5": 1.38974
+        },
+        "status": "OK",
+        "raw_healthy": true,
+        "stage": "R2a",
+        "title": "首轮点火·待确认",
+        "score": 74,
+        "components": {
+          "上涨扩散": 25,
+          "领涨活跃": 13.7,
+          "成交额变化": 13.6,
+          "持续扩散": 1.3,
+          "相对强度": 8.8,
+          "市场参与": 12
+        },
+        "penalty": 0,
+        "reason": [
+          "涨幅≥2%股票54.7%，前日3.1%（变化+51.6%）",
+          "领涨≥7%股票6.5%，领涨成交额占比20.4%",
+          "成交额相对之前5日：1.39倍",
+          "相对全A等权当日涨幅：+0.75个百分点"
+        ],
+        "warning": false
+      },
+      {
+        "id": "KC",
+        "name": "科创板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [],
+        "stats": {
+          "n": 615,
+          "members_n": 616,
+          "matched_raw": 616,
+          "outlier_count": 1,
+          "outlier_symbols": [
+            "sh688809"
+          ],
+          "outlier_share": 0.00162,
+          "breadth2": 0.66829,
+          "breadth_up": 0.90244,
+          "leader7": 0.11057,
+          "leader_count": 68,
+          "leader_amount_share": 0.26256,
+          "amount": 291302739468.0,
+          "eq_return": 3.27991,
+          "median_return": 0.0,
+          "p90_return": 7.24971,
+          "p10_return": 0.03021,
+          "coverage": 0.99838,
+          "amount_ratio5": 1.38943
+        },
+        "status": "OK",
+        "raw_healthy": true,
+        "stage": "R2c",
+        "title": "疑似高潮·严防追高",
+        "score": 64,
+        "components": {
+          "上涨扩散": 25,
+          "领涨活跃": 17,
+          "成交额变化": 13.6,
+          "持续扩散": 0.6,
+          "相对强度": 12.1,
+          "市场参与": 12
+        },
+        "penalty": 16,
+        "reason": [
+          "涨幅≥2%股票66.8%，前日1.5%（变化+65.4%）",
+          "领涨≥7%股票11.1%，领涨成交额占比26.3%",
+          "成交额相对之前5日：1.39倍",
+          "相对全A等权当日涨幅：+1.43个百分点",
+          "高广度且领涨高度同步，可能已进入短线高潮"
+        ],
+        "warning": true
+      }
     ]
   },
   "series": {
@@ -114829,6 +114945,16 @@
         "leader7": 0.0071,
         "amount_ratio5": 1.04038,
         "eq_return": -3.15336
+      },
+      {
+        "date": "2026-10-23",
+        "status": "OK",
+        "stage": "R2a",
+        "score": 74,
+        "breadth2": 0.54681,
+        "leader7": 0.06454,
+        "amount_ratio5": 1.38974,
+        "eq_return": 2.60439
       }
     ],
     "KC": [
@@ -124851,6 +124977,16 @@
         "leader7": 0.00162,
         "amount_ratio5": 0.97117,
         "eq_return": -3.17952
+      },
+      {
+        "date": "2026-10-23",
+        "status": "OK",
+        "stage": "R2c",
+        "score": 64,
+        "breadth2": 0.66829,
+        "leader7": 0.11057,
+        "amount_ratio5": 1.38943,
+        "eq_return": 3.27991
       }
     ]
   },
