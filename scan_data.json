@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "engine_version": "2.0.0",
-  "generated_utc": "2026-10-26T11:24:31+00:00",
-  "asof": "2026-10-26",
+  "generated_utc": "2026-10-27T11:20:18+00:00",
+  "asof": "2026-10-27",
   "source": {
     "name": "东财 / 腾讯 / 新浪日期验证备用源盘后快照 + 逐日归档（详见provenance；非官方历史库）",
     "url": "https://github.com/guidebee/china-stock-data",
@@ -10053,6 +10053,16 @@
         "CY": 1411
       },
       "reasons": []
+    },
+    {
+      "date": "2026-10-27",
+      "passed": true,
+      "n": 5216,
+      "board_counts": {
+        "KC": 616,
+        "CY": 1411
+      },
+      "reasons": []
     }
   ],
   "groups": [
@@ -10064,47 +10074,46 @@
       "membership_source": null,
       "health": [],
       "stats": {
-        "n": 1410,
+        "n": 1411,
         "members_n": 1411,
-        "matched_raw": 1410,
+        "matched_raw": 1411,
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.11986,
-        "breadth_up": 0.3078,
-        "leader7": 0.01631,
-        "leader_count": 23,
-        "leader_amount_share": 0.03469,
-        "amount": 429627383660.0,
-        "eq_return": -1.07703,
-        "median_return": -1.04271,
-        "p90_return": 2.36835,
-        "p10_return": -4.84264,
-        "coverage": 0.99929,
-        "amount_ratio5": 1.03558
+        "breadth2": 0.04181,
+        "breadth_up": 0.07654,
+        "leader7": 0.01347,
+        "leader_count": 19,
+        "leader_amount_share": 0.02202,
+        "amount": 383305633215.0,
+        "eq_return": -3.53455,
+        "median_return": -0.0,
+        "p90_return": -0.0,
+        "p10_return": -0.0,
+        "coverage": 1.0,
+        "amount_ratio5": 0.89275
       },
       "status": "OK",
       "raw_healthy": true,
-      "stage": "R2c",
-      "title": "扩散退潮·风险",
-      "score": 16,
+      "stage": "R1a",
+      "title": "冰点观察·不接飞刀",
+      "score": 12,
       "components": {
-        "上涨扩散": 6.7,
-        "领涨活跃": 3.5,
-        "成交额变化": 5.4,
-        "持续扩散": 5.0,
-        "相对强度": 2.7,
-        "市场参与": 4.9
+        "上涨扩散": 2.3,
+        "领涨活跃": 2.9,
+        "成交额变化": 2.1,
+        "持续扩散": 1.7,
+        "相对强度": 1.4,
+        "市场参与": 1.2
       },
-      "penalty": 12,
+      "penalty": 0,
       "reason": [
-        "涨幅≥2%股票12.0%，前日54.7%（变化-42.7%）",
-        "领涨≥7%股票1.6%，领涨成交额占比3.5%",
-        "成交额相对之前5日：1.04倍",
-        "相对全A等权当日涨幅：-0.45个百分点",
-        "昨日扩散后今日明显收缩"
+        "涨幅≥2%股票4.2%，前日12.0%（变化-7.8%）",
+        "领涨≥7%股票1.3%，领涨成交额占比2.2%",
+        "成交额相对之前5日：0.89倍",
+        "相对全A等权当日涨幅：-0.72个百分点"
       ],
-      "warning": true
+      "warning": false
     },
     {
       "id": "KC",
@@ -10120,41 +10129,40 @@
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.11201,
-        "breadth_up": 0.29383,
-        "leader7": 0.03247,
-        "leader_count": 20,
-        "leader_amount_share": 0.06547,
-        "amount": 257004265570.0,
-        "eq_return": -1.34885,
-        "median_return": -1.35399,
-        "p90_return": 2.39958,
-        "p10_return": -5.64631,
+        "breadth2": 0.02597,
+        "breadth_up": 0.04058,
+        "leader7": 0.00162,
+        "leader_count": 1,
+        "leader_amount_share": 0.0023,
+        "amount": 213095102642.0,
+        "eq_return": -4.57096,
+        "median_return": -4.7633,
+        "p90_return": -1.60323,
+        "p10_return": -7.13222,
         "coverage": 1.0,
-        "amount_ratio5": 1.1384
+        "amount_ratio5": 0.9074
       },
       "status": "OK",
       "raw_healthy": true,
-      "stage": "R2c",
-      "title": "扩散退潮·风险",
-      "score": 20,
+      "stage": "R1a",
+      "title": "冰点观察·不接飞刀",
+      "score": 6,
       "components": {
-        "上涨扩散": 6.2,
-        "领涨活跃": 6.9,
-        "成交额变化": 7.8,
-        "持续扩散": 4.7,
-        "相对强度": 1.4,
-        "市场参与": 4.7
+        "上涨扩散": 1.4,
+        "领涨活跃": 0.3,
+        "成交额变化": 2.5,
+        "持续扩散": 1.1,
+        "相对强度": 0.0,
+        "市场参与": 0.6
       },
-      "penalty": 12,
+      "penalty": 0,
       "reason": [
-        "涨幅≥2%股票11.2%，前日66.8%（变化-55.6%）",
-        "领涨≥7%股票3.2%，领涨成交额占比6.5%",
-        "成交额相对之前5日：1.14倍",
-        "相对全A等权当日涨幅：-0.72个百分点",
-        "昨日扩散后今日明显收缩"
+        "涨幅≥2%股票2.6%，前日11.2%（变化-8.6%）",
+        "领涨≥7%股票0.2%，领涨成交额占比0.2%",
+        "成交额相对之前5日：0.91倍",
+        "相对全A等权当日涨幅：-1.75个百分点"
       ],
-      "warning": true
+      "warning": false
     }
   ],
   "daily_groups": {
@@ -105033,6 +105041,106 @@
         ],
         "warning": true
       }
+    ],
+    "2026-10-27": [
+      {
+        "id": "CY",
+        "name": "创业板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [],
+        "stats": {
+          "n": 1411,
+          "members_n": 1411,
+          "matched_raw": 1411,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.04181,
+          "breadth_up": 0.07654,
+          "leader7": 0.01347,
+          "leader_count": 19,
+          "leader_amount_share": 0.02202,
+          "amount": 383305633215.0,
+          "eq_return": -3.53455,
+          "median_return": -0.0,
+          "p90_return": -0.0,
+          "p10_return": -0.0,
+          "coverage": 1.0,
+          "amount_ratio5": 0.89275
+        },
+        "status": "OK",
+        "raw_healthy": true,
+        "stage": "R1a",
+        "title": "冰点观察·不接飞刀",
+        "score": 12,
+        "components": {
+          "上涨扩散": 2.3,
+          "领涨活跃": 2.9,
+          "成交额变化": 2.1,
+          "持续扩散": 1.7,
+          "相对强度": 1.4,
+          "市场参与": 1.2
+        },
+        "penalty": 0,
+        "reason": [
+          "涨幅≥2%股票4.2%，前日12.0%（变化-7.8%）",
+          "领涨≥7%股票1.3%，领涨成交额占比2.2%",
+          "成交额相对之前5日：0.89倍",
+          "相对全A等权当日涨幅：-0.72个百分点"
+        ],
+        "warning": false
+      },
+      {
+        "id": "KC",
+        "name": "科创板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [],
+        "stats": {
+          "n": 616,
+          "members_n": 616,
+          "matched_raw": 616,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.02597,
+          "breadth_up": 0.04058,
+          "leader7": 0.00162,
+          "leader_count": 1,
+          "leader_amount_share": 0.0023,
+          "amount": 213095102642.0,
+          "eq_return": -4.57096,
+          "median_return": -4.7633,
+          "p90_return": -1.60323,
+          "p10_return": -7.13222,
+          "coverage": 1.0,
+          "amount_ratio5": 0.9074
+        },
+        "status": "OK",
+        "raw_healthy": true,
+        "stage": "R1a",
+        "title": "冰点观察·不接飞刀",
+        "score": 6,
+        "components": {
+          "上涨扩散": 1.4,
+          "领涨活跃": 0.3,
+          "成交额变化": 2.5,
+          "持续扩散": 1.1,
+          "相对强度": 0.0,
+          "市场参与": 0.6
+        },
+        "penalty": 0,
+        "reason": [
+          "涨幅≥2%股票2.6%，前日11.2%（变化-8.6%）",
+          "领涨≥7%股票0.2%，领涨成交额占比0.2%",
+          "成交额相对之前5日：0.91倍",
+          "相对全A等权当日涨幅：-1.75个百分点"
+        ],
+        "warning": false
+      }
     ]
   },
   "series": {
@@ -115076,6 +115184,16 @@
         "leader7": 0.01631,
         "amount_ratio5": 1.03558,
         "eq_return": -1.07703
+      },
+      {
+        "date": "2026-10-27",
+        "status": "OK",
+        "stage": "R1a",
+        "score": 12,
+        "breadth2": 0.04181,
+        "leader7": 0.01347,
+        "amount_ratio5": 0.89275,
+        "eq_return": -3.53455
       }
     ],
     "KC": [
@@ -125118,6 +125236,16 @@
         "leader7": 0.03247,
         "amount_ratio5": 1.1384,
         "eq_return": -1.34885
+      },
+      {
+        "date": "2026-10-27",
+        "status": "OK",
+        "stage": "R1a",
+        "score": 6,
+        "breadth2": 0.02597,
+        "leader7": 0.00162,
+        "amount_ratio5": 0.9074,
+        "eq_return": -4.57096
       }
     ]
   },
@@ -127271,7 +127399,13 @@
         "exit_date": "2026-10-13"
       },
       "hold20": {
-        "status": "unmatured"
+        "status": "ok",
+        "gross_pct": -13.905,
+        "net_pct": -14.105,
+        "matched": 1396,
+        "excluded_unverified_price": 7,
+        "entry_date": "2026-09-22",
+        "exit_date": "2026-10-27"
       }
     }
   ],
