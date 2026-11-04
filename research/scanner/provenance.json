@@ -1,110 +1,110 @@
 {
-  "sz399006": {
-    "source": "TDX official unadjusted daily archive; turnover yuan",
-    "url": "https://www.tdx.com.cn/products/data/data/vipdoc/szlday.zip",
-    "archive_identity": [
-      "\"6ae9b02c-102bb281\"",
-      "Tue, 03 Nov 2026 09:58:04 GMT",
-      271299201
-    ],
-    "member_sha256": "99acd07b26dc683bdc552bd08f689b4298439d328a309d5904faf507f50bfa6c",
-    "price_divisor": 100,
-    "last_date": "2026-11-03"
-  },
-  "sz159770": {
-    "source": "TDX official unadjusted daily archive; turnover yuan",
-    "url": "https://www.tdx.com.cn/products/data/data/vipdoc/szlday.zip",
-    "archive_identity": [
-      "\"6ae9b02c-102bb281\"",
-      "Tue, 03 Nov 2026 09:58:04 GMT",
-      271299201
-    ],
-    "member_sha256": "28560eaf634fbe7bd9fedaf8863aa3ab75e702e36195ed9f6dd4df0a96791590",
-    "price_divisor": 1000,
-    "last_date": "2026-11-03"
-  },
-  "sz399363": {
-    "source": "TDX official unadjusted daily archive; turnover yuan",
-    "url": "https://www.tdx.com.cn/products/data/data/vipdoc/szlday.zip",
-    "archive_identity": [
-      "\"6ae9b02c-102bb281\"",
-      "Tue, 03 Nov 2026 09:58:04 GMT",
-      271299201
-    ],
-    "member_sha256": "fd3382d4464ddaaed0903979cc4694daac337207c5ef9b9840befb35a4732dd1",
-    "price_divisor": 100,
-    "last_date": "2026-11-03"
-  },
-  "sz159732": {
-    "source": "TDX official unadjusted daily archive; turnover yuan",
-    "url": "https://www.tdx.com.cn/products/data/data/vipdoc/szlday.zip",
-    "archive_identity": [
-      "\"6ae9b02c-102bb281\"",
-      "Tue, 03 Nov 2026 09:58:04 GMT",
-      271299201
-    ],
-    "member_sha256": "8725f53caa19f6916f9c5fddbfdade9842de594fc10fbdddfeb8ff597b1d9465",
-    "price_divisor": 1000,
-    "last_date": "2026-11-03"
-  },
   "sh000001": {
     "source": "TDX official unadjusted daily archive; turnover yuan",
     "url": "https://www.tdx.com.cn/products/data/data/vipdoc/shlday.zip",
     "archive_identity": [
-      "\"6ae9a912-dde215e\"",
-      "Tue, 03 Nov 2026 09:27:46 GMT",
-      232661342
+      "\"6aeafa93-ddf473e\"",
+      "Wed, 04 Nov 2026 09:27:47 GMT",
+      232736574
     ],
-    "member_sha256": "a95cd76306c9a112ec8a97c08fd98df264a0893a4c85692bc734f2dcbab41666",
+    "member_sha256": "3cd5f4464fd0302755bc86a6c9b7e99ac7dd3bfd48d36501cd78d51a85400d19",
     "price_divisor": 100,
-    "last_date": "2026-11-03"
+    "last_date": "2026-11-04"
   },
   "sh000688": {
     "source": "TDX official unadjusted daily archive; turnover yuan",
     "url": "https://www.tdx.com.cn/products/data/data/vipdoc/shlday.zip",
     "archive_identity": [
-      "\"6ae9a912-dde215e\"",
-      "Tue, 03 Nov 2026 09:27:46 GMT",
-      232661342
+      "\"6aeafa93-ddf473e\"",
+      "Wed, 04 Nov 2026 09:27:47 GMT",
+      232736574
     ],
-    "member_sha256": "7cbf779fb64f89e5afb2d30948ac9757626c6caf79f69951777c4c8c34a0feb1",
+    "member_sha256": "161dbea44b121c1c8254404af66ee3cad6e4fb9af22d9c2093c409b788fd9ef7",
     "price_divisor": 100,
-    "last_date": "2026-11-03"
+    "last_date": "2026-11-04"
   },
   "sh515880": {
     "source": "TDX official unadjusted daily archive; turnover yuan",
     "url": "https://www.tdx.com.cn/products/data/data/vipdoc/shlday.zip",
     "archive_identity": [
-      "\"6ae9a912-dde215e\"",
-      "Tue, 03 Nov 2026 09:27:46 GMT",
-      232661342
+      "\"6aeafa93-ddf473e\"",
+      "Wed, 04 Nov 2026 09:27:47 GMT",
+      232736574
     ],
-    "member_sha256": "8929b25b518d5c4d86007ddf92d8b7ef5e5cc9ea36c8beb1425744256c8d986c",
+    "member_sha256": "b7ab819a7822c654ad4570be0dfc29afc790aea26beff413133263153842caeb",
     "price_divisor": 1000,
-    "last_date": "2026-11-03"
+    "last_date": "2026-11-04"
   },
   "sh512480": {
     "source": "TDX official unadjusted daily archive; turnover yuan",
     "url": "https://www.tdx.com.cn/products/data/data/vipdoc/shlday.zip",
     "archive_identity": [
-      "\"6ae9a912-dde215e\"",
-      "Tue, 03 Nov 2026 09:27:46 GMT",
-      232661342
+      "\"6aeafa93-ddf473e\"",
+      "Wed, 04 Nov 2026 09:27:47 GMT",
+      232736574
     ],
-    "member_sha256": "a0f4770b48713ccc8fccc03bcda8422664920dc2ef75da000a31ca24afba3e4e",
+    "member_sha256": "d17e07632d38a3eef9b5d91b11cdb7a919a15f874ad6e58100d1a0917588b954",
     "price_divisor": 1000,
-    "last_date": "2026-11-03"
+    "last_date": "2026-11-04"
   },
   "sh516510": {
     "source": "TDX official unadjusted daily archive; turnover yuan",
     "url": "https://www.tdx.com.cn/products/data/data/vipdoc/shlday.zip",
     "archive_identity": [
-      "\"6ae9a912-dde215e\"",
-      "Tue, 03 Nov 2026 09:27:46 GMT",
-      232661342
+      "\"6aeafa93-ddf473e\"",
+      "Wed, 04 Nov 2026 09:27:47 GMT",
+      232736574
     ],
-    "member_sha256": "b6041e48a29fdc8f4e7f0997f1a1cb558ef0f26d0f6acd9c91500b7c9deb6488",
+    "member_sha256": "0abcdf75196620143a11a8b3c33d1895782bc45c578a8b127d95e00c39232dee",
     "price_divisor": 1000,
-    "last_date": "2026-11-03"
+    "last_date": "2026-11-04"
+  },
+  "sz399006": {
+    "source": "TDX official unadjusted daily archive; turnover yuan",
+    "url": "https://www.tdx.com.cn/products/data/data/vipdoc/szlday.zip",
+    "archive_identity": [
+      "\"6aeb01ae-102d12ed\"",
+      "Wed, 04 Nov 2026 09:58:06 GMT",
+      271389421
+    ],
+    "member_sha256": "c7e636473661ce3e28393d5972d4c892a0c56f199ab8dca0d659d51c3c06e30d",
+    "price_divisor": 100,
+    "last_date": "2026-11-04"
+  },
+  "sz159770": {
+    "source": "TDX official unadjusted daily archive; turnover yuan",
+    "url": "https://www.tdx.com.cn/products/data/data/vipdoc/szlday.zip",
+    "archive_identity": [
+      "\"6aeb01ae-102d12ed\"",
+      "Wed, 04 Nov 2026 09:58:06 GMT",
+      271389421
+    ],
+    "member_sha256": "76e321d6580f47c2120e6f973354dd9da3b30bb3c35f69b4508639a8b1acc738",
+    "price_divisor": 1000,
+    "last_date": "2026-11-04"
+  },
+  "sz399363": {
+    "source": "TDX official unadjusted daily archive; turnover yuan",
+    "url": "https://www.tdx.com.cn/products/data/data/vipdoc/szlday.zip",
+    "archive_identity": [
+      "\"6aeb01ae-102d12ed\"",
+      "Wed, 04 Nov 2026 09:58:06 GMT",
+      271389421
+    ],
+    "member_sha256": "53d51e66bbb632f69dd7e6687f1489cbacbc69653c519dccea21940eeca603ed",
+    "price_divisor": 100,
+    "last_date": "2026-11-04"
+  },
+  "sz159732": {
+    "source": "TDX official unadjusted daily archive; turnover yuan",
+    "url": "https://www.tdx.com.cn/products/data/data/vipdoc/szlday.zip",
+    "archive_identity": [
+      "\"6aeb01ae-102d12ed\"",
+      "Wed, 04 Nov 2026 09:58:06 GMT",
+      271389421
+    ],
+    "member_sha256": "64a478821235486cee79a9303c43eab60e5fa55e7e572264618b6cc38363af99",
+    "price_divisor": 1000,
+    "last_date": "2026-11-04"
   }
 }
