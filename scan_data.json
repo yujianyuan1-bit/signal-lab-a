@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "engine_version": "2.0.0",
-  "generated_utc": "2026-11-03T11:32:52+00:00",
-  "asof": "2026-11-03",
+  "generated_utc": "2026-11-04T11:38:36+00:00",
+  "asof": "2026-11-04",
   "source": {
     "name": "东财 / 腾讯 / 新浪日期验证备用源盘后快照 + 逐日归档（详见provenance；非官方历史库）",
     "url": "https://github.com/guidebee/china-stock-data",
@@ -10113,6 +10113,16 @@
         "CY": 1411
       },
       "reasons": []
+    },
+    {
+      "date": "2026-11-04",
+      "passed": true,
+      "n": 5217,
+      "board_counts": {
+        "KC": 615,
+        "CY": 1411
+      },
+      "reasons": []
     }
   ],
   "groups": [
@@ -10130,39 +10140,39 @@
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.08079,
-        "breadth_up": 0.236,
-        "leader7": 0.01134,
-        "leader_count": 16,
-        "leader_amount_share": 0.03181,
-        "amount": 448863579983.0,
-        "eq_return": -1.93398,
-        "median_return": -0.0,
+        "breadth2": 0.60737,
+        "breadth_up": 0.92984,
+        "leader7": 0.16088,
+        "leader_count": 227,
+        "leader_amount_share": 0.53416,
+        "amount": 549329528584.0,
+        "eq_return": 3.67327,
+        "median_return": 0.0,
         "p90_return": 0.0,
-        "p10_return": -0.0,
+        "p10_return": 0.0,
         "coverage": 1.0,
-        "amount_ratio5": 1.02891
+        "amount_ratio5": 1.22246
       },
       "status": "OK",
       "raw_healthy": true,
       "stage": "R2c",
-      "title": "扩散退潮·风险",
-      "score": 8,
+      "title": "疑似高潮·严防追高",
+      "score": 60,
       "components": {
-        "上涨扩散": 4.5,
-        "领涨活跃": 2.4,
-        "成交额变化": 5.3,
+        "上涨扩散": 25,
+        "领涨活跃": 17,
+        "成交额变化": 9.7,
         "持续扩散": 3.4,
-        "相对强度": 0.7,
-        "市场参与": 3.8
+        "相对强度": 9.2,
+        "市场参与": 12
       },
-      "penalty": 12,
+      "penalty": 16,
       "reason": [
-        "涨幅≥2%股票8.1%，前日58.6%（变化-50.5%）",
-        "领涨≥7%股票1.1%，领涨成交额占比3.2%",
-        "成交额相对之前5日：1.03倍",
-        "相对全A等权当日涨幅：-0.87个百分点",
-        "昨日扩散后今日明显收缩"
+        "涨幅≥2%股票60.7%，前日8.1%（变化+52.7%）",
+        "领涨≥7%股票16.1%，领涨成交额占比53.4%",
+        "成交额相对之前5日：1.22倍",
+        "相对全A等权当日涨幅：+0.84个百分点",
+        "高广度且领涨高度同步，可能已进入短线高潮"
       ],
       "warning": true
     },
@@ -10180,39 +10190,39 @@
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.04878,
-        "breadth_up": 0.15285,
-        "leader7": 0.00813,
-        "leader_count": 5,
-        "leader_amount_share": 0.00865,
-        "amount": 239043124741.0,
-        "eq_return": -3.67596,
-        "median_return": -0.0,
-        "p90_return": 0.74562,
-        "p10_return": -8.64696,
+        "breadth2": 0.84715,
+        "breadth_up": 0.97561,
+        "leader7": 0.3935,
+        "leader_count": 242,
+        "leader_amount_share": 0.78637,
+        "amount": 313817436976.0,
+        "eq_return": 6.6464,
+        "median_return": 0.0,
+        "p90_return": 13.71994,
+        "p10_return": 1.34994,
         "coverage": 1.0,
-        "amount_ratio5": 1.01076
+        "amount_ratio5": 1.29844
       },
       "status": "OK",
       "raw_healthy": true,
       "stage": "R2c",
-      "title": "扩散退潮·风险",
-      "score": 2,
+      "title": "疑似高潮·严防追高",
+      "score": 68,
       "components": {
-        "上涨扩散": 2.7,
-        "领涨活跃": 1.7,
-        "成交额变化": 4.9,
+        "上涨扩散": 25,
+        "领涨活跃": 17,
+        "成交额变化": 11.5,
         "持续扩散": 2.0,
-        "相对强度": 0.0,
-        "市场参与": 2.4
+        "相对强度": 16,
+        "市场参与": 12
       },
-      "penalty": 12,
+      "penalty": 16,
       "reason": [
-        "涨幅≥2%股票4.9%，前日61.5%（变化-56.6%）",
-        "领涨≥7%股票0.8%，领涨成交额占比0.9%",
-        "成交额相对之前5日：1.01倍",
-        "相对全A等权当日涨幅：-2.61个百分点",
-        "昨日扩散后今日明显收缩"
+        "涨幅≥2%股票84.7%，前日4.9%（变化+79.8%）",
+        "领涨≥7%股票39.3%，领涨成交额占比78.6%",
+        "成交额相对之前5日：1.30倍",
+        "相对全A等权当日涨幅：+3.82个百分点",
+        "高广度且领涨高度同步，可能已进入短线高潮"
       ],
       "warning": true
     }
@@ -105700,6 +105710,108 @@
         ],
         "warning": true
       }
+    ],
+    "2026-11-04": [
+      {
+        "id": "CY",
+        "name": "创业板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [],
+        "stats": {
+          "n": 1411,
+          "members_n": 1411,
+          "matched_raw": 1411,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.60737,
+          "breadth_up": 0.92984,
+          "leader7": 0.16088,
+          "leader_count": 227,
+          "leader_amount_share": 0.53416,
+          "amount": 549329528584.0,
+          "eq_return": 3.67327,
+          "median_return": 0.0,
+          "p90_return": 0.0,
+          "p10_return": 0.0,
+          "coverage": 1.0,
+          "amount_ratio5": 1.22246
+        },
+        "status": "OK",
+        "raw_healthy": true,
+        "stage": "R2c",
+        "title": "疑似高潮·严防追高",
+        "score": 60,
+        "components": {
+          "上涨扩散": 25,
+          "领涨活跃": 17,
+          "成交额变化": 9.7,
+          "持续扩散": 3.4,
+          "相对强度": 9.2,
+          "市场参与": 12
+        },
+        "penalty": 16,
+        "reason": [
+          "涨幅≥2%股票60.7%，前日8.1%（变化+52.7%）",
+          "领涨≥7%股票16.1%，领涨成交额占比53.4%",
+          "成交额相对之前5日：1.22倍",
+          "相对全A等权当日涨幅：+0.84个百分点",
+          "高广度且领涨高度同步，可能已进入短线高潮"
+        ],
+        "warning": true
+      },
+      {
+        "id": "KC",
+        "name": "科创板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [],
+        "stats": {
+          "n": 615,
+          "members_n": 615,
+          "matched_raw": 615,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.84715,
+          "breadth_up": 0.97561,
+          "leader7": 0.3935,
+          "leader_count": 242,
+          "leader_amount_share": 0.78637,
+          "amount": 313817436976.0,
+          "eq_return": 6.6464,
+          "median_return": 0.0,
+          "p90_return": 13.71994,
+          "p10_return": 1.34994,
+          "coverage": 1.0,
+          "amount_ratio5": 1.29844
+        },
+        "status": "OK",
+        "raw_healthy": true,
+        "stage": "R2c",
+        "title": "疑似高潮·严防追高",
+        "score": 68,
+        "components": {
+          "上涨扩散": 25,
+          "领涨活跃": 17,
+          "成交额变化": 11.5,
+          "持续扩散": 2.0,
+          "相对强度": 16,
+          "市场参与": 12
+        },
+        "penalty": 16,
+        "reason": [
+          "涨幅≥2%股票84.7%，前日4.9%（变化+79.8%）",
+          "领涨≥7%股票39.3%，领涨成交额占比78.6%",
+          "成交额相对之前5日：1.30倍",
+          "相对全A等权当日涨幅：+3.82个百分点",
+          "高广度且领涨高度同步，可能已进入短线高潮"
+        ],
+        "warning": true
+      }
     ]
   },
   "series": {
@@ -115803,6 +115915,16 @@
         "leader7": 0.01134,
         "amount_ratio5": 1.02891,
         "eq_return": -1.93398
+      },
+      {
+        "date": "2026-11-04",
+        "status": "OK",
+        "stage": "R2c",
+        "score": 60,
+        "breadth2": 0.60737,
+        "leader7": 0.16088,
+        "amount_ratio5": 1.22246,
+        "eq_return": 3.67327
       }
     ],
     "KC": [
@@ -125905,6 +126027,16 @@
         "leader7": 0.00813,
         "amount_ratio5": 1.01076,
         "eq_return": -3.67596
+      },
+      {
+        "date": "2026-11-04",
+        "status": "OK",
+        "stage": "R2c",
+        "score": 68,
+        "breadth2": 0.84715,
+        "leader7": 0.3935,
+        "amount_ratio5": 1.29844,
+        "eq_return": 6.6464
       }
     ]
   },
