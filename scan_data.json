@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "engine_version": "2.0.0",
-  "generated_utc": "2026-11-10T11:39:07+00:00",
-  "asof": "2026-11-10",
+  "generated_utc": "2026-11-11T11:37:01+00:00",
+  "asof": "2026-11-11",
   "source": {
     "name": "东财 / 腾讯 / 新浪日期验证备用源盘后快照 + 逐日归档（详见provenance；非官方历史库）",
     "url": "https://github.com/guidebee/china-stock-data",
@@ -10163,6 +10163,16 @@
         "CY": 1411
       },
       "reasons": []
+    },
+    {
+      "date": "2026-11-11",
+      "passed": true,
+      "n": 4998,
+      "board_counts": {
+        "KC": 564,
+        "CY": 1320
+      },
+      "reasons": []
     }
   ],
   "groups": [
@@ -10174,46 +10184,47 @@
       "membership_source": null,
       "health": [],
       "stats": {
-        "n": 1411,
-        "members_n": 1411,
-        "matched_raw": 1411,
+        "n": 1320,
+        "members_n": 1320,
+        "matched_raw": 1320,
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.54996,
-        "breadth_up": 0.88873,
-        "leader7": 0.05245,
-        "leader_count": 74,
-        "leader_amount_share": 0.12237,
-        "amount": 418447832764.0,
-        "eq_return": 2.57062,
-        "median_return": 0.0,
-        "p90_return": 0.0,
-        "p10_return": -0.0,
+        "breadth2": 0.36818,
+        "breadth_up": 0.75682,
+        "leader7": 0.04167,
+        "leader_count": 55,
+        "leader_amount_share": 0.28174,
+        "amount": 457819063919.0,
+        "eq_return": 1.75857,
+        "median_return": 1.27578,
+        "p90_return": 4.75644,
+        "p10_return": -0.7914,
         "coverage": 1.0,
-        "amount_ratio5": 0.86268
+        "amount_ratio5": 0.95583
       },
       "status": "OK",
       "raw_healthy": true,
-      "stage": "R1b",
-      "title": "冰点回暖·未确认",
-      "score": 65,
+      "stage": "R2c",
+      "title": "扩散退潮·风险",
+      "score": 56,
       "components": {
-        "上涨扩散": 25,
-        "领涨活跃": 11.1,
-        "成交额变化": 1.4,
-        "持续扩散": 6.0,
-        "相对强度": 8.9,
+        "上涨扩散": 20.5,
+        "领涨活跃": 8.9,
+        "成交额变化": 3.6,
+        "持续扩散": 15,
+        "相对强度": 7.8,
         "市场参与": 12
       },
-      "penalty": 0,
+      "penalty": 12,
       "reason": [
-        "涨幅≥2%股票55.0%，前日14.5%（变化+40.5%）",
-        "领涨≥7%股票5.2%，领涨成交额占比12.2%",
-        "成交额相对之前5日：0.86倍",
-        "相对全A等权当日涨幅：+0.79个百分点"
+        "涨幅≥2%股票36.8%，前日55.0%（变化-18.2%）",
+        "领涨≥7%股票4.2%，领涨成交额占比28.2%",
+        "成交额相对之前5日：0.96倍",
+        "相对全A等权当日涨幅：+0.55个百分点",
+        "昨日扩散后今日明显收缩"
       ],
-      "warning": false
+      "warning": true
     },
     {
       "id": "KC",
@@ -10223,44 +10234,44 @@
       "membership_source": null,
       "health": [],
       "stats": {
-        "n": 613,
-        "members_n": 615,
-        "matched_raw": 613,
+        "n": 563,
+        "members_n": 564,
+        "matched_raw": 563,
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.49592,
-        "breadth_up": 0.84666,
-        "leader7": 0.05383,
-        "leader_count": 33,
-        "leader_amount_share": 0.08044,
-        "amount": 220503824194.0,
-        "eq_return": 2.42405,
+        "breadth2": 0.40675,
+        "breadth_up": 0.73357,
+        "leader7": 0.05684,
+        "leader_count": 32,
+        "leader_amount_share": 0.2497,
+        "amount": 202647434133.0,
+        "eq_return": 1.90869,
         "median_return": 0.0,
-        "p90_return": 5.72515,
-        "p10_return": -0.44197,
-        "coverage": 0.99675,
-        "amount_ratio5": 0.80213
+        "p90_return": 5.44415,
+        "p10_return": -0.97304,
+        "coverage": 0.99823,
+        "amount_ratio5": 0.74725
       },
       "status": "OK",
       "raw_healthy": true,
-      "stage": "R1b",
-      "title": "冰点回暖·未确认",
-      "score": 63,
+      "stage": "WATCH",
+      "title": "尚无明确结构",
+      "score": 70,
       "components": {
-        "上涨扩散": 25,
-        "领涨活跃": 11.4,
+        "上涨扩散": 22.6,
+        "领涨活跃": 12.1,
         "成交额变化": 0.0,
-        "持续扩散": 6.8,
-        "相对强度": 8.2,
-        "市场参与": 12
+        "持续扩散": 15,
+        "相对强度": 8.5,
+        "市场参与": 11.7
       },
       "penalty": 0,
       "reason": [
-        "涨幅≥2%股票49.6%，前日16.3%（变化+33.3%）",
-        "领涨≥7%股票5.4%，领涨成交额占比8.0%",
-        "成交额相对之前5日：0.80倍",
-        "相对全A等权当日涨幅：+0.64个百分点"
+        "涨幅≥2%股票40.7%，前日49.6%（变化-8.9%）",
+        "领涨≥7%股票5.7%，领涨成交额占比25.0%",
+        "成交额相对之前5日：0.75倍",
+        "相对全A等权当日涨幅：+0.70个百分点"
       ],
       "warning": false
     }
@@ -106254,6 +106265,107 @@
         ],
         "warning": false
       }
+    ],
+    "2026-11-11": [
+      {
+        "id": "CY",
+        "name": "创业板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [],
+        "stats": {
+          "n": 1320,
+          "members_n": 1320,
+          "matched_raw": 1320,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.36818,
+          "breadth_up": 0.75682,
+          "leader7": 0.04167,
+          "leader_count": 55,
+          "leader_amount_share": 0.28174,
+          "amount": 457819063919.0,
+          "eq_return": 1.75857,
+          "median_return": 1.27578,
+          "p90_return": 4.75644,
+          "p10_return": -0.7914,
+          "coverage": 1.0,
+          "amount_ratio5": 0.95583
+        },
+        "status": "OK",
+        "raw_healthy": true,
+        "stage": "R2c",
+        "title": "扩散退潮·风险",
+        "score": 56,
+        "components": {
+          "上涨扩散": 20.5,
+          "领涨活跃": 8.9,
+          "成交额变化": 3.6,
+          "持续扩散": 15,
+          "相对强度": 7.8,
+          "市场参与": 12
+        },
+        "penalty": 12,
+        "reason": [
+          "涨幅≥2%股票36.8%，前日55.0%（变化-18.2%）",
+          "领涨≥7%股票4.2%，领涨成交额占比28.2%",
+          "成交额相对之前5日：0.96倍",
+          "相对全A等权当日涨幅：+0.55个百分点",
+          "昨日扩散后今日明显收缩"
+        ],
+        "warning": true
+      },
+      {
+        "id": "KC",
+        "name": "科创板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [],
+        "stats": {
+          "n": 563,
+          "members_n": 564,
+          "matched_raw": 563,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.40675,
+          "breadth_up": 0.73357,
+          "leader7": 0.05684,
+          "leader_count": 32,
+          "leader_amount_share": 0.2497,
+          "amount": 202647434133.0,
+          "eq_return": 1.90869,
+          "median_return": 0.0,
+          "p90_return": 5.44415,
+          "p10_return": -0.97304,
+          "coverage": 0.99823,
+          "amount_ratio5": 0.74725
+        },
+        "status": "OK",
+        "raw_healthy": true,
+        "stage": "WATCH",
+        "title": "尚无明确结构",
+        "score": 70,
+        "components": {
+          "上涨扩散": 22.6,
+          "领涨活跃": 12.1,
+          "成交额变化": 0.0,
+          "持续扩散": 15,
+          "相对强度": 8.5,
+          "市场参与": 11.7
+        },
+        "penalty": 0,
+        "reason": [
+          "涨幅≥2%股票40.7%，前日49.6%（变化-8.9%）",
+          "领涨≥7%股票5.7%，领涨成交额占比25.0%",
+          "成交额相对之前5日：0.75倍",
+          "相对全A等权当日涨幅：+0.70个百分点"
+        ],
+        "warning": false
+      }
     ]
   },
   "series": {
@@ -116407,6 +116519,16 @@
         "leader7": 0.05245,
         "amount_ratio5": 0.86268,
         "eq_return": 2.57062
+      },
+      {
+        "date": "2026-11-11",
+        "status": "OK",
+        "stage": "R2c",
+        "score": 56,
+        "breadth2": 0.36818,
+        "leader7": 0.04167,
+        "amount_ratio5": 0.95583,
+        "eq_return": 1.75857
       }
     ],
     "KC": [
@@ -126559,6 +126681,16 @@
         "leader7": 0.05383,
         "amount_ratio5": 0.80213,
         "eq_return": 2.42405
+      },
+      {
+        "date": "2026-11-11",
+        "status": "OK",
+        "stage": "WATCH",
+        "score": 70,
+        "breadth2": 0.40675,
+        "leader7": 0.05684,
+        "amount_ratio5": 0.74725,
+        "eq_return": 1.90869
       }
     ]
   },
