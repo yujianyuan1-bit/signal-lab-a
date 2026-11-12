@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "engine_version": "2.0.0",
-  "generated_utc": "2026-11-11T11:37:01+00:00",
-  "asof": "2026-11-11",
+  "generated_utc": "2026-11-12T11:38:37+00:00",
+  "asof": "2026-11-12",
   "source": {
     "name": "东财 / 腾讯 / 新浪日期验证备用源盘后快照 + 逐日归档（详见provenance；非官方历史库）",
     "url": "https://github.com/guidebee/china-stock-data",
@@ -10173,6 +10173,16 @@
         "CY": 1320
       },
       "reasons": []
+    },
+    {
+      "date": "2026-11-12",
+      "passed": true,
+      "n": 5218,
+      "board_counts": {
+        "KC": 616,
+        "CY": 1411
+      },
+      "reasons": []
     }
   ],
   "groups": [
@@ -10182,49 +10192,30 @@
       "kind": "风格池",
       "members_total": null,
       "membership_source": null,
-      "health": [],
+      "health": [
+        "前后日可匹配股票覆盖低于95%"
+      ],
       "stats": {
         "n": 1320,
-        "members_n": 1320,
+        "members_n": 1411,
         "matched_raw": 1320,
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.36818,
-        "breadth_up": 0.75682,
-        "leader7": 0.04167,
-        "leader_count": 55,
-        "leader_amount_share": 0.28174,
-        "amount": 457819063919.0,
-        "eq_return": 1.75857,
-        "median_return": 1.27578,
-        "p90_return": 4.75644,
-        "p10_return": -0.7914,
-        "coverage": 1.0,
-        "amount_ratio5": 0.95583
+        "breadth2": 0.03939,
+        "breadth_up": 0.11591,
+        "leader7": 0.00758,
+        "leader_count": 10,
+        "leader_amount_share": 0.03387,
+        "amount": 500343585551.0,
+        "eq_return": -2.01207,
+        "median_return": -2.04537,
+        "p90_return": 0.22091,
+        "p10_return": -4.29872,
+        "coverage": 0.93551
       },
-      "status": "OK",
-      "raw_healthy": true,
-      "stage": "R2c",
-      "title": "扩散退潮·风险",
-      "score": 56,
-      "components": {
-        "上涨扩散": 20.5,
-        "领涨活跃": 8.9,
-        "成交额变化": 3.6,
-        "持续扩散": 15,
-        "相对强度": 7.8,
-        "市场参与": 12
-      },
-      "penalty": 12,
-      "reason": [
-        "涨幅≥2%股票36.8%，前日55.0%（变化-18.2%）",
-        "领涨≥7%股票4.2%，领涨成交额占比28.2%",
-        "成交额相对之前5日：0.96倍",
-        "相对全A等权当日涨幅：+0.55个百分点",
-        "昨日扩散后今日明显收缩"
-      ],
-      "warning": true
+      "status": "BLOCKED",
+      "raw_healthy": false
     },
     {
       "id": "KC",
@@ -10232,48 +10223,30 @@
       "kind": "风格池",
       "members_total": null,
       "membership_source": null,
-      "health": [],
+      "health": [
+        "前后日可匹配股票覆盖低于95%"
+      ],
       "stats": {
-        "n": 563,
-        "members_n": 564,
-        "matched_raw": 563,
+        "n": 564,
+        "members_n": 616,
+        "matched_raw": 564,
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.40675,
-        "breadth_up": 0.73357,
-        "leader7": 0.05684,
-        "leader_count": 32,
-        "leader_amount_share": 0.2497,
-        "amount": 202647434133.0,
-        "eq_return": 1.90869,
-        "median_return": 0.0,
-        "p90_return": 5.44415,
-        "p10_return": -0.97304,
-        "coverage": 0.99823,
-        "amount_ratio5": 0.74725
+        "breadth2": 0.0656,
+        "breadth_up": 0.18262,
+        "leader7": 0.01064,
+        "leader_count": 6,
+        "leader_amount_share": 0.1105,
+        "amount": 265517763736.0,
+        "eq_return": -1.7361,
+        "median_return": -1.79067,
+        "p90_return": 1.28954,
+        "p10_return": -4.34264,
+        "coverage": 0.91558
       },
-      "status": "OK",
-      "raw_healthy": true,
-      "stage": "WATCH",
-      "title": "尚无明确结构",
-      "score": 70,
-      "components": {
-        "上涨扩散": 22.6,
-        "领涨活跃": 12.1,
-        "成交额变化": 0.0,
-        "持续扩散": 15,
-        "相对强度": 8.5,
-        "市场参与": 11.7
-      },
-      "penalty": 0,
-      "reason": [
-        "涨幅≥2%股票40.7%，前日49.6%（变化-8.9%）",
-        "领涨≥7%股票5.7%，领涨成交额占比25.0%",
-        "成交额相对之前5日：0.75倍",
-        "相对全A等权当日涨幅：+0.70个百分点"
-      ],
-      "warning": false
+      "status": "BLOCKED",
+      "raw_healthy": false
     }
   ],
   "daily_groups": {
@@ -106366,6 +106339,70 @@
         ],
         "warning": false
       }
+    ],
+    "2026-11-12": [
+      {
+        "id": "CY",
+        "name": "创业板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [
+          "前后日可匹配股票覆盖低于95%"
+        ],
+        "stats": {
+          "n": 1320,
+          "members_n": 1411,
+          "matched_raw": 1320,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.03939,
+          "breadth_up": 0.11591,
+          "leader7": 0.00758,
+          "leader_count": 10,
+          "leader_amount_share": 0.03387,
+          "amount": 500343585551.0,
+          "eq_return": -2.01207,
+          "median_return": -2.04537,
+          "p90_return": 0.22091,
+          "p10_return": -4.29872,
+          "coverage": 0.93551
+        },
+        "status": "BLOCKED",
+        "raw_healthy": false
+      },
+      {
+        "id": "KC",
+        "name": "科创板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [
+          "前后日可匹配股票覆盖低于95%"
+        ],
+        "stats": {
+          "n": 564,
+          "members_n": 616,
+          "matched_raw": 564,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.0656,
+          "breadth_up": 0.18262,
+          "leader7": 0.01064,
+          "leader_count": 6,
+          "leader_amount_share": 0.1105,
+          "amount": 265517763736.0,
+          "eq_return": -1.7361,
+          "median_return": -1.79067,
+          "p90_return": 1.28954,
+          "p10_return": -4.34264,
+          "coverage": 0.91558
+        },
+        "status": "BLOCKED",
+        "raw_healthy": false
+      }
     ]
   },
   "series": {
@@ -116529,6 +116566,16 @@
         "leader7": 0.04167,
         "amount_ratio5": 0.95583,
         "eq_return": 1.75857
+      },
+      {
+        "date": "2026-11-12",
+        "status": "BLOCKED",
+        "stage": null,
+        "score": null,
+        "breadth2": 0.03939,
+        "leader7": 0.00758,
+        "amount_ratio5": null,
+        "eq_return": -2.01207
       }
     ],
     "KC": [
@@ -126691,6 +126738,16 @@
         "leader7": 0.05684,
         "amount_ratio5": 0.74725,
         "eq_return": 1.90869
+      },
+      {
+        "date": "2026-11-12",
+        "status": "BLOCKED",
+        "stage": null,
+        "score": null,
+        "breadth2": 0.0656,
+        "leader7": 0.01064,
+        "amount_ratio5": null,
+        "eq_return": -1.7361
       }
     ]
   },
