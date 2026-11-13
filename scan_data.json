@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "engine_version": "2.0.0",
-  "generated_utc": "2026-11-12T11:38:37+00:00",
-  "asof": "2026-11-12",
+  "generated_utc": "2026-11-13T11:36:02+00:00",
+  "asof": "2026-11-13",
   "source": {
     "name": "东财 / 腾讯 / 新浪日期验证备用源盘后快照 + 逐日归档（详见provenance；非官方历史库）",
     "url": "https://github.com/guidebee/china-stock-data",
@@ -10183,6 +10183,16 @@
         "CY": 1411
       },
       "reasons": []
+    },
+    {
+      "date": "2026-11-13",
+      "passed": true,
+      "n": 5215,
+      "board_counts": {
+        "KC": 615,
+        "CY": 1411
+      },
+      "reasons": []
     }
   ],
   "groups": [
@@ -10193,29 +10203,30 @@
       "members_total": null,
       "membership_source": null,
       "health": [
-        "前后日可匹配股票覆盖低于95%"
+        "至少需要20个完整历史比较日"
       ],
       "stats": {
-        "n": 1320,
+        "n": 1411,
         "members_n": 1411,
-        "matched_raw": 1320,
+        "matched_raw": 1411,
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.03939,
-        "breadth_up": 0.11591,
-        "leader7": 0.00758,
-        "leader_count": 10,
-        "leader_amount_share": 0.03387,
-        "amount": 500343585551.0,
-        "eq_return": -2.01207,
-        "median_return": -2.04537,
-        "p90_return": 0.22091,
-        "p10_return": -4.29872,
-        "coverage": 0.93551
+        "breadth2": 0.04181,
+        "breadth_up": 0.10631,
+        "leader7": 0.0078,
+        "leader_count": 11,
+        "leader_amount_share": 0.02041,
+        "amount": 437728605235.0,
+        "eq_return": -2.36712,
+        "median_return": -0.0,
+        "p90_return": 0.0,
+        "p10_return": -0.0,
+        "coverage": 1.0,
+        "amount_ratio5": null
       },
-      "status": "BLOCKED",
-      "raw_healthy": false
+      "status": "WARMUP",
+      "raw_healthy": true
     },
     {
       "id": "KC",
@@ -10224,29 +10235,30 @@
       "members_total": null,
       "membership_source": null,
       "health": [
-        "前后日可匹配股票覆盖低于95%"
+        "至少需要20个完整历史比较日"
       ],
       "stats": {
-        "n": 564,
-        "members_n": 616,
-        "matched_raw": 564,
+        "n": 615,
+        "members_n": 615,
+        "matched_raw": 615,
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.0656,
-        "breadth_up": 0.18262,
-        "leader7": 0.01064,
-        "leader_count": 6,
-        "leader_amount_share": 0.1105,
-        "amount": 265517763736.0,
-        "eq_return": -1.7361,
-        "median_return": -1.79067,
-        "p90_return": 1.28954,
-        "p10_return": -4.34264,
-        "coverage": 0.91558
+        "breadth2": 0.03902,
+        "breadth_up": 0.08455,
+        "leader7": 0.00488,
+        "leader_count": 3,
+        "leader_amount_share": 0.01344,
+        "amount": 266629319283.0,
+        "eq_return": -3.11181,
+        "median_return": -0.0,
+        "p90_return": -0.23107,
+        "p10_return": -7.01726,
+        "coverage": 1.0,
+        "amount_ratio5": null
       },
-      "status": "BLOCKED",
-      "raw_healthy": false
+      "status": "WARMUP",
+      "raw_healthy": true
     }
   ],
   "daily_groups": {
@@ -106403,6 +106415,72 @@
         "status": "BLOCKED",
         "raw_healthy": false
       }
+    ],
+    "2026-11-13": [
+      {
+        "id": "CY",
+        "name": "创业板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [
+          "至少需要20个完整历史比较日"
+        ],
+        "stats": {
+          "n": 1411,
+          "members_n": 1411,
+          "matched_raw": 1411,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.04181,
+          "breadth_up": 0.10631,
+          "leader7": 0.0078,
+          "leader_count": 11,
+          "leader_amount_share": 0.02041,
+          "amount": 437728605235.0,
+          "eq_return": -2.36712,
+          "median_return": -0.0,
+          "p90_return": 0.0,
+          "p10_return": -0.0,
+          "coverage": 1.0,
+          "amount_ratio5": null
+        },
+        "status": "WARMUP",
+        "raw_healthy": true
+      },
+      {
+        "id": "KC",
+        "name": "科创板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [
+          "至少需要20个完整历史比较日"
+        ],
+        "stats": {
+          "n": 615,
+          "members_n": 615,
+          "matched_raw": 615,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.03902,
+          "breadth_up": 0.08455,
+          "leader7": 0.00488,
+          "leader_count": 3,
+          "leader_amount_share": 0.01344,
+          "amount": 266629319283.0,
+          "eq_return": -3.11181,
+          "median_return": -0.0,
+          "p90_return": -0.23107,
+          "p10_return": -7.01726,
+          "coverage": 1.0,
+          "amount_ratio5": null
+        },
+        "status": "WARMUP",
+        "raw_healthy": true
+      }
     ]
   },
   "series": {
@@ -116576,6 +116654,16 @@
         "leader7": 0.00758,
         "amount_ratio5": null,
         "eq_return": -2.01207
+      },
+      {
+        "date": "2026-11-13",
+        "status": "WARMUP",
+        "stage": null,
+        "score": null,
+        "breadth2": 0.04181,
+        "leader7": 0.0078,
+        "amount_ratio5": null,
+        "eq_return": -2.36712
       }
     ],
     "KC": [
@@ -126748,6 +126836,16 @@
         "leader7": 0.01064,
         "amount_ratio5": null,
         "eq_return": -1.7361
+      },
+      {
+        "date": "2026-11-13",
+        "status": "WARMUP",
+        "stage": null,
+        "score": null,
+        "breadth2": 0.03902,
+        "leader7": 0.00488,
+        "amount_ratio5": null,
+        "eq_return": -3.11181
       }
     ]
   },
