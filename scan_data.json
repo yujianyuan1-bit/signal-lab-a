@@ -1,8 +1,8 @@
 {
   "schema": 2,
   "engine_version": "2.0.0",
-  "generated_utc": "2026-11-13T11:36:02+00:00",
-  "asof": "2026-11-13",
+  "generated_utc": "2026-11-16T11:51:53+00:00",
+  "asof": "2026-11-16",
   "source": {
     "name": "东财 / 腾讯 / 新浪日期验证备用源盘后快照 + 逐日归档（详见provenance；非官方历史库）",
     "url": "https://github.com/guidebee/china-stock-data",
@@ -10193,6 +10193,16 @@
         "CY": 1411
       },
       "reasons": []
+    },
+    {
+      "date": "2026-11-16",
+      "passed": true,
+      "n": 5216,
+      "board_counts": {
+        "KC": 615,
+        "CY": 1411
+      },
+      "reasons": []
     }
   ],
   "groups": [
@@ -10203,7 +10213,7 @@
       "members_total": null,
       "membership_source": null,
       "health": [
-        "至少需要20个完整历史比较日"
+        "20个连续有效历史观测不足"
       ],
       "stats": {
         "n": 1411,
@@ -10212,13 +10222,13 @@
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.04181,
-        "breadth_up": 0.10631,
-        "leader7": 0.0078,
-        "leader_count": 11,
-        "leader_amount_share": 0.02041,
-        "amount": 437728605235.0,
-        "eq_return": -2.36712,
+        "breadth2": 0.04465,
+        "breadth_up": 0.11552,
+        "leader7": 0.00638,
+        "leader_count": 9,
+        "leader_amount_share": 0.01102,
+        "amount": 373386791756.0,
+        "eq_return": -3.08094,
         "median_return": -0.0,
         "p90_return": 0.0,
         "p10_return": -0.0,
@@ -10235,7 +10245,7 @@
       "members_total": null,
       "membership_source": null,
       "health": [
-        "至少需要20个完整历史比较日"
+        "20个连续有效历史观测不足"
       ],
       "stats": {
         "n": 615,
@@ -10244,16 +10254,16 @@
         "outlier_count": 0,
         "outlier_symbols": [],
         "outlier_share": 0.0,
-        "breadth2": 0.03902,
-        "breadth_up": 0.08455,
-        "leader7": 0.00488,
-        "leader_count": 3,
-        "leader_amount_share": 0.01344,
-        "amount": 266629319283.0,
-        "eq_return": -3.11181,
+        "breadth2": 0.01951,
+        "breadth_up": 0.06179,
+        "leader7": 0.0,
+        "leader_count": 0,
+        "leader_amount_share": 0.0,
+        "amount": 232193314762.0,
+        "eq_return": -4.83864,
         "median_return": -0.0,
-        "p90_return": -0.23107,
-        "p10_return": -7.01726,
+        "p90_return": -0.6241,
+        "p10_return": -9.5464,
         "coverage": 1.0,
         "amount_ratio5": null
       },
@@ -106481,6 +106491,72 @@
         "status": "WARMUP",
         "raw_healthy": true
       }
+    ],
+    "2026-11-16": [
+      {
+        "id": "CY",
+        "name": "创业板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [
+          "20个连续有效历史观测不足"
+        ],
+        "stats": {
+          "n": 1411,
+          "members_n": 1411,
+          "matched_raw": 1411,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.04465,
+          "breadth_up": 0.11552,
+          "leader7": 0.00638,
+          "leader_count": 9,
+          "leader_amount_share": 0.01102,
+          "amount": 373386791756.0,
+          "eq_return": -3.08094,
+          "median_return": -0.0,
+          "p90_return": 0.0,
+          "p10_return": -0.0,
+          "coverage": 1.0,
+          "amount_ratio5": null
+        },
+        "status": "WARMUP",
+        "raw_healthy": true
+      },
+      {
+        "id": "KC",
+        "name": "科创板全板",
+        "kind": "风格池",
+        "members_total": null,
+        "membership_source": null,
+        "health": [
+          "20个连续有效历史观测不足"
+        ],
+        "stats": {
+          "n": 615,
+          "members_n": 615,
+          "matched_raw": 615,
+          "outlier_count": 0,
+          "outlier_symbols": [],
+          "outlier_share": 0.0,
+          "breadth2": 0.01951,
+          "breadth_up": 0.06179,
+          "leader7": 0.0,
+          "leader_count": 0,
+          "leader_amount_share": 0.0,
+          "amount": 232193314762.0,
+          "eq_return": -4.83864,
+          "median_return": -0.0,
+          "p90_return": -0.6241,
+          "p10_return": -9.5464,
+          "coverage": 1.0,
+          "amount_ratio5": null
+        },
+        "status": "WARMUP",
+        "raw_healthy": true
+      }
     ]
   },
   "series": {
@@ -116664,6 +116740,16 @@
         "leader7": 0.0078,
         "amount_ratio5": null,
         "eq_return": -2.36712
+      },
+      {
+        "date": "2026-11-16",
+        "status": "WARMUP",
+        "stage": null,
+        "score": null,
+        "breadth2": 0.04465,
+        "leader7": 0.00638,
+        "amount_ratio5": null,
+        "eq_return": -3.08094
       }
     ],
     "KC": [
@@ -126846,6 +126932,16 @@
         "leader7": 0.00488,
         "amount_ratio5": null,
         "eq_return": -3.11181
+      },
+      {
+        "date": "2026-11-16",
+        "status": "WARMUP",
+        "stage": null,
+        "score": null,
+        "breadth2": 0.01951,
+        "leader7": 0.0,
+        "amount_ratio5": null,
+        "eq_return": -4.83864
       }
     ]
   },
